@@ -1,0 +1,45 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go module stuff
+go.sum
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# игнорирует все файлы .md
+*.md
+# не игнорирует файл README.md
+!README.md 
+
+# файлы для архивации
+7z_date.bat
+7za.exe
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# переменные окружения
+.env
+
+# Build and cache
+bin/
+obj/
+vendor/
+*.log
+/logs
