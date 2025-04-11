@@ -17,7 +17,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	//side "trade_api/v1/side"
-	side "github.com/Ruvad39/go-finam-grps/trade_api/v1"
+	side "github.com/Ruvad39/go-finam-grpc/trade_api/v1"
 
 	unsafe "unsafe"
 )

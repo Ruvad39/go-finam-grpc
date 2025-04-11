@@ -43,14 +43,15 @@ type Client struct {
 	accessToken       string    // JWT токен для дальнейшей авторизации
 	ttlJWT            time.Time // Время завершения действия JWT токена
 	conn              *grpc.ClientConn
-	CloseC            chan struct{} // Сигнальный канал для закрытия коннекта
 	AuthService       auth_service.AuthServiceClient
 	AccountsService   accounts_service.AccountsServiceClient
 	AssetsService     assets_service.AssetsServiceClient
 	MarketDataService marketdata_service.MarketDataServiceClient
-	QuoteChan         chan marketdata_service.Quote
+	Securities        map[string]Security //  Список инструментов с которыми работаем (или весь список? )
+	closeChan         chan struct{}       // Сигнальный канал для закрытия коннекта
+	quoteChan         chan *marketdata_service.Quote
 	subscriptions     map[Subscription]Subscription // Список подписок на поток данных
-	Securities        map[string]Security           //  Список инструментов с которыми работаем (или весь список? )
+
 }
 
 func NewClient(ctx context.Context, token string) (*Client, error) {
@@ -64,17 +65,17 @@ func NewClient(ctx context.Context, token string) (*Client, error) {
 	client := &Client{
 		token:             token,
 		conn:              conn,
-		CloseC:            make(chan struct{}),
 		AuthService:       auth_service.NewAuthServiceClient(conn),
 		AccountsService:   accounts_service.NewAccountsServiceClient(conn),
 		AssetsService:     assets_service.NewAssetsServiceClient(conn),
 		MarketDataService: marketdata_service.NewMarketDataServiceClient(conn),
 		Securities:        make(map[string]Security),
+		closeChan:         make(chan struct{}),
+		quoteChan:         make(chan *marketdata_service.Quote),
 		subscriptions:     make(map[Subscription]Subscription),
 	}
 	log.Debug("NewClient есть connect")
-	// сразу получим и запишем токен для работы
-	err = client.UpdateJWT(ctx)
+	err = client.UpdateJWT(ctx) // сразу получим и запишем токен для работы
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +83,8 @@ func NewClient(ctx context.Context, token string) (*Client, error) {
 }
 
 func (c *Client) Close() error {
-	close(c.CloseC)
+	close(c.closeChan)
+	close(c.quoteChan)
 	return c.conn.Close()
 
 }

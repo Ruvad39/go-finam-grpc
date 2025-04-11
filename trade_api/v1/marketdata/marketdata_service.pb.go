@@ -704,6 +704,7 @@ func (x *SubscribeQuoteRequest) GetSymbols() []string {
 type SubscribeQuoteResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Список котировок
+	//Quote *Quote `protobuf:"bytes,1,rep,name=quote,proto3" json:"quote,omitempty"`
 	Quote []*Quote `protobuf:"bytes,1,rep,name=quote,proto3" json:"quote,omitempty"`
 	// Ошибка стрим сервиса
 	Error         *StreamError `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
