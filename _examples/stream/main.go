@@ -30,36 +30,45 @@ func main() {
 		return
 	}
 	defer client.Close()
-	//
-	streamQuote(ctx, client)
+
+	// подпишемся на котировки (Quote)
+	client.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
+	client.Subscribe(finam.QuoteChannel, "ROSN@MISX")
+	client.Subscribe(finam.QuoteChannel, "SBER@MISX")
+	// установим метод обработчик данных (раньше StartStream)
+	client.SetQuoteHandler(onQuote)
+	// запустим потока данных
+	err = client.StartStream(ctx)
+	if err != nil {
+		slog.Error("StartStream", "err", err.Error())
+	}
+
+	// пример работы с каналом "сырых" данных
+	// получим канал с котировкам
+	client.SendRawQuotes = true // проставим признак отправки данных в канал
+	rawQuoteChan := client.GetRawQuoteChan()
+	// пошлем его на обработку
+	go listenRawQuoteChan(ctx, rawQuoteChan)
 
 	// ожидание сигнала о закрытие
 	waitForSignal(ctx, syscall.SIGINT, syscall.SIGTERM)
 	cancel()
-
 	slog.Info("exiting...")
 }
 
-func streamQuote(ctx context.Context, client *finam.Client) {
-	// пидпишемся
-	//client.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
-	//client.Subscribe(finam.QuoteChannel, "ROSN@MISX")
-	client.Subscribe(finam.QuoteChannel, "MOEX@MISX")
-	_ = client.StartStream(ctx)
-
-	// получим канал с котировкам
-	quoteChan := client.GetQuoteChan()
-	// пошлем его на обработку
-	go listenQuoteChan(ctx, quoteChan)
+// onQuote обработка входящих котировок
+func onQuote(quote finam.Quote) {
+	//fmt.Printf("onQuote: %v\n", quote)
+	slog.Info("onQuote", "time", quote.Time(), "quote", quote)
 }
 
-// читаем канал с котировками
-func listenQuoteChan(ctx context.Context, quoteChan chan *marketdata_service.Quote) {
+// Читаем канал с сырими данными котировок
+func listenRawQuoteChan(ctx context.Context, quoteChan chan *marketdata_service.Quote) {
 	for {
 		select {
 		case res := <-quoteChan:
-			//fmt.Printf("quoteСhan: %v\n", res)
-			slog.Info("listenQuoteChan", "quote", res)
+			//fmt.Printf("RawQuote: %v\n", res)
+			slog.Info("RawQuoteChan", "time", res.Timestamp.AsTime().In(finam.TzMoscow), "rawQuote", res)
 		case <-ctx.Done():
 			return
 		}

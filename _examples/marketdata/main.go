@@ -53,7 +53,7 @@ func getQuote(ctx context.Context, client *finam.Client) {
 		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
 		return
 	}
-	symbol := "SIM5@RTSX" //"SBER@MISX" //"SIM5@RTSX"
+	symbol := "ROSN@MISX" //"SBER@MISX" //"SIM5@RTSX"
 	q, err := client.MarketDataService.LastQuote(ctx, finam.NewQuoteRequest(symbol))
 	if err != nil {
 		slog.Error("LastQuote", "err", err.Error())

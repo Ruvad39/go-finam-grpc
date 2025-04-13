@@ -1,3 +1,7 @@
+/*
+TODO quoteChan сжелать буффиризированным. устанивить переменную для значение буыфера
+*/
+
 package finam
 
 import (
@@ -18,6 +22,9 @@ import (
 const (
 	endPoint = "ftrr01.finam.ru:443"
 )
+
+// Размер буфера канала котировок
+const quoteBufferSize = 100
 
 var logLevel = &slog.LevelVar{} // INFO
 var log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
@@ -49,9 +56,13 @@ type Client struct {
 	MarketDataService marketdata_service.MarketDataServiceClient
 	Securities        map[string]Security //  Список инструментов с которыми работаем (или весь список? )
 	closeChan         chan struct{}       // Сигнальный канал для закрытия коннекта
-	quoteChan         chan *marketdata_service.Quote
+	errChan           chan error
+	rawQuoteChan      chan *marketdata_service.Quote // Канал с "сырыми" данными по котировкам
+	quoteChan         chan Quote                     // Канал с обработанными котировками
+	handleQuote       QuoteFunc
 	subscriptions     map[Subscription]Subscription // Список подписок на поток данных
-
+	SendRawQuotes     bool                          // Признак, посылать сырые данные или нет
+	quoteStore        QuoteStore                    // Обработчик данных по котировкам
 }
 
 func NewClient(ctx context.Context, token string) (*Client, error) {
@@ -71,8 +82,13 @@ func NewClient(ctx context.Context, token string) (*Client, error) {
 		MarketDataService: marketdata_service.NewMarketDataServiceClient(conn),
 		Securities:        make(map[string]Security),
 		closeChan:         make(chan struct{}),
-		quoteChan:         make(chan *marketdata_service.Quote),
+		errChan:           make(chan error, 1),
+		quoteChan:         make(chan Quote, quoteBufferSize),
+		rawQuoteChan:      make(chan *marketdata_service.Quote, quoteBufferSize),
 		subscriptions:     make(map[Subscription]Subscription),
+		quoteStore: QuoteStore{
+			quoteState: make(map[string]*Quote),
+		},
 	}
 	log.Debug("NewClient есть connect")
 	err = client.UpdateJWT(ctx) // сразу получим и запишем токен для работы
@@ -85,6 +101,8 @@ func NewClient(ctx context.Context, token string) (*Client, error) {
 func (c *Client) Close() error {
 	close(c.closeChan)
 	close(c.quoteChan)
+	close(c.rawQuoteChan)
+	//close(c.errChan)
 	return c.conn.Close()
 
 }
