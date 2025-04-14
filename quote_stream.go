@@ -19,13 +19,13 @@ type QuoteFunc func(quote Quote)
 // SetQuoteHandler
 // установим функцию для обработки поступления котировок
 // должен устанавливать раньше Start
-func (c *Client) SetQuoteHandler(handler QuoteFunc) {
-	c.handleQuote = handler
+func (s *Stream) SetQuoteHandler(handler QuoteFunc) {
+	s.handleQuote = handler
 }
 
 // GetRawQuoteChan вернем канал в котором сырые данные по котировкам
-func (c *Client) GetRawQuoteChan() chan *marketdata_service.Quote {
-	return c.rawQuoteChan
+func (s *Stream) GetRawQuoteChan() chan *marketdata_service.Quote {
+	return s.rawQuoteChan
 }
 
 // startQuoteStream
@@ -33,8 +33,8 @@ func (c *Client) GetRawQuoteChan() chan *marketdata_service.Quote {
 // делаем подписку на SubscribeQuote
 // запускаем в отдельном потоке (Воркер) для последовательной обработки (handleQuote)
 // запускаем в отдельном потоке метод для прослушивания стрима (listenQuoteStream)
-func (c *Client) startQuoteStream(ctx context.Context) error {
-	symbols := c.getSymbolsByChannel(QuoteChannel)
+func (s *Stream) startQuoteStream(ctx context.Context) error {
+	symbols := s.getSymbolsByChannel(QuoteChannel)
 	// если список пустой = выйдем
 	if len(symbols) == 0 {
 		return nil // errors.New("no quote symbols found")
@@ -44,35 +44,35 @@ func (c *Client) startQuoteStream(ctx context.Context) error {
 	var stream grpc.ServerStreamingClient[marketdata_service.SubscribeQuoteResponse]
 	log.Debug("StartStream", "QuoteSymbols", symbols)
 	// добавим заголовок с авторизацией (accessToken)
-	ctx, err = c.WithAuthToken(ctx)
+	ctx, err = s.client.WithAuthToken(ctx)
 	if err != nil {
 		return err
 	}
 	// команда на подписку данных
-	stream, err = c.MarketDataService.SubscribeQuote(ctx, NewSubscribeQuoteRequest(symbols))
+	stream, err = s.client.MarketDataService.SubscribeQuote(ctx, NewSubscribeQuoteRequest(symbols))
 	if err != nil {
 		return err
 	}
 
 	// Воркер для последовательной обработки канала котировок
-	hasHandleQuote := c.handleQuote != nil
+	hasHandleQuote := s.handleQuote != nil
 	go func() {
-		for quote := range c.quoteChan {
+		for quote := range s.quoteChan {
 			// только если установили функцию для обработки
 			if hasHandleQuote {
-				c.handleQuote(quote)
+				s.handleQuote(quote)
 			}
 		}
 	}()
 
 	// в отдельном потоке запустим чтения данных из стрима
-	go c.listenQuoteStream(ctx, stream)
+	go s.listenQuoteStream(ctx, stream)
 
 	return err
 }
 
 // listenQuoteStream чтение данных из стрима котировок
-func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStreamingClient[marketdata_service.SubscribeQuoteResponse]) {
+func (s *Stream) listenQuoteStream(ctx context.Context, stream grpc.ServerStreamingClient[marketdata_service.SubscribeQuoteResponse]) {
 	var err error
 	// сразу создадим переменные, что бы их переиспользовать
 	var msg *marketdata_service.SubscribeQuoteResponse
@@ -91,7 +91,7 @@ func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 		select {
 		case <-ctx.Done():
 			return
-		case <-c.closeChan:
+		case <-s.closeChan:
 			return
 		default:
 			msg, err = stream.Recv()
@@ -104,9 +104,10 @@ func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 					// пока пошлем в канал ошибок и выйдем
 					log.Error("StreamQuote Ошибка чтения из потока", "err", err.Error())
 					if err != nil {
-						c.errChan <- err
+						s.errChan <- err
 					}
-					return //  выход
+					break // test
+					//return //  выход
 				}
 			}
 			// В потоке приходит массив данных
@@ -116,9 +117,9 @@ func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 			if len(quoteSlice) != 0 {
 				for _, rawQuote := range quoteSlice {
 					// Отправляем в канал с сырыми данными, если включено
-					if c.SendRawQuotes {
+					if s.SendRawQuotes {
 						select {
-						case c.rawQuoteChan <- rawQuote:
+						case s.rawQuoteChan <- rawQuote:
 							// успешно отправили
 						default:
 							log.Error("listenQuoteStream: канал rawQuoteChan переполнен, дропаем", slog.Any("rawQuote", rawQuote))
@@ -126,14 +127,14 @@ func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 					}
 					// Обработка котировки
 					processedQuote.Reset()
-					processedQuote, err = c.quoteStore.processQuote(rawQuote) // Обработаем сырые данные. Вернем срез Quote
+					processedQuote, err = s.quoteStore.processQuote(rawQuote) // Обработаем сырые данные. Вернем срез Quote
 					if err != nil {
 						log.Error("ошибка обработки котировки", slog.Any("rawQuote", rawQuote), slog.String("err", err.Error()))
 						continue
 					}
 					// Пошлем обработанные данные в канал
 					select {
-					case c.quoteChan <- processedQuote:
+					case s.quoteChan <- processedQuote:
 						// запись в канал прошла
 					default:
 						// канал переполнен, дропаем

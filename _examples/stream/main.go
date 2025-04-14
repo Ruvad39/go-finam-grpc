@@ -31,22 +31,25 @@ func main() {
 	}
 	defer client.Close()
 
+	stream := client.NewStream()
 	// подпишемся на котировки (Quote)
-	//client.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
-	//client.Subscribe(finam.QuoteChannel, "ROSN@MISX")
-	client.Subscribe(finam.QuoteChannel, "SBER@MISX")
+	stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
+	stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
+	stream.Subscribe(finam.QuoteChannel, "ROSN@MISX")
+	stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
 	// установим метод обработчик данных (раньше StartStream)
-	client.SetQuoteHandler(onQuote)
-	// запустим потока данных
-	err = client.StartStream(ctx)
+	stream.SetQuoteHandler(onQuote)
+	// запустим поток данных
+	err = stream.Connect(ctx)
 	if err != nil {
-		slog.Error("StartStream", "err", err.Error())
+		slog.Error("stream.Connect", "err", err.Error())
+		return
 	}
 
 	// пример работы с каналом "сырых" данных
 	// получим канал с котировкам
-	client.SendRawQuotes = true // проставим признак отправки данных в канал
-	rawQuoteChan := client.GetRawQuoteChan()
+	stream.SendRawQuotes = true // проставим признак отправки данных в канал
+	rawQuoteChan := stream.GetRawQuoteChan()
 	// пошлем его на обработку
 	go listenRawQuoteChan(ctx, rawQuoteChan)
 
@@ -60,6 +63,7 @@ func main() {
 func onQuote(quote finam.Quote) {
 	//fmt.Printf("onQuote: %v\n", quote)
 	slog.Info("onQuote", "time", quote.Time(), "quote", quote)
+	_ = quote
 }
 
 // Читаем канал с сырыми данными котировок
@@ -68,7 +72,8 @@ func listenRawQuoteChan(ctx context.Context, quoteChan chan *marketdata_service.
 		select {
 		case res := <-quoteChan:
 			//fmt.Printf("RawQuote: %v\n", res)
-			slog.Info("RawQuoteChan", "time", res.Timestamp.AsTime().In(finam.TzMoscow), "rawQuote", res)
+			//slog.Info("RawQuoteChan", "time", res.Timestamp.AsTime().In(finam.TzMoscow), "rawQuote", res)
+			_ = res
 		case <-ctx.Done():
 			return
 		}
