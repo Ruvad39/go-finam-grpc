@@ -11,6 +11,7 @@ import (
 	assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
 	auth_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/auth"
 	marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
+	orders_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/orders"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"log/slog"
@@ -54,6 +55,7 @@ type Client struct {
 	AccountsService   accounts_service.AccountsServiceClient
 	AssetsService     assets_service.AssetsServiceClient
 	MarketDataService marketdata_service.MarketDataServiceClient
+	OrdersService     orders_service.OrdersServiceClient
 	Securities        map[string]Security //  Список инструментов с которыми работаем (или весь список? )
 	closeChan         chan struct{}       // Сигнальный канал для закрытия коннекта
 	errChan           chan error
@@ -80,6 +82,7 @@ func NewClient(ctx context.Context, token string) (*Client, error) {
 		AccountsService:   accounts_service.NewAccountsServiceClient(conn),
 		AssetsService:     assets_service.NewAssetsServiceClient(conn),
 		MarketDataService: marketdata_service.NewMarketDataServiceClient(conn),
+		OrdersService:     orders_service.NewOrdersServiceClient(conn),
 		Securities:        make(map[string]Security),
 		closeChan:         make(chan struct{}),
 		errChan:           make(chan error, 1),

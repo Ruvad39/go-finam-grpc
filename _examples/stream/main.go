@@ -32,8 +32,8 @@ func main() {
 	defer client.Close()
 
 	// подпишемся на котировки (Quote)
-	client.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
-	client.Subscribe(finam.QuoteChannel, "ROSN@MISX")
+	//client.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
+	//client.Subscribe(finam.QuoteChannel, "ROSN@MISX")
 	client.Subscribe(finam.QuoteChannel, "SBER@MISX")
 	// установим метод обработчик данных (раньше StartStream)
 	client.SetQuoteHandler(onQuote)
@@ -62,7 +62,7 @@ func onQuote(quote finam.Quote) {
 	slog.Info("onQuote", "time", quote.Time(), "quote", quote)
 }
 
-// Читаем канал с сырими данными котировок
+// Читаем канал с сырыми данными котировок
 func listenRawQuoteChan(ctx context.Context, quoteChan chan *marketdata_service.Quote) {
 	for {
 		select {

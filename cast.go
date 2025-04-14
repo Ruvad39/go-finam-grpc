@@ -21,6 +21,13 @@ func initMoscow() *time.Location {
 	return loc
 }
 
+// IntToDecimal конвертируем int в google.Decimal
+func IntToDecimal(i int) *decimal.Decimal {
+	return &decimal.Decimal{
+		Value: strconv.FormatInt(int64(i), 10),
+	}
+}
+
 // Float64ToDecimal конвертируем  float64 в google.Decimal
 func Float64ToDecimal(f float64) *decimal.Decimal {
 	// Конвертируем float64 в строку с нужной точностью (например, 6 знаков после точки)

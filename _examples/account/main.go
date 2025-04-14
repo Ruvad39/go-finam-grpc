@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Ruvad39/go-finam-grps"
-	accounts_service "github.com/Ruvad39/go-finam-grps/trade_api/v1/accounts"
+	"github.com/Ruvad39/go-finam-grpc"
+	accounts_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/accounts"
 	"github.com/joho/godotenv"
 	"log/slog"
 	"os"

@@ -8,73 +8,11 @@ package finam
 
 import (
 	"context"
-	"fmt"
 	marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
 	"google.golang.org/grpc"
 	"io"
 	"log/slog"
-	"time"
 )
-
-// Информация о котировке
-type Quote struct {
-	Symbol    string // Символ инструмента
-	Timestamp int64  // Метка времени
-	Ask       float64
-	Bid       float64
-	Last      float64 // Цена последней сделки
-}
-
-func (q *Quote) Time() time.Time {
-	return time.Unix(0, q.Timestamp).In(TzMoscow)
-}
-
-type QuoteStore struct {
-	quoteState map[string]*Quote // Последнее состояние по символу
-	//mu         sync.Mutex        // защита для конкурентного доступа
-}
-
-// processQuote обработаем сырые
-func (qs *QuoteStore) processQuote(rq *marketdata_service.Quote) (Quote, error) {
-	if rq == nil || rq.Symbol == "" {
-		return Quote{}, fmt.Errorf("некорректная котировка: отсутствует символ")
-	}
-	// пока уберу. все делается в одном потоке (в listenQuoteStream)
-	//qs.mu.Lock()
-	//defer qs.mu.Unlock()
-
-	// Получаем текущее состояние, если есть
-	q, ok := qs.quoteState[rq.Symbol]
-	if !ok {
-		q = &Quote{
-			Symbol: rq.Symbol,
-		}
-		qs.quoteState[rq.Symbol] = q
-	}
-
-	// Обновляем только непустые поля
-	if rq.Timestamp != nil {
-		q.Timestamp = rq.Timestamp.AsTime().UnixNano()
-	}
-	if rq.Ask != nil {
-		q.Ask, _ = DecimalToFloat64E(rq.Ask)
-	}
-	if rq.Bid != nil {
-		q.Bid, _ = DecimalToFloat64E(rq.Bid)
-	}
-	if rq.Last != nil {
-		q.Last, _ = DecimalToFloat64E(rq.Last)
-	}
-
-	// Возвращаем копию
-	return Quote{
-		Symbol:    q.Symbol,
-		Timestamp: q.Timestamp,
-		Ask:       q.Ask,
-		Bid:       q.Bid,
-		Last:      q.Last,
-	}, nil
-}
 
 type QuoteFunc func(quote Quote)
 
@@ -110,7 +48,7 @@ func (c *Client) startQuoteStream(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
+	// команда на подписку данных
 	stream, err = c.MarketDataService.SubscribeQuote(ctx, NewSubscribeQuoteRequest(symbols))
 	if err != nil {
 		return err
@@ -139,8 +77,9 @@ func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 	// сразу создадим переменные, что бы их переиспользовать
 	var msg *marketdata_service.SubscribeQuoteResponse
 	var quoteSlice []*marketdata_service.Quote
+	var processedQuote Quote
 
-	// TODO разобраться с ошибкой отправки в "закрытый" канал ошибок
+	// TODO разобраться с ошибкой отправки в "закрытый" канал ошибок. Не закрывать канал?
 	defer func() {
 		if r := recover(); r != nil {
 			log.Debug("предотвращена паника при отправке в errChan:", "recover", r)
@@ -170,9 +109,10 @@ func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 					return //  выход
 				}
 			}
-			// Приходит массив данных.
+			// В потоке приходит массив данных
+			quoteSlice = quoteSlice[:0]
 			quoteSlice = msg.GetQuote()
-			// Обработаем его и пошлем ссылку дальше в канал
+			// Обработаем его
 			if len(quoteSlice) != 0 {
 				for _, rawQuote := range quoteSlice {
 					// Отправляем в канал с сырыми данными, если включено
@@ -185,12 +125,13 @@ func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 						}
 					}
 					// Обработка котировки
-					processedQuote, err := c.quoteStore.processQuote(rawQuote)
+					processedQuote.Reset()
+					processedQuote, err = c.quoteStore.processQuote(rawQuote) // Обработаем сырые данные. Вернем срез Quote
 					if err != nil {
 						log.Error("ошибка обработки котировки", slog.Any("rawQuote", rawQuote), slog.String("err", err.Error()))
 						continue
 					}
-
+					// Пошлем обработанные данные в канал
 					select {
 					case c.quoteChan <- processedQuote:
 						// запись в канал прошла
@@ -204,20 +145,7 @@ func (c *Client) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 			}
 			// очистим переменные
 			msg.Reset()
-			quoteSlice = quoteSlice[:0]
 
 		}
 	}
 }
-
-//func (c *Consumer) processQuote(q *marketdata_service.Quote) (*marketdata_service.Quote, error) {
-//	// Пример: фильтрация, нормализация, добавление полей и т.п.
-//	if q.Price <= 0 {
-//		return nil, fmt.Errorf("некорректная цена")
-//	}
-//
-//	// Допустим, мы клонируем quote и что-то меняем:
-//	newQuote := *q
-//	newQuote.Price = normalizePrice(q.Price)
-//	return &newQuote, nil
-//}
