@@ -79,3 +79,41 @@ func NewOrderSellLimit(accountId, symbol string, quantity int, price float64) *o
 		LimitPrice: Float64ToDecimal(price),
 	}
 }
+
+// NewOrderBuyStopLimit сформируем ордер на покупку по stop лимитной цене
+// accountId string Идентификатор аккаунта
+// symbol string  Символ инструмента
+// quantity Количество в шт.
+// price float64 по какой цене заявка
+// stopPrice float64 по какой цене stop
+func NewOrderBuyStopLimit(accountId, symbol string, quantity int, price, stopPrice float64) *orders_service.Order {
+	return &orders_service.Order{
+		Side:          side.Side_SIDE_BUY,
+		Type:          orders_service.OrderType_ORDER_TYPE_STOP_LIMIT,
+		AccountId:     accountId,
+		Symbol:        symbol,
+		Quantity:      IntToDecimal(quantity),
+		LimitPrice:    Float64ToDecimal(price),
+		StopPrice:     Float64ToDecimal(stopPrice),
+		StopCondition: orders_service.StopCondition_STOP_CONDITION_LAST_UP, // Цена срабатывания больше текущей цены
+	}
+}
+
+// NewOrderSellStopLimit сформируем ордер на покупку по stop лимитной цене
+// accountId string Идентификатор аккаунта
+// symbol string  Символ инструмента
+// quantity Количество в шт.
+// price float64 по какой цене заявка
+// stopPrice float64 по какой цене stop
+func NewOrderSellStopLimit(accountId, symbol string, quantity int, price, stopPrice float64) *orders_service.Order {
+	return &orders_service.Order{
+		Side:          side.Side_SIDE_SELL,
+		Type:          orders_service.OrderType_ORDER_TYPE_STOP_LIMIT,
+		AccountId:     accountId,
+		Symbol:        symbol,
+		Quantity:      IntToDecimal(quantity),
+		LimitPrice:    Float64ToDecimal(price),
+		StopPrice:     Float64ToDecimal(stopPrice),
+		StopCondition: orders_service.StopCondition_STOP_CONDITION_LAST_DOWN, // Цена срабатывания меньше текущей цены
+	}
+}

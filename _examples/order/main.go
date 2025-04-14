@@ -46,26 +46,14 @@ func main() {
 	//getOrder(ctx, client, accountId, orderId)
 
 	// Отмена биржевой заявки
-	//cancelOrder(ctx, client, accountId, "64209942226")
+	cancelOrder(ctx, client, accountId, "40045338")
 	//getOrders(ctx, client, accountId)
 	// еще раз запросим данные по заданному ордеру
 	// уже вернется ошибка ("rpc error: code = NotFound desc = Order with id 2033125054207932011 is not found")
 	//getOrder(ctx, client, accountId, orderId)
 
-	//symbol := "IMOEXF@RTSX"
-	//symbol := "SBER@MISX"
-	// пример покупки
-	//newOrder := finam.NewOrderBuy(accountId, symbol, 1) // по рынку
-	//newOrder := finam.NewOrderBuyLimit(accountId, symbol, 1, 2840.0) // лимиткой
-	// пример продажи по рынку
-	//newOrder := finam.NewOrderSell(accountId, symbol, 1)
-	//newOrder := finam.NewOrderSellLimit(accountId, symbol, 1, 2851.0) // лимиткой
-	//orderState, err := client.OrdersService.PlaceOrder(ctx, newOrder)
-	//if err != nil {
-	//	slog.Error("OrdersService", "PlaceOrder", err.Error())
-	//}
-	//slog.Info("OrdersService.PlaceOrder", "orderState", orderState)
-
+	// пример выставления ордера на покупку\продажу
+	//placeOrder(ctx, client, accountId)
 	//buyLimit(ctx, client, accountId)
 }
 
@@ -94,6 +82,25 @@ func cancelOrder(ctx context.Context, client *finam.Client, accountId string, or
 		slog.Error("OrdersService", "CancelOrder", err.Error())
 	}
 	slog.Info("OrdersService", "orderState", orderState)
+}
+
+func placeOrder(ctx context.Context, client *finam.Client, accountId string) {
+	symbol := "SiM5@RTSX"
+	//symbol := "SBER@MISX"
+	// пример покупки
+	//newOrder := finam.NewOrderBuy(accountId, symbol, 1) // по рынку
+	//newOrder := finam.NewOrderBuyLimit(accountId, symbol, 1, 2840.0) // лимиткой
+	// пример продажи по рынку
+	//newOrder := finam.NewOrderSell(accountId, symbol, 1)
+	//newOrder := finam.NewOrderSellLimit(accountId, symbol, 1, 2851.0) // лимиткой
+
+	//newOrder := finam.NewOrderBuyStopLimit(accountId, symbol, 1, 86994, 86994) // стоп-лимиткой
+	newOrder := finam.NewOrderSellStopLimit(accountId, symbol, 1, 96168, 86170) // стоп-лимиткой
+	orderState, err := client.OrdersService.PlaceOrder(ctx, newOrder)
+	if err != nil {
+		slog.Error("OrdersService", "PlaceOrder", err.Error())
+	}
+	slog.Info("OrdersService.PlaceOrder", "orderState", orderState)
 }
 
 // buyLimit пример лимитной покупки
