@@ -17,6 +17,7 @@ import (
 )
 
 type QuoteFunc func(quote Quote)
+type RawQuoteFunc func(quote *marketdata_service.Quote)
 
 // SetQuoteHandler
 // установим функцию для обработки поступления котировок
@@ -25,38 +26,67 @@ func (s *Stream) SetQuoteHandler(handler QuoteFunc) {
 	s.handleQuote = handler
 }
 
-// GetRawQuoteChan вернем канал в котором сырые данные по котировкам
-func (s *Stream) GetRawQuoteChan() chan *marketdata_service.Quote {
-	return s.rawQuoteChan
+// SetRawQuoteHandler
+// установим функцию для обработки поступления "сырых" котировок
+// должен устанавливать раньше Start
+func (s *Stream) SetRawQuoteHandler(handler RawQuoteFunc) {
+	s.handleRawQuote = handler
 }
+
+// GetRawQuoteChan вернем канал в котором сырые данные по котировкам
+//func (s *Stream) GetRawQuoteChan() chan *marketdata_service.Quote {
+//	return s.rawQuoteChan
+//}
 
 // startHandleQuoteWorker Воркер для последовательной обработки канала котировок
 func (s *Stream) startHandleQuoteWorker(ctx context.Context) {
 	log.Debug("startHandleQuoteWorker")
-	//hasHandleQuote := s.handleQuote != nil
+	// "сырые" котировки
 	go func() {
+		hasHandleRawQuote := s.handleRawQuote != nil
 		hasHandleQuote := s.handleQuote != nil
+		var err error
+		var processedQuote Quote
+		var rawQuote *marketdata_service.Quote
+		var ok bool
 		for {
 			select {
 			case <-ctx.Done():
-				log.Debug("startHandleQuoteWorker ctx.Done() = выход")
+				log.Debug("HandleRawQuoteWorker ctx.Done() = выход")
 				return
-			case quote, ok := <-s.quoteChan:
+			case rawQuote, ok = <-s.rawQuoteChan:
 				if !ok {
-					log.Debug("startHandleQuoteWorker quoteChan закрыт = выход")
+					log.Debug("HandleRawQuoteWorker quoteChan закрыт = выход")
 					return // канал закрыт
 				}
-				if hasHandleQuote {
-					s.handleQuote(quote)
+				// пошлем получателю
+				if hasHandleRawQuote {
+					s.handleRawQuote(rawQuote)
 				}
+				// обработаем инкрементальные данные в срез
+				// только если указана функция приема
+				if hasHandleQuote {
+					// Обработка котировки
+					processedQuote.Reset()
+					processedQuote, err = s.quoteStore.processQuote(rawQuote) // Обработаем сырые данные. Вернем Quote
+					if err != nil {
+						log.Error("ошибка обработки котировки", slog.Any("rawQuote", rawQuote), slog.String("err", err.Error()))
+						continue
+					}
+					// пошлем получателю
+					s.handleQuote(processedQuote)
+				}
+				// очистим
+				rawQuote.Reset()
 			}
 		}
 	}()
+
 }
 
 // startQuoteStream
 // собираем данные с подписки QuoteChannel
-// делаем подписку на SubscribeQuote
+// делаем подписку (SubscribeQuote)
 // запускаем в отдельном потоке метод для прослушивания стрима (listenQuoteStream)
 func (s *Stream) startQuoteStream(ctx context.Context) error {
 	log.Debug("start startQuoteStream")
@@ -93,7 +123,6 @@ func (s *Stream) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 	// сразу создадим переменные, что бы их переиспользовать
 	var msg *marketdata_service.SubscribeQuoteResponse
 	var quoteSlice []*marketdata_service.Quote
-	var processedQuote Quote
 
 	// читаем поток
 	for {
@@ -118,49 +147,26 @@ func (s *Stream) listenQuoteStream(ctx context.Context, stream grpc.ServerStream
 					return // Поток завершён, выходим из цикла
 				} else {
 					log.Error("listenQuoteStream:  Ошибка чтения из потока", "err", err.Error())
-					s.errChan <- err
+					//s.errChan <- err
 					s.Reconnect(QuoteChannel)
 					return //  выход
 				}
 			}
-			// TODO возможно выделить в отдельный метод (слишком много логики в одном месте)?
 			// В потоке приходит массив данных
-			quoteSlice = quoteSlice[:0]
+			quoteSlice = quoteSlice[:0] // предварительно очистим
 			quoteSlice = msg.GetQuote()
-			// Обработаем его
 			if len(quoteSlice) != 0 {
 				for _, rawQuote := range quoteSlice {
-					// Отправляем в канал с сырыми данными, если включено
-					if s.SendRawQuotes {
-						select {
-						case s.rawQuoteChan <- rawQuote:
-							// успешно отправили
-						default:
-							log.Error("listenQuoteStream: канал rawQuoteChan переполнен, дропаем", slog.Any("rawQuote", rawQuote))
-						}
-					}
-					// Обработка котировки
-					processedQuote.Reset()
-					processedQuote, err = s.quoteStore.processQuote(rawQuote) // Обработаем сырые данные. Вернем срез Quote
-					if err != nil {
-						log.Error("ошибка обработки котировки", slog.Any("rawQuote", rawQuote), slog.String("err", err.Error()))
-						continue
-					}
-					// Пошлем обработанные данные в канал
 					select {
-					case s.quoteChan <- processedQuote:
-						// запись в канал прошла
+					case s.rawQuoteChan <- rawQuote:
+						// успешно отправили
 					default:
-						// канал переполнен, дропаем
-						log.Error("listenQuoteStream: канал quoteChan переполнен, дропаем", slog.Any("quote", rawQuote))
+						log.Error("QuoteStream: канал переполнен, дропаем", slog.Any("rawQuote", rawQuote))
 					}
-
 				}
-
 			}
 			// очистим переменные
 			msg.Reset()
-
 		}
 	}
 }
