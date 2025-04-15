@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/Ruvad39/go-finam-grpc"
 	marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
 	"github.com/joho/godotenv"
@@ -34,9 +35,9 @@ func main() {
 	stream := client.NewStream()
 	// подпишемся на котировки (Quote)
 	stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
-	stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
-	stream.Subscribe(finam.QuoteChannel, "ROSN@MISX")
-	stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
+	//stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
+	//stream.Subscribe(finam.QuoteChannel, "ROSN@MISX")
+	//stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
 	// установим метод обработчик данных (раньше StartStream)
 	stream.SetQuoteHandler(onQuote)
 	// запустим поток данных
@@ -71,7 +72,7 @@ func listenRawQuoteChan(ctx context.Context, quoteChan chan *marketdata_service.
 	for {
 		select {
 		case res := <-quoteChan:
-			//fmt.Printf("RawQuote: %v\n", res)
+			fmt.Printf("RawQuote: %v\n", res)
 			//slog.Info("RawQuoteChan", "time", res.Timestamp.AsTime().In(finam.TzMoscow), "rawQuote", res)
 			_ = res
 		case <-ctx.Done():

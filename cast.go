@@ -8,6 +8,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"math"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -111,11 +112,17 @@ func IsWithinInterval(t time.Time, iv *interval.Interval) bool {
 	return !t.Before(start) && !t.After(end)
 }
 
-//func TimestampAsTime(x *Timestamp) AsTime() time.Time {
-//	return time.Unix(int64(x.GetSeconds()), int64(x.GetNanos())).UTC()
-//}
+// ???
+func cleanSymbolFromMic(symbol string) string {
+	if idx := strings.Index(symbol, "@"); idx != -1 {
+		return symbol[:idx]
+	}
+	return symbol
+}
 
-// AsTime converts x to a time.Time.
-//func (x *Timestamp) AsTime() time.Time {
-//	return time.Unix(int64(x.GetSeconds()), int64(x.GetNanos())).UTC()
-//}
+func valueOrZero(v *decimal.Decimal) string {
+	if v == nil {
+		return "0"
+	}
+	return v.Value
+}

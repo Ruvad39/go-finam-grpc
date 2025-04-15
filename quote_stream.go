@@ -10,6 +10,8 @@ import (
 	"context"
 	marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"io"
 	"log/slog"
 )
@@ -28,12 +30,36 @@ func (s *Stream) GetRawQuoteChan() chan *marketdata_service.Quote {
 	return s.rawQuoteChan
 }
 
+// startHandleQuoteWorker Воркер для последовательной обработки канала котировок
+func (s *Stream) startHandleQuoteWorker(ctx context.Context) {
+	log.Debug("startHandleQuoteWorker")
+	//hasHandleQuote := s.handleQuote != nil
+	go func() {
+		hasHandleQuote := s.handleQuote != nil
+		for {
+			select {
+			case <-ctx.Done():
+				log.Debug("startHandleQuoteWorker ctx.Done() = выход")
+				return
+			case quote, ok := <-s.quoteChan:
+				if !ok {
+					log.Debug("startHandleQuoteWorker quoteChan закрыт = выход")
+					return // канал закрыт
+				}
+				if hasHandleQuote {
+					s.handleQuote(quote)
+				}
+			}
+		}
+	}()
+}
+
 // startQuoteStream
 // собираем данные с подписки QuoteChannel
 // делаем подписку на SubscribeQuote
-// запускаем в отдельном потоке (Воркер) для последовательной обработки (handleQuote)
 // запускаем в отдельном потоке метод для прослушивания стрима (listenQuoteStream)
 func (s *Stream) startQuoteStream(ctx context.Context) error {
+	log.Debug("start startQuoteStream")
 	symbols := s.getSymbolsByChannel(QuoteChannel)
 	// если список пустой = выйдем
 	if len(symbols) == 0 {
@@ -54,17 +80,6 @@ func (s *Stream) startQuoteStream(ctx context.Context) error {
 		return err
 	}
 
-	// Воркер для последовательной обработки канала котировок
-	hasHandleQuote := s.handleQuote != nil
-	go func() {
-		for quote := range s.quoteChan {
-			// только если установили функцию для обработки
-			if hasHandleQuote {
-				s.handleQuote(quote)
-			}
-		}
-	}()
-
 	// в отдельном потоке запустим чтения данных из стрима
 	go s.listenQuoteStream(ctx, stream)
 
@@ -73,43 +88,42 @@ func (s *Stream) startQuoteStream(ctx context.Context) error {
 
 // listenQuoteStream чтение данных из стрима котировок
 func (s *Stream) listenQuoteStream(ctx context.Context, stream grpc.ServerStreamingClient[marketdata_service.SubscribeQuoteResponse]) {
+	log.Debug("start listenQuoteStream")
 	var err error
 	// сразу создадим переменные, что бы их переиспользовать
 	var msg *marketdata_service.SubscribeQuoteResponse
 	var quoteSlice []*marketdata_service.Quote
 	var processedQuote Quote
 
-	// TODO разобраться с ошибкой отправки в "закрытый" канал ошибок. Не закрывать канал?
-	defer func() {
-		if r := recover(); r != nil {
-			log.Debug("предотвращена паника при отправке в errChan:", "recover", r)
-		}
-	}()
-
 	// читаем поток
 	for {
 		select {
 		case <-ctx.Done():
+			log.Debug("listenQuoteStream: ctx.Done(), выходим")
 			return
 		case <-s.closeChan:
+			log.Debug("listenQuoteStream: closeChan, выходим")
 			return
 		default:
 			msg, err = stream.Recv()
 			if err != nil {
+				// Проверка на конкретный код ошибки
+				st, ok := status.FromError(err)
+				if ok && st.Code() == codes.Canceled {
+					log.Debug("listenQuoteStream: Recv: контекст отменён (canceled), выходим")
+					return
+				}
 				if err == io.EOF {
-					log.Debug("StreamQuote Поток завершён")
-					break // Поток завершён, выходим из цикла
+					log.Debug("listenQuoteStream: Поток завершён")
+					return // Поток завершён, выходим из цикла
 				} else {
-					// TODO решить что делать с ошибкой. Как ее обрабатывать.
-					// пока пошлем в канал ошибок и выйдем
-					log.Error("StreamQuote Ошибка чтения из потока", "err", err.Error())
-					if err != nil {
-						s.errChan <- err
-					}
-					break // test
-					//return //  выход
+					log.Error("listenQuoteStream:  Ошибка чтения из потока", "err", err.Error())
+					s.errChan <- err
+					s.Reconnect(QuoteChannel)
+					return //  выход
 				}
 			}
+			// TODO возможно выделить в отдельный метод (слишком много логики в одном месте)?
 			// В потоке приходит массив данных
 			quoteSlice = quoteSlice[:0]
 			quoteSlice = msg.GetQuote()
