@@ -27,17 +27,18 @@ type Subscription struct {
 }
 
 type Stream struct {
-	client        *Client
-	subscriptions map[Subscription]Subscription // Список подписок на поток данных
-	closeChan     chan struct{}                 // Сигнальный канал для закрытия коннекта
-	reconnectChan chan Channel                  // Сигнальный канал для необходимости реконекта
-	errChan       chan error
-	rawQuoteChan  chan *marketdata_service.Quote // Канал с "сырыми" данными по котировкам
-	quoteChan     chan Quote                     // Канал с обработанными котировками
-	handleQuote   QuoteFunc
-	SendRawQuotes bool       // Признак, посылать сырые данные или нет
-	quoteStore    QuoteStore // Обработчик данных по котировкам
-
+	client         *Client
+	subscriptions  map[Subscription]Subscription // Список подписок на поток данных
+	closeChan      chan struct{}                 // Сигнальный канал для закрытия коннекта
+	reconnectChan  chan Channel                  // Сигнальный канал для необходимости реконекта
+	errChan        chan error
+	rawQuoteChan   chan *marketdata_service.Quote // Канал с "сырыми" данными по котировкам
+	quoteChan      chan Quote                     // Канал с обработанными котировками
+	handleQuote    QuoteFunc
+	SendRawQuotes  bool                                        // Признак, посылать сырые данные или нет
+	quoteStore     QuoteStore                                  // Обработчик данных по котировкам
+	streamStarters map[Channel]func(ctx context.Context) error // Список методов для запуска потоков
+	workerStarters map[Channel]func(context.Context)           // Список воркеров
 }
 
 func (c *Client) NewStream() *Stream {
@@ -51,7 +52,16 @@ func (c *Client) NewStream() *Stream {
 		quoteStore: QuoteStore{
 			quoteState: make(map[string]*Quote),
 		},
+		streamStarters: make(map[Channel]func(context.Context) error),
+		workerStarters: make(map[Channel]func(context.Context)),
 	}
+	// Регистрируем стримы
+	s.streamStarters[QuoteChannel] = s.startQuoteStream
+	//s.streamStarters[OrderChannel] = s.startOrderStream
+
+	// Регистрируем воркеры
+	s.workerStarters[QuoteChannel] = s.startHandleQuoteWorker
+
 	return s
 }
 
@@ -96,7 +106,7 @@ func (s *Stream) groupSymbolsByChannel() map[Channel][]string {
 // func (c *Client) StartStream(ctx context.Context) error {
 func (s *Stream) Connect(ctx context.Context) error {
 	// запустим воркеры для чтения каналов
-	s.startHandleQuoteWorker(ctx) // запустим Воркер для последовательной обработки канала котировок
+	s.startHandleWorkers(ctx)
 
 	// вызовем подписку и запуск потоков
 	err := s.startStreams(ctx)
@@ -108,11 +118,22 @@ func (s *Stream) Connect(ctx context.Context) error {
 	return nil
 }
 
-// startStreams подписка и запуск потоков
+// startHandleWorker запустим воркеры для чтения каналов
+func (s *Stream) startHandleWorkers(ctx context.Context) {
+	for ch, startWorker := range s.workerStarters {
+		log.Debug("startHandleWorkers: Запускаем воркер", "channel", ch)
+		go startWorker(ctx)
+	}
+}
+
+// startStreams запуск потоков
 func (s *Stream) startStreams(ctx context.Context) error {
-	// (1) QuoteChannel
-	if err := s.startQuoteStream(ctx); err != nil {
-		return err
+	for ch, starter := range s.streamStarters {
+		if err := starter(ctx); err != nil {
+			log.Error("startStreams: Не удалось запустить поток", "channel", ch, "err", err)
+			return err
+		}
+		log.Debug("startStreams: Поток успешно запущен", "channel", ch)
 	}
 	return nil
 }
@@ -120,7 +141,7 @@ func (s *Stream) startStreams(ctx context.Context) error {
 // Close закроем сигнальный канал, что бы закончить работу
 func (s *Stream) Close() {
 	close(s.closeChan)
-	close(s.quoteChan)
+	//close(s.quoteChan)
 }
 
 // Reconnect в сигнальный канал рекконета пошлем сообщение
@@ -145,22 +166,16 @@ func (s *Stream) reconnector(ctx context.Context) {
 			return
 		case ch := <-s.reconnectChan: //  получаем значение типа Channel
 			log.Warn("re-connecting stream", "channel", ch)
-
-			switch ch {
-			case QuoteChannel:
-				log.Warn("принят сигнал reconnect", "период восстановления повторного подключения", reconnectDelay)
-				time.Sleep(reconnectDelay)
-				if err := s.startQuoteStream(ctx); err != nil {
-					log.Error("QuoteChannel re-connect error", "err", err)
-					s.Reconnect(QuoteChannel) // повторный сигнал, если не удалось
-				}
-			//case BookChannel:
-			//	if err := s.startOrderStream(ctx); err != nil {
-			//		log.Error("OrderChannel re-connect error", "err", err)
-			//		s.Reconnect(OrderChannel)
-			//	}
-			default:
-				log.Error("Unknown channel for reconnection", "channel", ch)
+			reconnectFunc, ok := s.streamStarters[ch]
+			if !ok {
+				log.Error("Нет обработчика для канала", "channel", ch)
+				continue
+			}
+			log.Warn("reconnector", "период восстановления повторного подключения", reconnectDelay)
+			time.Sleep(reconnectDelay)
+			if err := reconnectFunc(ctx); err != nil {
+				log.Error("Ошибка реконнекта", "channel", ch, "err", err)
+				s.Reconnect(ch) // повторный сигнал
 			}
 		}
 	}
