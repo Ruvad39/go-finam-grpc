@@ -143,7 +143,7 @@ func (s *Stream) startStreams(ctx context.Context) error {
 			log.Error("startStreams: Не удалось запустить поток", "channel", ch, "err", err)
 			return err
 		}
-		log.Debug("startStreams: Поток успешно запущен", "channel", ch)
+		//log.Debug("startStreams: Поток успешно запущен", "channel", ch)
 	}
 	return nil
 }

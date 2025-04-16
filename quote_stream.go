@@ -88,6 +88,7 @@ func (s *Stream) startQuoteStream(ctx context.Context) error {
 	symbols := s.getSymbolsByChannel(QuoteChannel)
 	// если список пустой = выйдем
 	if len(symbols) == 0 {
+		log.Debug("startQuoteStream: нет подписок на канал: выйдем")
 		return nil // errors.New("no quote symbols found")
 	}
 	// есть список инструментов для подписки

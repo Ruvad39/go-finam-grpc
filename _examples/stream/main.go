@@ -36,7 +36,10 @@ func main() {
 	// подпишемся на котировки (Quote)
 	//stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
 	//stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
+
+	// подпишемся на стакан
 	stream.Subscribe(finam.BookChannel, "SBER@MISX")
+	stream.Subscribe(finam.BookChannel, "RIM5@RTSX")
 
 	// установим метод обработчик данных (раньше StartStream)
 	stream.SetQuoteHandler(onQuote)

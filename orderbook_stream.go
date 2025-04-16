@@ -61,27 +61,31 @@ func (s *Stream) startBookStream(ctx context.Context) error {
 	symbols := s.getSymbolsByChannel(BookChannel)
 	// если список пустой = выйдем
 	if len(symbols) == 0 {
+		log.Debug("startBookStream: нет подписок на канал: выйдем")
 		return nil // errors.New("no quote symbols found")
 	}
 	// есть список инструментов для подписки
-	var err error
-	var stream grpc.ServerStreamingClient[marketdata_service.SubscribeOrderBookResponse]
 	log.Debug("StartStream", "BookSymbols", symbols)
+
 	// добавим заголовок с авторизацией (accessToken)
+	var err error
 	ctx, err = s.client.WithAuthToken(ctx)
 	if err != nil {
 		return err
 	}
-	// команда на подписку данных
-	// TODO (2025-04-16) на текущий момент подписку на стакан можно сделать только на один символ
-	symbol := symbols[0] // временная заглушка = берем первый символ
-	stream, err = s.client.MarketDataService.SubscribeOrderBook(ctx, NewSubscribeOrderBookRequest(symbol))
-	if err != nil {
-		return err
+	// (2025-04-16) на текущий момент подписку на стакан можно сделать только на один символ
+	// сделаем вызов в цикле по списку символов
+	// каждый раз создается новый поток
+	for _, symbol := range symbols {
+		log.Debug("StartBookStream", "Symbol", symbol)
+		var stream grpc.ServerStreamingClient[marketdata_service.SubscribeOrderBookResponse]
+		stream, err = s.client.MarketDataService.SubscribeOrderBook(ctx, NewSubscribeOrderBookRequest(symbol))
+		if err != nil {
+			return err
+		}
+		// в отдельном потоке запустим чтения данных из стрима
+		go s.listenBookStream(ctx, stream)
 	}
-
-	// в отдельном потоке запустим чтения данных из стрима
-	go s.listenBookStream(ctx, stream)
 
 	return err
 }
