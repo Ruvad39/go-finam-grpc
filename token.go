@@ -77,5 +77,6 @@ func (c *Client) WithAuthToken(ctx context.Context) (context.Context, error) {
 	md := metadata.New(map[string]string{
 		"Authorization": c.accessToken,
 	})
+	// и добавляем его в ctx
 	return metadata.NewOutgoingContext(ctx, md), nil
 }

@@ -1,3 +1,7 @@
+/*
+TODO добавить события Connect DisConnect
+*/
+
 package finam
 
 import (
@@ -9,6 +13,7 @@ import (
 const (
 	reconnectDelay  = 10 * time.Second // Интервал повторной попытки реконнекта
 	quoteBufferSize = 100              // Размер буфера канала котировок
+	bookeBufferSize = 100              // Размер буфера канала стакана
 )
 
 // Channel канал для подписки потока данных
@@ -39,16 +44,20 @@ type Stream struct {
 	handleQuote    QuoteFunc                      // Функция обработчик котировок
 	handleRawQuote RawQuoteFunc                   // Функция обработчик "сырых" котировок
 	quoteStore     QuoteStore                     // Обработчик данных по котировкам
+	// для OrderBook
+	rawOrderBookChan   chan *marketdata_service.StreamOrderBook // Канал с "сырыми" данными по стакану
+	handleRawOrderBook StreamOrderBookFunc                      // Функция обработчик "сырого" стакана
 }
 
 func (c *Client) NewStream() *Stream {
 	s := &Stream{
-		client:        c,
-		closeChan:     make(chan struct{}),
-		reconnectChan: make(chan Channel),
-		errChan:       make(chan error, 1),
-		rawQuoteChan:  make(chan *marketdata_service.Quote, quoteBufferSize),
-		subscriptions: make(map[Subscription]Subscription),
+		client:           c,
+		closeChan:        make(chan struct{}),
+		reconnectChan:    make(chan Channel),
+		errChan:          make(chan error, 1),
+		rawQuoteChan:     make(chan *marketdata_service.Quote, quoteBufferSize),
+		rawOrderBookChan: make(chan *marketdata_service.StreamOrderBook, bookeBufferSize),
+		subscriptions:    make(map[Subscription]Subscription),
 		quoteStore: QuoteStore{
 			quoteState: make(map[string]*Quote),
 		},
@@ -57,10 +66,11 @@ func (c *Client) NewStream() *Stream {
 	}
 	// Регистрируем стримы
 	s.streamStarters[QuoteChannel] = s.startQuoteStream
-	//s.streamStarters[OrderChannel] = s.startOrderStream
+	s.streamStarters[BookChannel] = s.startBookStream
 
 	// Регистрируем воркеры
 	s.workerStarters[QuoteChannel] = s.startHandleQuoteWorker
+	s.workerStarters[BookChannel] = s.startHandleOrderBookWorker
 
 	return s
 }
@@ -175,10 +185,11 @@ func (s *Stream) reconnector(ctx context.Context) {
 				log.Error("Нет обработчика для канала", "channel", ch)
 				continue
 			}
-			log.Warn("reconnector: попытка восстановить поток", "channel", ch, "через", reconnectDelay)
-			time.Sleep(reconnectDelay)
+			log.Warn("reconnector: попытка восстановить поток", "channel", ch)
 			if err := reconnectFunc(ctx); err != nil {
 				log.Error("Ошибка реконнекта", "channel", ch, "err", err.Error())
+				log.Warn("reconnector: новая попытка восстановить поток", "channel", ch, "через", reconnectDelay)
+				time.Sleep(reconnectDelay)
 				s.Reconnect(ch) // повторный сигнал
 			}
 		}

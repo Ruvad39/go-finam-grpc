@@ -34,14 +34,17 @@ func main() {
 
 	stream := client.NewStream()
 	// подпишемся на котировки (Quote)
-	stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
-	//stream.Subscribe(finam.QuoteChannel, "ROSN@MISX")
-	stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
+	//stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
+	//stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
+	stream.Subscribe(finam.BookChannel, "SBER@MISX")
 
 	// установим метод обработчик данных (раньше StartStream)
 	stream.SetQuoteHandler(onQuote)
 	//  установим метод обработчик "сырых" данных (раньше StartStream)
 	stream.SetRawQuoteHandler(onRawQuote)
+	// функция для стакана
+	stream.SetRawOrderBookHandler(onRawBook)
+
 	// запустим поток данных
 	err = stream.Connect(ctx)
 	if err != nil {
@@ -66,6 +69,14 @@ func onQuote(quote finam.Quote) {
 func onRawQuote(quote *marketdata_service.Quote) {
 	fmt.Printf("onRawQuote: %v\n", quote)
 	//slog.Info("RawQuoteChan", "time", quote.Timestamp.AsTime().In(finam.TzMoscow), "rawQuote", quote)
+	//_ = quote
+}
+
+// обработаем стакан
+func onRawBook(data *marketdata_service.StreamOrderBook) {
+	//fmt.Printf("onRawBook: %v\n", data)
+	slog.Info("onRawBook", "data", data)
+	//slog.Info("onRawBook", "time", quote.Timestamp.AsTime().In(finam.TzMoscow), "rawQuote", quote)
 	//_ = quote
 }
 

@@ -31,13 +31,13 @@ func main() {
 	defer client.Close()
 
 	// Получение последней котировки по инструменту
-	getQuote(ctx, client)
+	//getQuote(ctx, client)
 
 	// Получение исторических данных по инструменту (агрегированные свечи)
 	//getBars(ctx, client)
 
 	// Получение текущего стакана по инструменту
-	//getOrderBook(ctx, client)
+	getOrderBook(ctx, client)
 
 	// Получение списка последних сделок по инструменту
 	//getLatestTrades(ctx, client)
@@ -116,7 +116,7 @@ func getOrderBook(ctx context.Context, client *finam.Client) {
 		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
 		return
 	}
-	symbol := "SIM5@RTSX" //"SBER@MISX" //"SIM5@RTSX"
+	symbol := "SBER@MISX" //"SBER@MISX" //"SIM5@RTSX"
 	b, err := client.MarketDataService.OrderBook(ctx, finam.NewOrderBookRequest(symbol))
 	if err != nil {
 		slog.Error("OrderBook", "err", err.Error())
