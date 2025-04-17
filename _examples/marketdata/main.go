@@ -30,22 +30,23 @@ func main() {
 	}
 	defer client.Close()
 
+	symbol := "SBER@MISX" //"ROSN@MISX"  //"SIM5@RTSX"
 	// Получение последней котировки по инструменту
-	//getQuote(ctx, client)
+	//getQuote(ctx, client, symbol)
 
 	// Получение исторических данных по инструменту (агрегированные свечи)
-	//getBars(ctx, client)
+	//getBars(ctx, client, symbol)
 
 	// Получение текущего стакана по инструменту
-	getOrderBook(ctx, client)
+	// getOrderBook(ctx, client, symbol)
 
 	// Получение списка последних сделок по инструменту
-	//getLatestTrades(ctx, client)
+	getLatestTrades(ctx, client, symbol)
 
 }
 
 // Получение последней котировки по инструменту
-func getQuote(ctx context.Context, client *finam.Client) {
+func getQuote(ctx context.Context, client *finam.Client, symbol string) {
 	// добавим заголовок с авторизацией (accessToken)
 	ctx, err := client.WithAuthToken(ctx)
 	if err != nil {
@@ -53,14 +54,12 @@ func getQuote(ctx context.Context, client *finam.Client) {
 		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
 		return
 	}
-	symbol := "ROSN@MISX" //"SBER@MISX" //"SIM5@RTSX"
+	//symbol := "ROSN@MISX" //"SBER@MISX" //"SIM5@RTSX"
 	q, err := client.MarketDataService.LastQuote(ctx, finam.NewQuoteRequest(symbol))
 	if err != nil {
 		slog.Error("LastQuote", "err", err.Error())
 		return
 	}
-	fmt.Printf("LastQuote: %v\n", q)
-
 	slog.Info("MarketDataService",
 		"Symbol", q.Symbol,
 		"Timestamp", q.Quote.Timestamp.AsTime().In(finam.TzMoscow),
@@ -69,11 +68,13 @@ func getQuote(ctx context.Context, client *finam.Client) {
 		"Last", finam.DecimalToFloat64(q.Quote.Last),
 		"Additions", q.Quote.Additions,
 	)
+	// все данные
+	fmt.Printf("LastQuote: %v\n", q)
 
 }
 
 // Получение исторических данных по инструменту (агрегированные свечи)
-func getBars(ctx context.Context, client *finam.Client) {
+func getBars(ctx context.Context, client *finam.Client, symbol string) {
 	// добавим заголовок с авторизацией (accessToken)
 	ctx, err := client.WithAuthToken(ctx)
 	if err != nil {
@@ -82,20 +83,20 @@ func getBars(ctx context.Context, client *finam.Client) {
 		return
 	}
 
-	symbol := "SBER@MISX" //"SIM5@RTSX" MISX
+	//symbol := "SBER@MISX" //"SIM5@RTSX" MISX
 	// получение списка свечей
 	tf := marketdata_service.BarsRequest_TIME_FRAME_D
-	start, _ := time.Parse("2006-01-02", "2025-04-01")
+	start, _ := time.Parse("2006-01-02", "2025-01-01")
 	end := time.Now()
 	req := finam.NewBarsRequest(symbol, tf, start, end)
 	bars, err := client.MarketDataService.Bars(ctx, req)
 	if err != nil {
-		slog.Error("GetBars", "err", err.Error())
+		slog.Error("MarketDataService.Bars", "err", err.Error())
 		return
 	}
-	slog.Info("MarketDataService", "Bars.len", len(bars.Bars))
+	slog.Info("MarketDataService.Bars", "Bars.len", len(bars.Bars))
 	for row, bar := range bars.Bars {
-		slog.Info("Bars", "row", row,
+		slog.Info("Bar", "row", row,
 			"Timestamp", bar.Timestamp.AsTime().In(finam.TzMoscow),
 			"Open", finam.DecimalToFloat64(bar.Open),
 			"High", finam.DecimalToFloat64(bar.High),
@@ -108,7 +109,7 @@ func getBars(ctx context.Context, client *finam.Client) {
 }
 
 // Получение текущего стакана по инструменту
-func getOrderBook(ctx context.Context, client *finam.Client) {
+func getOrderBook(ctx context.Context, client *finam.Client, symbol string) {
 	// добавим заголовок с авторизацией (accessToken)
 	ctx, err := client.WithAuthToken(ctx)
 	if err != nil {
@@ -116,21 +117,26 @@ func getOrderBook(ctx context.Context, client *finam.Client) {
 		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
 		return
 	}
-	symbol := "SBER@MISX" //"SBER@MISX" //"SIM5@RTSX"
 	b, err := client.MarketDataService.OrderBook(ctx, finam.NewOrderBookRequest(symbol))
 	if err != nil {
-		slog.Error("OrderBook", "err", err.Error())
+		slog.Error("MarketDataService.OrderBook", "err", err.Error())
 		return
 	}
-	slog.Info("MarketDataService",
+	slog.Info("MarketDataService.OrderBook",
 		"Symbol", b.Symbol,
-		"OrderBook", b.Orderbook,
+		//"OrderBook", b.Orderbook,
 	)
+	for n, row := range b.Orderbook.Rows {
+		slog.Info("OrderBook.Rows", "n", n,
+			"row", row,
+		)
+
+	}
 
 }
 
 // Получение списка последних сделок по инструменту
-func getLatestTrades(ctx context.Context, client *finam.Client) {
+func getLatestTrades(ctx context.Context, client *finam.Client, symbol string) {
 	// добавим заголовок с авторизацией (accessToken)
 	ctx, err := client.WithAuthToken(ctx)
 	if err != nil {
@@ -138,15 +144,18 @@ func getLatestTrades(ctx context.Context, client *finam.Client) {
 		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
 		return
 	}
-	symbol := "SIM5@RTSX" //"SBER@MISX" //"SIM5@RTSX"
 	trades, err := client.MarketDataService.LatestTrades(ctx, finam.NewLatestTradesRequest(symbol))
 	if err != nil {
-		slog.Error("LatestTrades", "err", err.Error())
+		slog.Error("MarketDataService.LatestTrades", "err", err.Error())
 		return
 	}
-	slog.Info("MarketDataService",
-		"Symbol", trades.Symbol,
-		"trades", trades.Trades,
-	)
+	slog.Info("MarketDataService.LatestTrades", "Symbol", trades.Symbol)
+	for n, row := range trades.Trades {
+		slog.Info("Trade",
+			"n", n,
+			"time", row.Timestamp.AsTime().In(finam.TzMoscow),
+			"trades", row,
+		)
+	}
 
 }

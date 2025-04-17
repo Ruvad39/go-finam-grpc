@@ -30,14 +30,6 @@ func main() {
 	}
 	defer client.Close()
 
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err = client.WithAuthToken(ctx)
-	if err != nil {
-		slog.Error("main", "WithAuthToken", err.Error())
-		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
-		return
-	}
-
 	// получим список всех ордеров по заданному счету
 	getOrders(ctx, client, accountId)
 
@@ -46,7 +38,7 @@ func main() {
 	//getOrder(ctx, client, accountId, orderId)
 
 	// Отмена биржевой заявки
-	cancelOrder(ctx, client, accountId, "40045338")
+	//cancelOrder(ctx, client, accountId, "40045338")
 	//getOrders(ctx, client, accountId)
 	// еще раз запросим данные по заданному ордеру
 	// уже вернется ошибка ("rpc error: code = NotFound desc = Order with id 2033125054207932011 is not found")
@@ -59,15 +51,34 @@ func main() {
 
 // getOrders получим список всех ордеров по заданному счету
 func getOrders(ctx context.Context, client *finam.Client, accountId string) {
+	// добавим заголовок с авторизацией (accessToken)
+	ctx, err := client.WithAuthToken(ctx)
+	if err != nil {
+		slog.Error("main", "WithAuthToken", err.Error())
+		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
+		return
+	}
+
 	orders, err := client.OrdersService.GetOrders(ctx, finam.NewOrdersRequest(accountId))
 	if err != nil {
 		slog.Error("OrdersService", "GetOrders", err.Error())
 	}
-	slog.Info("OrdersService", "orders", orders)
+	for n, row := range orders.Orders {
+		slog.Info("OrdersService", "n", n,
+			"order", row)
+	}
+
 }
 
 // getOrder получим информацию по заданному ордеру
 func getOrder(ctx context.Context, client *finam.Client, accountId string, orderId string) {
+	ctx, err := client.WithAuthToken(ctx)
+	if err != nil {
+		slog.Error("main", "WithAuthToken", err.Error())
+		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
+		return
+	}
+
 	orderState, err := client.OrdersService.GetOrder(ctx, finam.NewGetOrderRequest(accountId, orderId))
 	if err != nil {
 		slog.Error("OrdersService", "GetOrder", err.Error())
@@ -77,6 +88,12 @@ func getOrder(ctx context.Context, client *finam.Client, accountId string, order
 
 // cancelOrder Запрос отмены торговой заявки
 func cancelOrder(ctx context.Context, client *finam.Client, accountId string, orderId string) {
+	ctx, err := client.WithAuthToken(ctx)
+	if err != nil {
+		slog.Error("main", "WithAuthToken", err.Error())
+		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
+		return
+	}
 	orderState, err := client.OrdersService.CancelOrder(ctx, finam.NewCancelOrderRequest(accountId, orderId))
 	if err != nil {
 		slog.Error("OrdersService", "CancelOrder", err.Error())
@@ -85,6 +102,13 @@ func cancelOrder(ctx context.Context, client *finam.Client, accountId string, or
 }
 
 func placeOrder(ctx context.Context, client *finam.Client, accountId string) {
+	ctx, err := client.WithAuthToken(ctx)
+	if err != nil {
+		slog.Error("main", "WithAuthToken", err.Error())
+		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
+		return
+	}
+
 	symbol := "SiM5@RTSX"
 	//symbol := "SBER@MISX"
 	// пример покупки
@@ -105,6 +129,12 @@ func placeOrder(ctx context.Context, client *finam.Client, accountId string) {
 
 // buyLimit пример лимитной покупки
 func buyLimit(ctx context.Context, client *finam.Client, accountId string) {
+	ctx, err := client.WithAuthToken(ctx)
+	if err != nil {
+		slog.Error("main", "WithAuthToken", err.Error())
+		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
+		return
+	}
 	//symbol := "IMOEXF@RTSX"
 	symbol := "SBER@MISX"
 	newOrder := &orders_service.Order{

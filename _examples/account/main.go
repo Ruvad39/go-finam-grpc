@@ -18,6 +18,7 @@ func main() {
 	}
 	token, _ := os.LookupEnv("FINAM_TOKEN")
 
+	finam.SetLogDebug(true)
 	slog.Info("start")
 	// создание клиента
 	ctx := context.Background()
@@ -36,44 +37,90 @@ func main() {
 		return
 	}
 
-	// Получение информации по конкретному аккаунту
-	accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
+	//accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
 
+	// Получение информации о токене сессии. Возьмем список счетов
+	res, err := client.GetTokenDetails(ctx)
+	if err != nil {
+		slog.Error("main", "AuthService.TokenDetails", err.Error())
+	}
+	for row, accountId := range res.AccountIds {
+		// Получение информации по конкретному аккаунту
+		slog.Info("TokenDetails.AccountIds", "row", row, "accoiuntId", accountId)
+		// получим информацию по конкретному счету
+		getAccount(ctx, client, accountId)
+		getTrades(ctx, client, accountId)
+		getTransactions(ctx, client, accountId)
+	}
+
+}
+
+// getAccount получим информацию по конкретному счету
+func getAccount(ctx context.Context, client *finam.Client, accountId string) {
+	// добавим заголовок с авторизацией (accessToken)
+	ctx, err := client.WithAuthToken(ctx)
+	if err != nil {
+		slog.Error("main", "WithAuthToken", err.Error())
+		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
+		return
+	}
 	res, err := client.AccountsService.GetAccount(ctx, &accounts_service.GetAccountRequest{AccountId: accountId})
 	if err != nil {
-		slog.Error("accountService", "GetAccount", err.Error())
+		slog.Error("AccountsService.GetAccount", "GetAccount", err.Error())
 	}
-	slog.Info("main", "Account", res)
+	slog.Info("AccountsService.GetAccount",
+		"AccountId", res.AccountId,
+		"Type", res.Type,
+		"Status", res.Status,
+		"Equity", fmt.Sprintf("%.2f", finam.DecimalToFloat64(res.Equity)),
+		"UnrealizedProfit", fmt.Sprintf("%.2f", finam.DecimalToFloat64(res.UnrealizedProfit)),
+		"Cash", res.Cash,
+	)
+
 	// список позиций
-	//slog.Info("main", "Positions", res.Positions)
 	for row, pos := range res.Positions {
-		slog.Info("positions",
+		slog.Info("AccountsService.GetAccount.Positions",
 			"row", row,
 			"Symbol", pos.Symbol,
 			"Quantity", finam.DecimalToFloat64(pos.Quantity),
 			"AveragePrice", finam.DecimalToFloat64(pos.AveragePrice),
 			"CurrentPrice", finam.DecimalToFloat64(pos.CurrentPrice),
 		)
+
 	}
 
-	// Запрос получения истории по сделкам
+}
+
+// Запрос получения истории по сделкам
+func getTrades(ctx context.Context, client *finam.Client, accountId string) {
 	// запросим все сделки за последние 24 часа
 	var limit int32 = 0
 	start := time.Now().Add(-24 * time.Hour) //  24 часа назад
 	end := time.Now()
+
 	req := finam.NewTradesRequest(accountId, limit, start, end)
-	res2, err := client.AccountsService.Trades(ctx, req)
+	res, err := client.AccountsService.Trades(ctx, req)
 	if err != nil {
 		slog.Error("accountService", "Trades", err.Error())
 	}
-	slog.Info("accountService", "Trades", res2)
+	for row, t := range res.Trades {
+		slog.Info("AccountsService.Trades", "row", row, "trade", t)
+	}
+}
 
-	// Запрос Получение списка транзакций аккаунта
-	res3, err := client.AccountsService.Transactions(ctx, finam.NewTransactionsRequest(accountId, limit, start, end))
+// Запрос Получение списка транзакций аккаунта
+func getTransactions(ctx context.Context, client *finam.Client, accountId string) {
+	// запросим данные за последние 24 часа
+	var limit int32 = 0
+	start := time.Now().Add(-24 * time.Hour) //  24 часа назад
+	end := time.Now()
+
+	res, err := client.AccountsService.Transactions(ctx, finam.NewTransactionsRequest(accountId, limit, start, end))
 	if err != nil {
 		slog.Error("accountService", "Transactions", err.Error())
 	}
-	//slog.Info("accountService", "Transactions", res3)
-	fmt.Printf("Transactions = %s \n", res3)
+	for row, t := range res.Transactions {
+		slog.Info("AccountsService.Transactions", "row", row, "transaction", t)
+	}
 
 }

@@ -101,6 +101,7 @@ func NewInterval(start, end time.Time) *interval.Interval {
 }
 
 // Проверка: входит ли t в интервал [start, end]
+// TODO в параметры добавить зону
 func IsWithinInterval(t time.Time, iv *interval.Interval) bool {
 	if iv == nil || iv.StartTime == nil || iv.EndTime == nil {
 		return false
