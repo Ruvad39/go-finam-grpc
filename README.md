@@ -68,7 +68,4 @@ for row, pos := range res.Positions {
 
 
 ## TODO
-
-* [ ] MarketDataService.SubscribeOrderBook
 * [ ] MarketDataService.SubscribeLatestTrades
-* [ ] OrdersService

@@ -90,7 +90,7 @@ func (s *Stream) startBookStream(ctx context.Context) error {
 	return err
 }
 
-// listenQuoteStream чтение данных из стрима котировок
+// listenQuoteStream чтение данных из стрима стакана
 func (s *Stream) listenBookStream(ctx context.Context, stream grpc.ServerStreamingClient[marketdata_service.SubscribeOrderBookResponse]) {
 	log.Debug("start listenBookStream")
 	var err error

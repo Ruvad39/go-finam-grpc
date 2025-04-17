@@ -35,11 +35,15 @@ func main() {
 	stream := client.NewStream()
 	// подпишемся на котировки (Quote)
 	//stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
-	//stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
+	stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
 
 	// подпишемся на стакан
-	stream.Subscribe(finam.BookChannel, "SBER@MISX")
-	stream.Subscribe(finam.BookChannel, "RIM5@RTSX")
+	//stream.Subscribe(finam.BookChannel, "SBER@MISX")
+	//stream.Subscribe(finam.BookChannel, "RIM5@RTSX")
+
+	// подпишемся на все сделки
+	// TODO пока не работает
+	//stream.Subscribe(finam.AllTradesChannel, "SBER@MISX")
 
 	// установим метод обработчик данных (раньше StartStream)
 	stream.SetQuoteHandler(onQuote)
@@ -47,6 +51,8 @@ func main() {
 	stream.SetRawQuoteHandler(onRawQuote)
 	// функция для стакана
 	stream.SetRawOrderBookHandler(onRawBook)
+	// функция для всех сделок
+	stream.SetAllTradesHandler(onTrade)
 
 	// запустим поток данных
 	err = stream.Connect(ctx)
@@ -81,6 +87,12 @@ func onRawBook(data *marketdata_service.StreamOrderBook) {
 	slog.Info("onRawBook", "data", data)
 	//slog.Info("onRawBook", "time", quote.Timestamp.AsTime().In(finam.TzMoscow), "rawQuote", quote)
 	//_ = quote
+}
+
+// все сделки
+func onTrade(data *marketdata_service.SubscribeLatestTradesResponse) {
+	fmt.Printf("onTrade: %v\n", data)
+	//slog.Info("onTrade", "data", data)
 }
 
 // waitForSignal Ожидание сигнала о закрытие

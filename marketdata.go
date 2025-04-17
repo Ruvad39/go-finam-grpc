@@ -115,3 +115,8 @@ func NewSubscribeQuoteRequest(symbols []string) *marketdata_service.SubscribeQuo
 func NewSubscribeOrderBookRequest(symbol string) *marketdata_service.SubscribeOrderBookRequest {
 	return &marketdata_service.SubscribeOrderBookRequest{Symbol: symbol}
 }
+
+// NewSubscribeLatestTradesRequest
+func NewSubscribeLatestTradesRequest(symbol string) *marketdata_service.SubscribeLatestTradesRequest {
+	return &marketdata_service.SubscribeLatestTradesRequest{Symbol: symbol}
+}

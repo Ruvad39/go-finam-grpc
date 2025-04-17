@@ -11,18 +11,19 @@ import (
 )
 
 const (
-	reconnectDelay  = 10 * time.Second // Интервал повторной попытки реконнекта
-	quoteBufferSize = 100              // Размер буфера канала котировок
-	bookeBufferSize = 100              // Размер буфера канала стакана
+	reconnectDelay   = 10 * time.Second // Интервал повторной попытки реконнекта
+	quoteBufferSize  = 100              // Размер буфера канала котировок
+	bookBufferSize   = 100              // Размер буфера канала стакана
+	tradesBufferSize = 100              // Размер буфера канала всех сделок
 )
 
 // Channel канал для подписки потока данных
 type Channel string
 
 const (
-	QuoteChannel = Channel("quote") // Подписка на информацию о котировках
-	BookChannel  = Channel("book")  // Подписка на биржевой стакан
-	// TODO SubscribeLatestTrades Подписка на все сделки
+	QuoteChannel     = Channel("quote")      // Подписка на информацию о котировках
+	BookChannel      = Channel("book")       // Подписка на биржевой стакан
+	AllTradesChannel = Channel("all_trades") // подписка на все сделки
 )
 
 // Subscription
@@ -47,6 +48,9 @@ type Stream struct {
 	// для OrderBook
 	rawOrderBookChan   chan *marketdata_service.StreamOrderBook // Канал с "сырыми" данными по стакану
 	handleRawOrderBook StreamOrderBookFunc                      // Функция обработчик "сырого" стакана
+	// LatestTrades
+	handleAllTrades TradesFunc                                             // Функция обработчик всех сделок
+	allTradesChan   chan *marketdata_service.SubscribeLatestTradesResponse // Канал всех сделки
 }
 
 func (c *Client) NewStream() *Stream {
@@ -56,7 +60,8 @@ func (c *Client) NewStream() *Stream {
 		reconnectChan:    make(chan Channel),
 		errChan:          make(chan error, 1),
 		rawQuoteChan:     make(chan *marketdata_service.Quote, quoteBufferSize),
-		rawOrderBookChan: make(chan *marketdata_service.StreamOrderBook, bookeBufferSize),
+		rawOrderBookChan: make(chan *marketdata_service.StreamOrderBook, bookBufferSize),
+		allTradesChan:    make(chan *marketdata_service.SubscribeLatestTradesResponse),
 		subscriptions:    make(map[Subscription]Subscription),
 		quoteStore: QuoteStore{
 			quoteState: make(map[string]*Quote),
@@ -67,10 +72,12 @@ func (c *Client) NewStream() *Stream {
 	// Регистрируем стримы
 	s.streamStarters[QuoteChannel] = s.startQuoteStream
 	s.streamStarters[BookChannel] = s.startBookStream
+	s.streamStarters[AllTradesChannel] = s.startAllTradesStream
 
 	// Регистрируем воркеры
 	s.workerStarters[QuoteChannel] = s.startHandleQuoteWorker
 	s.workerStarters[BookChannel] = s.startHandleOrderBookWorker
+	s.workerStarters[AllTradesChannel] = s.startHandleAllTradesWorker
 
 	return s
 }

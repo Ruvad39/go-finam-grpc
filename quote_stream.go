@@ -1,9 +1,3 @@
-/*
-разделил на 2 канала с данынми
-
-	rawQuoteChan      chan *marketdata_service.Quote // Канал с "сырыми" данными по котировкам
-	quoteChan         chan Quote // Канал с обработанными котировками
-*/
 package finam
 
 import (
