@@ -64,7 +64,7 @@ for row, pos := range res.Positions {
 ```
 
 
-### Другие примеры смотрите [тут](/_examples)
+### Примеры смотрите [тут](/_examples)
 
 
 ## TODO
