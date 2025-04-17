@@ -2,7 +2,7 @@
 
 **gRPC-клиент на Go для работы с API Финама**  
 [tradeapi.finam](https://tradeapi.finam.ru/docs/about/)
-  
+
 
 ## Установка
 
