@@ -49,8 +49,8 @@ func main() {
 		slog.Info("TokenDetails.AccountIds", "row", row, "accoiuntId", accountId)
 		// получим информацию по конкретному счету
 		getAccount(ctx, client, accountId)
-		getTrades(ctx, client, accountId)
-		getTransactions(ctx, client, accountId)
+		//getTrades(ctx, client, accountId)
+		//getTransactions(ctx, client, accountId)
 	}
 
 }

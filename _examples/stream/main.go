@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Ruvad39/go-finam-grpc"
-	marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
-	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/Ruvad39/go-finam-grpc"
+	marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 	stream := client.NewStream()
 	// подпишемся на котировки (Quote)
 	//stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
-	stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
+	//stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
 
 	// подпишемся на стакан
 	//stream.Subscribe(finam.BookChannel, "SBER@MISX")

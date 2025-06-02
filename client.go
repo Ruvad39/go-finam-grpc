@@ -7,6 +7,10 @@ package finam
 import (
 	"context"
 	"crypto/tls"
+	"log/slog"
+	"os"
+	"time"
+
 	accounts_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/accounts"
 	assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
 	auth_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/auth"
@@ -14,9 +18,13 @@ import (
 	orders_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/orders"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"log/slog"
-	"os"
-	"time"
+	"google.golang.org/grpc/keepalive"
+)
+
+const (
+	Name        = "FINAM-API-gRPC GO"
+	Version     = "0.1.1"
+	VersionDate = "2025-04-22"
 )
 
 // Endpoints
@@ -57,10 +65,16 @@ type Client struct {
 }
 
 func NewClient(ctx context.Context, token string) (*Client, error) {
-	tlsConfig := tls.Config{MinVersion: tls.VersionTLS12}
 	// TODO выделить в отдельный метод connect()
 	log.Debug("NewClient start connect")
-	conn, err := grpc.NewClient(endPoint, grpc.WithTransportCredentials(credentials.NewTLS(&tlsConfig)))
+	conn, err := grpc.NewClient(endPoint,
+		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
+		grpc.WithKeepaliveParams(keepalive.ClientParameters{
+			Time:                15 * time.Minute, // отправлять ping каждые 15 минут
+			Timeout:             30 * time.Second, // ждать ответа не дольше 10 сек
+			PermitWithoutStream: true,             // пинговать даже без активных RPC
+		}),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -75,18 +89,16 @@ func NewClient(ctx context.Context, token string) (*Client, error) {
 		Securities:        make(map[string]Security),
 	}
 	log.Debug("NewClient есть connect")
-	err = client.UpdateJWT(ctx) // сразу получим и запишем токен для работы
+	err = client.UpdateJWT(ctx) // сразу получим и запишем accessToken для работы
 	if err != nil {
 		return nil, err
 	}
+	// в отдельном потоке периодически обновляем accessToken
+	go client.runJwtRefresher(ctx)
 	return client, nil
 }
 
 func (c *Client) Close() error {
-	//close(c.closeChan)
-	//close(c.quoteChan)
-	//close(c.rawQuoteChan)
-	//close(c.errChan)
 	return c.conn.Close()
 
 }

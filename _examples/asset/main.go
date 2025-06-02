@@ -39,15 +39,15 @@ func main() {
 	}
 
 	// Получение списка доступных бирж, названия и mic коды
-	// getExchanges(ctx, client)
+	//getExchanges(ctx, client)
 	// test Получение списка доступных бирж =  подсчет кол-ва дублей
 	// getExchangesCount(ctx, client)
 
 	// Получение списка доступных инструментов, их описание
-	//getAssets(ctx, client)
+	getAssets(ctx, client)
 
 	// Получение расписания торгов для инструмента
-	getSchedule(ctx, client, "SBER@MISX")
+	//getSchedule(ctx, client, "SBER@MISX")
 
 }
 

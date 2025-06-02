@@ -7,12 +7,15 @@ package finam
 import (
 	"context"
 	"fmt"
+	"time"
+
 	auth_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/auth"
 	"google.golang.org/grpc/metadata"
-	"time"
 )
 
-const jwtTokenTtl = 12 // Время жизни токена JWT в минутах (15 минут)
+const authKey = "Authorization"             //
+const jwtTokenTtl = 12 * time.Minute        // Время жизни токена JWT в минутах (15 минут)
+const jwtRefreshInterval = 10 * time.Minute // Интервал обновления токена (в минутах)
 
 // GetJWT Получение JWT токена из API токена
 //
@@ -51,11 +54,40 @@ func (c *Client) UpdateJWT(ctx context.Context) error {
 			return err
 		}
 		// запишем время окончания токена
-		c.ttlJWT = time.Now().Add(jwtTokenTtl * time.Minute)
+		c.ttlJWT = time.Now().Add(jwtTokenTtl)
 		c.accessToken = token
 	}
 	log.Debug("UpdateJWT. токен живой")
 	return nil
+}
+
+// runJwtRefresher в отдельном потоке периодически обновляем токен
+func (c *Client) runJwtRefresher(ctx context.Context) {
+	log.Debug("run JwtRefresher")
+	if c.token == "" {
+		c.accessToken = ""
+		log.Warn("JWT refresher token пустой. Выход из метода")
+		return
+	}
+	ticker := time.NewTicker(jwtRefreshInterval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			log.Debug("start JwtRefresh")
+			token, err := c.GetJWT(ctx)
+			if err != nil {
+				log.Error("failed to refresh JW", "err", err.Error())
+			}
+			// запишем время окончания токена
+			c.ttlJWT = time.Now().Add(jwtTokenTtl)
+			c.accessToken = token
+		case <-ctx.Done():
+			log.Debug("JWT refresher stopped")
+			return
+		}
+	}
 }
 
 // GetTokenDetails Получение информации о токене сессии
@@ -73,9 +105,13 @@ func (c *Client) WithAuthToken(ctx context.Context) (context.Context, error) {
 	if err != nil {
 		return ctx, err
 	}
+
+	//_ = authKey
+	//ctx = context.WithValue(ctx, authKey, c.accessToken)
+	//return ctx, nil
 	// добавим заголовок
 	md := metadata.New(map[string]string{
-		"Authorization": c.accessToken,
+		authKey: c.accessToken,
 	})
 	// и добавляем его в ctx
 	return metadata.NewOutgoingContext(ctx, md), nil

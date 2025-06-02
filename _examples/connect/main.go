@@ -20,6 +20,7 @@ func main() {
 	ctx := context.Background()
 	token, _ := os.LookupEnv("FINAM_TOKEN")
 	slog.Info("start")
+	finam.SetLogDebug(true)
 	client, err := finam.NewClient(ctx, token)
 	if err != nil {
 		slog.Error("NewClient", "err", err.Error())

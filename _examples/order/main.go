@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
+	"log/slog"
+	"os"
+
 	"github.com/Ruvad39/go-finam-grpc"
 	side "github.com/Ruvad39/go-finam-grpc/trade_api/v1"
 	orders_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/orders"
 	"github.com/joho/godotenv"
-	"log/slog"
-	"os"
 )
 
 func main() {
@@ -31,7 +32,8 @@ func main() {
 	defer client.Close()
 
 	// получим список всех ордеров по заданному счету
-	getOrders(ctx, client, accountId)
+	_ = accountId
+	getOrders(ctx, client, "1347034")
 
 	// получим информацию по заданному ордеру
 	//orderId := "1892950515808633522"
