@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Ruvad39/go-finam-grpc"
-	assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
-	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
 	"time"
+
+	"github.com/Ruvad39/go-finam-grpc"
+	assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -44,7 +45,10 @@ func main() {
 	// getExchangesCount(ctx, client)
 
 	// Получение списка доступных инструментов, их описание
-	getAssets(ctx, client)
+	//getAssets(ctx, client)
+	//
+	accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
+	getGetAssetParams(ctx, client, "SBER@MISX", accountId)
 
 	// Получение расписания торгов для инструмента
 	//getSchedule(ctx, client, "SBER@MISX")
@@ -89,6 +93,14 @@ func getAssets(ctx context.Context, client *finam.Client) {
 			)
 		}
 	}
+}
+
+func getGetAssetParams(ctx context.Context, client *finam.Client, symbol, accountId string) {
+	assetParams, err := client.AssetsService.GetAssetParams(ctx, finam.NewAssetParamsRequest(symbol, accountId))
+	if err != nil {
+		slog.Error("AssetsParams", "err", err.Error())
+	}
+	slog.Info("AssetsService.AssetsParams", slog.Any("assetParams", assetParams))
 }
 
 // Получение расписания торгов для инструмента

@@ -11,6 +11,7 @@ import (
 	date "google.golang.org/genproto/googleapis/type/date"
 	decimal "google.golang.org/genproto/googleapis/type/decimal"
 	interval "google.golang.org/genproto/googleapis/type/interval"
+	money "google.golang.org/genproto/googleapis/type/money"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -75,7 +76,121 @@ func (x Option_Type) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Option_Type.Descriptor instead.
 func (Option_Type) EnumDescriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{10, 0}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{12, 0}
+}
+
+// Статус
+type Longable_Status int32
+
+const (
+	// Не доступен
+	Longable_NOT_AVAILABLE Longable_Status = 0
+	// Доступен
+	Longable_AVAILABLE Longable_Status = 1
+	// Запрещено на уровне счета
+	Longable_ACCOUNT_NOT_APPROVED Longable_Status = 2
+)
+
+// Enum value maps for Longable_Status.
+var (
+	Longable_Status_name = map[int32]string{
+		0: "NOT_AVAILABLE",
+		1: "AVAILABLE",
+		2: "ACCOUNT_NOT_APPROVED",
+	}
+	Longable_Status_value = map[string]int32{
+		"NOT_AVAILABLE":        0,
+		"AVAILABLE":            1,
+		"ACCOUNT_NOT_APPROVED": 2,
+	}
+)
+
+func (x Longable_Status) Enum() *Longable_Status {
+	p := new(Longable_Status)
+	*p = x
+	return p
+}
+
+func (x Longable_Status) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Longable_Status) Descriptor() protoreflect.EnumDescriptor {
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_enumTypes[1].Descriptor()
+}
+
+func (Longable_Status) Type() protoreflect.EnumType {
+	return &file_grpc_tradeapi_v1_assets_assets_service_proto_enumTypes[1]
+}
+
+func (x Longable_Status) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Longable_Status.Descriptor instead.
+func (Longable_Status) EnumDescriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{13, 0}
+}
+
+// Статус
+type Shortable_Status int32
+
+const (
+	// Не доступен
+	Shortable_NOT_AVAILABLE Shortable_Status = 0
+	// Доступен
+	Shortable_AVAILABLE Shortable_Status = 1
+	// Признак того, что бумага Hard To Borrow (если есть)
+	Shortable_HTB Shortable_Status = 2
+	// Запрещено на уровне счета
+	Shortable_ACCOUNT_NOT_APPROVED Shortable_Status = 3
+	// Разрешено в составе стратегии
+	Shortable_AVAILABLE_STRATEGY Shortable_Status = 4
+)
+
+// Enum value maps for Shortable_Status.
+var (
+	Shortable_Status_name = map[int32]string{
+		0: "NOT_AVAILABLE",
+		1: "AVAILABLE",
+		2: "HTB",
+		3: "ACCOUNT_NOT_APPROVED",
+		4: "AVAILABLE_STRATEGY",
+	}
+	Shortable_Status_value = map[string]int32{
+		"NOT_AVAILABLE":        0,
+		"AVAILABLE":            1,
+		"HTB":                  2,
+		"ACCOUNT_NOT_APPROVED": 3,
+		"AVAILABLE_STRATEGY":   4,
+	}
+)
+
+func (x Shortable_Status) Enum() *Shortable_Status {
+	p := new(Shortable_Status)
+	*p = x
+	return p
+}
+
+func (x Shortable_Status) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Shortable_Status) Descriptor() protoreflect.EnumDescriptor {
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_enumTypes[2].Descriptor()
+}
+
+func (Shortable_Status) Type() protoreflect.EnumType {
+	return &file_grpc_tradeapi_v1_assets_assets_service_proto_enumTypes[2]
+}
+
+func (x Shortable_Status) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Shortable_Status.Descriptor instead.
+func (Shortable_Status) EnumDescriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{14, 0}
 }
 
 // Запрос получения списка доступных бирж
@@ -244,6 +359,179 @@ func (x *AssetsResponse) GetAssets() []*Asset {
 	return nil
 }
 
+// Запрос торговых параметров инструмента
+type GetAssetParamsRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Символ инструмента
+	Symbol string `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	// ID аккаунта для которого будут подбираться торговые параметры
+	AccountId     string `protobuf:"bytes,2,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAssetParamsRequest) Reset() {
+	*x = GetAssetParamsRequest{}
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAssetParamsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAssetParamsRequest) ProtoMessage() {}
+
+func (x *GetAssetParamsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAssetParamsRequest.ProtoReflect.Descriptor instead.
+func (*GetAssetParamsRequest) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetAssetParamsRequest) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+func (x *GetAssetParamsRequest) GetAccountId() string {
+	if x != nil {
+		return x.AccountId
+	}
+	return ""
+}
+
+// Торговые параметры инструмента
+type GetAssetParamsResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Символ инструмента
+	Symbol string `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	// ID аккаунта для которого подбираются торговые параметры
+	AccountId string `protobuf:"bytes,2,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	// Доступны ли торговые операции
+	Tradeable bool `protobuf:"varint,3,opt,name=tradeable,proto3" json:"tradeable,omitempty"`
+	// Доступны ли операции в Лонг
+	Longable *Longable `protobuf:"bytes,4,opt,name=longable,proto3" json:"longable,omitempty"`
+	// Доступны ли операции в Шорт
+	Shortable *Shortable `protobuf:"bytes,5,opt,name=shortable,proto3" json:"shortable,omitempty"`
+	// Ставка риска для операции в Лонг
+	LongRiskRate *decimal.Decimal `protobuf:"bytes,6,opt,name=long_risk_rate,json=longRiskRate,proto3" json:"long_risk_rate,omitempty"`
+	// Сумма обеспечения для поддержания позиции Лонг
+	LongCollateral *money.Money `protobuf:"bytes,7,opt,name=long_collateral,json=longCollateral,proto3" json:"long_collateral,omitempty"`
+	// Ставка риска для операции в Шорт
+	ShortRiskRate *decimal.Decimal `protobuf:"bytes,8,opt,name=short_risk_rate,json=shortRiskRate,proto3" json:"short_risk_rate,omitempty"`
+	// Сумма обеспечения для поддержания позиции Шорт
+	ShortCollateral *money.Money `protobuf:"bytes,9,opt,name=short_collateral,json=shortCollateral,proto3" json:"short_collateral,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *GetAssetParamsResponse) Reset() {
+	*x = GetAssetParamsResponse{}
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAssetParamsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAssetParamsResponse) ProtoMessage() {}
+
+func (x *GetAssetParamsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAssetParamsResponse.ProtoReflect.Descriptor instead.
+func (*GetAssetParamsResponse) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetAssetParamsResponse) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+func (x *GetAssetParamsResponse) GetAccountId() string {
+	if x != nil {
+		return x.AccountId
+	}
+	return ""
+}
+
+func (x *GetAssetParamsResponse) GetTradeable() bool {
+	if x != nil {
+		return x.Tradeable
+	}
+	return false
+}
+
+func (x *GetAssetParamsResponse) GetLongable() *Longable {
+	if x != nil {
+		return x.Longable
+	}
+	return nil
+}
+
+func (x *GetAssetParamsResponse) GetShortable() *Shortable {
+	if x != nil {
+		return x.Shortable
+	}
+	return nil
+}
+
+func (x *GetAssetParamsResponse) GetLongRiskRate() *decimal.Decimal {
+	if x != nil {
+		return x.LongRiskRate
+	}
+	return nil
+}
+
+func (x *GetAssetParamsResponse) GetLongCollateral() *money.Money {
+	if x != nil {
+		return x.LongCollateral
+	}
+	return nil
+}
+
+func (x *GetAssetParamsResponse) GetShortRiskRate() *decimal.Decimal {
+	if x != nil {
+		return x.ShortRiskRate
+	}
+	return nil
+}
+
+func (x *GetAssetParamsResponse) GetShortCollateral() *money.Money {
+	if x != nil {
+		return x.ShortCollateral
+	}
+	return nil
+}
+
 // Запрос получения цепочки опционов
 type OptionsChainRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -255,7 +543,7 @@ type OptionsChainRequest struct {
 
 func (x *OptionsChainRequest) Reset() {
 	*x = OptionsChainRequest{}
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[4]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -267,7 +555,7 @@ func (x *OptionsChainRequest) String() string {
 func (*OptionsChainRequest) ProtoMessage() {}
 
 func (x *OptionsChainRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[4]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -280,7 +568,7 @@ func (x *OptionsChainRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OptionsChainRequest.ProtoReflect.Descriptor instead.
 func (*OptionsChainRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{4}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *OptionsChainRequest) GetUnderlyingSymbol() string {
@@ -303,7 +591,7 @@ type OptionsChainResponse struct {
 
 func (x *OptionsChainResponse) Reset() {
 	*x = OptionsChainResponse{}
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[5]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -315,7 +603,7 @@ func (x *OptionsChainResponse) String() string {
 func (*OptionsChainResponse) ProtoMessage() {}
 
 func (x *OptionsChainResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[5]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -328,7 +616,7 @@ func (x *OptionsChainResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OptionsChainResponse.ProtoReflect.Descriptor instead.
 func (*OptionsChainResponse) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{5}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *OptionsChainResponse) GetSymbol() string {
@@ -356,7 +644,7 @@ type ScheduleRequest struct {
 
 func (x *ScheduleRequest) Reset() {
 	*x = ScheduleRequest{}
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[6]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -368,7 +656,7 @@ func (x *ScheduleRequest) String() string {
 func (*ScheduleRequest) ProtoMessage() {}
 
 func (x *ScheduleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[6]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -381,7 +669,7 @@ func (x *ScheduleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScheduleRequest.ProtoReflect.Descriptor instead.
 func (*ScheduleRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{6}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ScheduleRequest) GetSymbol() string {
@@ -404,7 +692,7 @@ type ScheduleResponse struct {
 
 func (x *ScheduleResponse) Reset() {
 	*x = ScheduleResponse{}
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[7]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -416,7 +704,7 @@ func (x *ScheduleResponse) String() string {
 func (*ScheduleResponse) ProtoMessage() {}
 
 func (x *ScheduleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[7]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -429,7 +717,7 @@ func (x *ScheduleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScheduleResponse.ProtoReflect.Descriptor instead.
 func (*ScheduleResponse) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{7}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ScheduleResponse) GetSymbol() string {
@@ -459,7 +747,7 @@ type Exchange struct {
 
 func (x *Exchange) Reset() {
 	*x = Exchange{}
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[8]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -471,7 +759,7 @@ func (x *Exchange) String() string {
 func (*Exchange) ProtoMessage() {}
 
 func (x *Exchange) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[8]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -484,7 +772,7 @@ func (x *Exchange) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Exchange.ProtoReflect.Descriptor instead.
 func (*Exchange) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{8}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Exchange) GetMic() string {
@@ -524,7 +812,7 @@ type Asset struct {
 
 func (x *Asset) Reset() {
 	*x = Asset{}
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[9]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -536,7 +824,7 @@ func (x *Asset) String() string {
 func (*Asset) ProtoMessage() {}
 
 func (x *Asset) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[9]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -549,7 +837,7 @@ func (x *Asset) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Asset.ProtoReflect.Descriptor instead.
 func (*Asset) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{9}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *Asset) GetSymbol() string {
@@ -601,7 +889,7 @@ func (x *Asset) GetName() string {
 	return ""
 }
 
-// Инфомация об опционе
+// Информация об опционе
 type Option struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Символ инструмента
@@ -624,7 +912,7 @@ type Option struct {
 
 func (x *Option) Reset() {
 	*x = Option{}
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[10]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -636,7 +924,7 @@ func (x *Option) String() string {
 func (*Option) ProtoMessage() {}
 
 func (x *Option) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[10]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -649,7 +937,7 @@ func (x *Option) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Option.ProtoReflect.Descriptor instead.
 func (*Option) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{10}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Option) GetSymbol() string {
@@ -701,6 +989,116 @@ func (x *Option) GetMultiplier() *decimal.Decimal {
 	return nil
 }
 
+// Доступны ли операции в Лонг
+type Longable struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Статус инструмента
+	Value Longable_Status `protobuf:"varint,1,opt,name=value,proto3,enum=grpc.tradeapi.v1.assets.Longable_Status" json:"value,omitempty"`
+	// Сколько дней действует запрет на операции в Лонг (если есть)
+	HaltedDays    int32 `protobuf:"varint,2,opt,name=halted_days,json=haltedDays,proto3" json:"halted_days,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Longable) Reset() {
+	*x = Longable{}
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Longable) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Longable) ProtoMessage() {}
+
+func (x *Longable) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Longable.ProtoReflect.Descriptor instead.
+func (*Longable) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *Longable) GetValue() Longable_Status {
+	if x != nil {
+		return x.Value
+	}
+	return Longable_NOT_AVAILABLE
+}
+
+func (x *Longable) GetHaltedDays() int32 {
+	if x != nil {
+		return x.HaltedDays
+	}
+	return 0
+}
+
+// Доступны ли операции в Шорт
+type Shortable struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Статус инструмента
+	Value Shortable_Status `protobuf:"varint,1,opt,name=value,proto3,enum=grpc.tradeapi.v1.assets.Shortable_Status" json:"value,omitempty"`
+	// Сколько дней действует запрет на операции в Шорт (если есть)
+	HaltedDays    int32 `protobuf:"varint,2,opt,name=halted_days,json=haltedDays,proto3" json:"halted_days,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Shortable) Reset() {
+	*x = Shortable{}
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Shortable) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Shortable) ProtoMessage() {}
+
+func (x *Shortable) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Shortable.ProtoReflect.Descriptor instead.
+func (*Shortable) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *Shortable) GetValue() Shortable_Status {
+	if x != nil {
+		return x.Value
+	}
+	return Shortable_NOT_AVAILABLE
+}
+
+func (x *Shortable) GetHaltedDays() int32 {
+	if x != nil {
+		return x.HaltedDays
+	}
+	return 0
+}
+
 // Сессии
 type ScheduleResponse_Sessions struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -714,7 +1112,7 @@ type ScheduleResponse_Sessions struct {
 
 func (x *ScheduleResponse_Sessions) Reset() {
 	*x = ScheduleResponse_Sessions{}
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[11]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -726,7 +1124,7 @@ func (x *ScheduleResponse_Sessions) String() string {
 func (*ScheduleResponse_Sessions) ProtoMessage() {}
 
 func (x *ScheduleResponse_Sessions) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[11]
+	mi := &file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -739,7 +1137,7 @@ func (x *ScheduleResponse_Sessions) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ScheduleResponse_Sessions.ProtoReflect.Descriptor instead.
 func (*ScheduleResponse_Sessions) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{7, 0}
+	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP(), []int{9, 0}
 }
 
 func (x *ScheduleResponse_Sessions) GetType() string {
@@ -760,13 +1158,28 @@ var File_grpc_tradeapi_v1_assets_assets_service_proto protoreflect.FileDescripto
 
 const file_grpc_tradeapi_v1_assets_assets_service_proto_rawDesc = "" +
 	"\n" +
-	",grpc/tradeapi/v1/assets/assets_service.proto\x12\x17grpc.tradeapi.v1.assets\x1a\x1cgoogle/api/annotations.proto\x1a\x16google/type/date.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\"\x12\n" +
+	",grpc/tradeapi/v1/assets/assets_service.proto\x12\x17grpc.tradeapi.v1.assets\x1a\x1cgoogle/api/annotations.proto\x1a\x16google/type/date.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\x1a\x17google/type/money.proto\"\x12\n" +
 	"\x10ExchangesRequest\"T\n" +
 	"\x11ExchangesResponse\x12?\n" +
 	"\texchanges\x18\x01 \x03(\v2!.grpc.tradeapi.v1.assets.ExchangeR\texchanges\"\x0f\n" +
 	"\rAssetsRequest\"H\n" +
 	"\x0eAssetsResponse\x126\n" +
-	"\x06assets\x18\x01 \x03(\v2\x1e.grpc.tradeapi.v1.assets.AssetR\x06assets\"B\n" +
+	"\x06assets\x18\x01 \x03(\v2\x1e.grpc.tradeapi.v1.assets.AssetR\x06assets\"N\n" +
+	"\x15GetAssetParamsRequest\x12\x16\n" +
+	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12\x1d\n" +
+	"\n" +
+	"account_id\x18\x02 \x01(\tR\taccountId\"\xe4\x03\n" +
+	"\x16GetAssetParamsResponse\x12\x16\n" +
+	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12\x1d\n" +
+	"\n" +
+	"account_id\x18\x02 \x01(\tR\taccountId\x12\x1c\n" +
+	"\ttradeable\x18\x03 \x01(\bR\ttradeable\x12=\n" +
+	"\blongable\x18\x04 \x01(\v2!.grpc.tradeapi.v1.assets.LongableR\blongable\x12@\n" +
+	"\tshortable\x18\x05 \x01(\v2\".grpc.tradeapi.v1.assets.ShortableR\tshortable\x12:\n" +
+	"\x0elong_risk_rate\x18\x06 \x01(\v2\x14.google.type.DecimalR\flongRiskRate\x12;\n" +
+	"\x0flong_collateral\x18\a \x01(\v2\x12.google.type.MoneyR\x0elongCollateral\x12<\n" +
+	"\x0fshort_risk_rate\x18\b \x01(\v2\x14.google.type.DecimalR\rshortRiskRate\x12=\n" +
+	"\x10short_collateral\x18\t \x01(\v2\x12.google.type.MoneyR\x0fshortCollateral\"B\n" +
 	"\x13OptionsChainRequest\x12+\n" +
 	"\x11underlying_symbol\x18\x01 \x01(\tR\x10underlyingSymbol\"i\n" +
 	"\x14OptionsChainResponse\x12\x16\n" +
@@ -804,11 +1217,30 @@ const file_grpc_tradeapi_v1_assets_assets_service_proto_rawDesc = "" +
 	"\x04Type\x12\x14\n" +
 	"\x10TYPE_UNSPECIFIED\x10\x00\x12\r\n" +
 	"\tTYPE_CALL\x10\x01\x12\f\n" +
-	"\bTYPE_PUT\x10\x022\x9f\x04\n" +
+	"\bTYPE_PUT\x10\x02\"\xb1\x01\n" +
+	"\bLongable\x12>\n" +
+	"\x05value\x18\x01 \x01(\x0e2(.grpc.tradeapi.v1.assets.Longable.StatusR\x05value\x12\x1f\n" +
+	"\vhalted_days\x18\x02 \x01(\x05R\n" +
+	"haltedDays\"D\n" +
+	"\x06Status\x12\x11\n" +
+	"\rNOT_AVAILABLE\x10\x00\x12\r\n" +
+	"\tAVAILABLE\x10\x01\x12\x18\n" +
+	"\x14ACCOUNT_NOT_APPROVED\x10\x02\"\xd4\x01\n" +
+	"\tShortable\x12?\n" +
+	"\x05value\x18\x01 \x01(\x0e2).grpc.tradeapi.v1.assets.Shortable.StatusR\x05value\x12\x1f\n" +
+	"\vhalted_days\x18\x02 \x01(\x05R\n" +
+	"haltedDays\"e\n" +
+	"\x06Status\x12\x11\n" +
+	"\rNOT_AVAILABLE\x10\x00\x12\r\n" +
+	"\tAVAILABLE\x10\x01\x12\a\n" +
+	"\x03HTB\x10\x02\x12\x18\n" +
+	"\x14ACCOUNT_NOT_APPROVED\x10\x03\x12\x16\n" +
+	"\x12AVAILABLE_STRATEGY\x10\x042\xb7\x05\n" +
 	"\rAssetsService\x12y\n" +
 	"\tExchanges\x12).grpc.tradeapi.v1.assets.ExchangesRequest\x1a*.grpc.tradeapi.v1.assets.ExchangesResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/v1/exchanges\x12m\n" +
 	"\x06Assets\x12&.grpc.tradeapi.v1.assets.AssetsRequest\x1a'.grpc.tradeapi.v1.assets.AssetsResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/v1/assets\x12\x9b\x01\n" +
+	"/v1/assets\x12\x95\x01\n" +
+	"\x0eGetAssetParams\x12..grpc.tradeapi.v1.assets.GetAssetParamsRequest\x1a/.grpc.tradeapi.v1.assets.GetAssetParamsResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1/assets/{symbol}/params\x12\x9b\x01\n" +
 	"\fOptionsChain\x12,.grpc.tradeapi.v1.assets.OptionsChainRequest\x1a-.grpc.tradeapi.v1.assets.OptionsChainResponse\".\x82\xd3\xe4\x93\x02(\x12&/v1/assets/{underlying_symbol}/options\x12\x85\x01\n" +
 	"\bSchedule\x12(.grpc.tradeapi.v1.assets.ScheduleRequest\x1a).grpc.tradeapi.v1.assets.ScheduleResponse\"$\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1/assets/{symbol}/scheduleB&P\x01Z\"trade_api/v1/assets/assets_serviceb\x06proto3"
 
@@ -824,51 +1256,68 @@ func file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescGZIP() []byte {
 	return file_grpc_tradeapi_v1_assets_assets_service_proto_rawDescData
 }
 
-var file_grpc_tradeapi_v1_assets_assets_service_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_grpc_tradeapi_v1_assets_assets_service_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_grpc_tradeapi_v1_assets_assets_service_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_grpc_tradeapi_v1_assets_assets_service_proto_goTypes = []any{
 	(Option_Type)(0),                  // 0: grpc.tradeapi.v1.assets.Option.Type
-	(*ExchangesRequest)(nil),          // 1: grpc.tradeapi.v1.assets.ExchangesRequest
-	(*ExchangesResponse)(nil),         // 2: grpc.tradeapi.v1.assets.ExchangesResponse
-	(*AssetsRequest)(nil),             // 3: grpc.tradeapi.v1.assets.AssetsRequest
-	(*AssetsResponse)(nil),            // 4: grpc.tradeapi.v1.assets.AssetsResponse
-	(*OptionsChainRequest)(nil),       // 5: grpc.tradeapi.v1.assets.OptionsChainRequest
-	(*OptionsChainResponse)(nil),      // 6: grpc.tradeapi.v1.assets.OptionsChainResponse
-	(*ScheduleRequest)(nil),           // 7: grpc.tradeapi.v1.assets.ScheduleRequest
-	(*ScheduleResponse)(nil),          // 8: grpc.tradeapi.v1.assets.ScheduleResponse
-	(*Exchange)(nil),                  // 9: grpc.tradeapi.v1.assets.Exchange
-	(*Asset)(nil),                     // 10: grpc.tradeapi.v1.assets.Asset
-	(*Option)(nil),                    // 11: grpc.tradeapi.v1.assets.Option
-	(*ScheduleResponse_Sessions)(nil), // 12: grpc.tradeapi.v1.assets.ScheduleResponse.Sessions
-	(*decimal.Decimal)(nil),           // 13: google.type.Decimal
-	(*date.Date)(nil),                 // 14: google.type.Date
-	(*interval.Interval)(nil),         // 15: google.type.Interval
+	(Longable_Status)(0),              // 1: grpc.tradeapi.v1.assets.Longable.Status
+	(Shortable_Status)(0),             // 2: grpc.tradeapi.v1.assets.Shortable.Status
+	(*ExchangesRequest)(nil),          // 3: grpc.tradeapi.v1.assets.ExchangesRequest
+	(*ExchangesResponse)(nil),         // 4: grpc.tradeapi.v1.assets.ExchangesResponse
+	(*AssetsRequest)(nil),             // 5: grpc.tradeapi.v1.assets.AssetsRequest
+	(*AssetsResponse)(nil),            // 6: grpc.tradeapi.v1.assets.AssetsResponse
+	(*GetAssetParamsRequest)(nil),     // 7: grpc.tradeapi.v1.assets.GetAssetParamsRequest
+	(*GetAssetParamsResponse)(nil),    // 8: grpc.tradeapi.v1.assets.GetAssetParamsResponse
+	(*OptionsChainRequest)(nil),       // 9: grpc.tradeapi.v1.assets.OptionsChainRequest
+	(*OptionsChainResponse)(nil),      // 10: grpc.tradeapi.v1.assets.OptionsChainResponse
+	(*ScheduleRequest)(nil),           // 11: grpc.tradeapi.v1.assets.ScheduleRequest
+	(*ScheduleResponse)(nil),          // 12: grpc.tradeapi.v1.assets.ScheduleResponse
+	(*Exchange)(nil),                  // 13: grpc.tradeapi.v1.assets.Exchange
+	(*Asset)(nil),                     // 14: grpc.tradeapi.v1.assets.Asset
+	(*Option)(nil),                    // 15: grpc.tradeapi.v1.assets.Option
+	(*Longable)(nil),                  // 16: grpc.tradeapi.v1.assets.Longable
+	(*Shortable)(nil),                 // 17: grpc.tradeapi.v1.assets.Shortable
+	(*ScheduleResponse_Sessions)(nil), // 18: grpc.tradeapi.v1.assets.ScheduleResponse.Sessions
+	(*decimal.Decimal)(nil),           // 19: google.type.Decimal
+	(*money.Money)(nil),               // 20: google.type.Money
+	(*date.Date)(nil),                 // 21: google.type.Date
+	(*interval.Interval)(nil),         // 22: google.type.Interval
 }
 var file_grpc_tradeapi_v1_assets_assets_service_proto_depIdxs = []int32{
-	9,  // 0: grpc.tradeapi.v1.assets.ExchangesResponse.exchanges:type_name -> grpc.tradeapi.v1.assets.Exchange
-	10, // 1: grpc.tradeapi.v1.assets.AssetsResponse.assets:type_name -> grpc.tradeapi.v1.assets.Asset
-	11, // 2: grpc.tradeapi.v1.assets.OptionsChainResponse.options:type_name -> grpc.tradeapi.v1.assets.Option
-	12, // 3: grpc.tradeapi.v1.assets.ScheduleResponse.sessions:type_name -> grpc.tradeapi.v1.assets.ScheduleResponse.Sessions
-	0,  // 4: grpc.tradeapi.v1.assets.Option.type:type_name -> grpc.tradeapi.v1.assets.Option.Type
-	13, // 5: grpc.tradeapi.v1.assets.Option.contract_size:type_name -> google.type.Decimal
-	14, // 6: grpc.tradeapi.v1.assets.Option.trade_first_day:type_name -> google.type.Date
-	14, // 7: grpc.tradeapi.v1.assets.Option.trade_last_day:type_name -> google.type.Date
-	13, // 8: grpc.tradeapi.v1.assets.Option.strike:type_name -> google.type.Decimal
-	13, // 9: grpc.tradeapi.v1.assets.Option.multiplier:type_name -> google.type.Decimal
-	15, // 10: grpc.tradeapi.v1.assets.ScheduleResponse.Sessions.interval:type_name -> google.type.Interval
-	1,  // 11: grpc.tradeapi.v1.assets.AssetsService.Exchanges:input_type -> grpc.tradeapi.v1.assets.ExchangesRequest
-	3,  // 12: grpc.tradeapi.v1.assets.AssetsService.Assets:input_type -> grpc.tradeapi.v1.assets.AssetsRequest
-	5,  // 13: grpc.tradeapi.v1.assets.AssetsService.OptionsChain:input_type -> grpc.tradeapi.v1.assets.OptionsChainRequest
-	7,  // 14: grpc.tradeapi.v1.assets.AssetsService.Schedule:input_type -> grpc.tradeapi.v1.assets.ScheduleRequest
-	2,  // 15: grpc.tradeapi.v1.assets.AssetsService.Exchanges:output_type -> grpc.tradeapi.v1.assets.ExchangesResponse
-	4,  // 16: grpc.tradeapi.v1.assets.AssetsService.Assets:output_type -> grpc.tradeapi.v1.assets.AssetsResponse
-	6,  // 17: grpc.tradeapi.v1.assets.AssetsService.OptionsChain:output_type -> grpc.tradeapi.v1.assets.OptionsChainResponse
-	8,  // 18: grpc.tradeapi.v1.assets.AssetsService.Schedule:output_type -> grpc.tradeapi.v1.assets.ScheduleResponse
-	15, // [15:19] is the sub-list for method output_type
-	11, // [11:15] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	13, // 0: grpc.tradeapi.v1.assets.ExchangesResponse.exchanges:type_name -> grpc.tradeapi.v1.assets.Exchange
+	14, // 1: grpc.tradeapi.v1.assets.AssetsResponse.assets:type_name -> grpc.tradeapi.v1.assets.Asset
+	16, // 2: grpc.tradeapi.v1.assets.GetAssetParamsResponse.longable:type_name -> grpc.tradeapi.v1.assets.Longable
+	17, // 3: grpc.tradeapi.v1.assets.GetAssetParamsResponse.shortable:type_name -> grpc.tradeapi.v1.assets.Shortable
+	19, // 4: grpc.tradeapi.v1.assets.GetAssetParamsResponse.long_risk_rate:type_name -> google.type.Decimal
+	20, // 5: grpc.tradeapi.v1.assets.GetAssetParamsResponse.long_collateral:type_name -> google.type.Money
+	19, // 6: grpc.tradeapi.v1.assets.GetAssetParamsResponse.short_risk_rate:type_name -> google.type.Decimal
+	20, // 7: grpc.tradeapi.v1.assets.GetAssetParamsResponse.short_collateral:type_name -> google.type.Money
+	15, // 8: grpc.tradeapi.v1.assets.OptionsChainResponse.options:type_name -> grpc.tradeapi.v1.assets.Option
+	18, // 9: grpc.tradeapi.v1.assets.ScheduleResponse.sessions:type_name -> grpc.tradeapi.v1.assets.ScheduleResponse.Sessions
+	0,  // 10: grpc.tradeapi.v1.assets.Option.type:type_name -> grpc.tradeapi.v1.assets.Option.Type
+	19, // 11: grpc.tradeapi.v1.assets.Option.contract_size:type_name -> google.type.Decimal
+	21, // 12: grpc.tradeapi.v1.assets.Option.trade_first_day:type_name -> google.type.Date
+	21, // 13: grpc.tradeapi.v1.assets.Option.trade_last_day:type_name -> google.type.Date
+	19, // 14: grpc.tradeapi.v1.assets.Option.strike:type_name -> google.type.Decimal
+	19, // 15: grpc.tradeapi.v1.assets.Option.multiplier:type_name -> google.type.Decimal
+	1,  // 16: grpc.tradeapi.v1.assets.Longable.value:type_name -> grpc.tradeapi.v1.assets.Longable.Status
+	2,  // 17: grpc.tradeapi.v1.assets.Shortable.value:type_name -> grpc.tradeapi.v1.assets.Shortable.Status
+	22, // 18: grpc.tradeapi.v1.assets.ScheduleResponse.Sessions.interval:type_name -> google.type.Interval
+	3,  // 19: grpc.tradeapi.v1.assets.AssetsService.Exchanges:input_type -> grpc.tradeapi.v1.assets.ExchangesRequest
+	5,  // 20: grpc.tradeapi.v1.assets.AssetsService.Assets:input_type -> grpc.tradeapi.v1.assets.AssetsRequest
+	7,  // 21: grpc.tradeapi.v1.assets.AssetsService.GetAssetParams:input_type -> grpc.tradeapi.v1.assets.GetAssetParamsRequest
+	9,  // 22: grpc.tradeapi.v1.assets.AssetsService.OptionsChain:input_type -> grpc.tradeapi.v1.assets.OptionsChainRequest
+	11, // 23: grpc.tradeapi.v1.assets.AssetsService.Schedule:input_type -> grpc.tradeapi.v1.assets.ScheduleRequest
+	4,  // 24: grpc.tradeapi.v1.assets.AssetsService.Exchanges:output_type -> grpc.tradeapi.v1.assets.ExchangesResponse
+	6,  // 25: grpc.tradeapi.v1.assets.AssetsService.Assets:output_type -> grpc.tradeapi.v1.assets.AssetsResponse
+	8,  // 26: grpc.tradeapi.v1.assets.AssetsService.GetAssetParams:output_type -> grpc.tradeapi.v1.assets.GetAssetParamsResponse
+	10, // 27: grpc.tradeapi.v1.assets.AssetsService.OptionsChain:output_type -> grpc.tradeapi.v1.assets.OptionsChainResponse
+	12, // 28: grpc.tradeapi.v1.assets.AssetsService.Schedule:output_type -> grpc.tradeapi.v1.assets.ScheduleResponse
+	24, // [24:29] is the sub-list for method output_type
+	19, // [19:24] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_grpc_tradeapi_v1_assets_assets_service_proto_init() }
@@ -881,8 +1330,8 @@ func file_grpc_tradeapi_v1_assets_assets_service_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_tradeapi_v1_assets_assets_service_proto_rawDesc), len(file_grpc_tradeapi_v1_assets_assets_service_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   12,
+			NumEnums:      3,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AssetsService_Exchanges_FullMethodName    = "/grpc.tradeapi.v1.assets.AssetsService/Exchanges"
-	AssetsService_Assets_FullMethodName       = "/grpc.tradeapi.v1.assets.AssetsService/Assets"
-	AssetsService_OptionsChain_FullMethodName = "/grpc.tradeapi.v1.assets.AssetsService/OptionsChain"
-	AssetsService_Schedule_FullMethodName     = "/grpc.tradeapi.v1.assets.AssetsService/Schedule"
+	AssetsService_Exchanges_FullMethodName      = "/grpc.tradeapi.v1.assets.AssetsService/Exchanges"
+	AssetsService_Assets_FullMethodName         = "/grpc.tradeapi.v1.assets.AssetsService/Assets"
+	AssetsService_GetAssetParams_FullMethodName = "/grpc.tradeapi.v1.assets.AssetsService/GetAssetParams"
+	AssetsService_OptionsChain_FullMethodName   = "/grpc.tradeapi.v1.assets.AssetsService/OptionsChain"
+	AssetsService_Schedule_FullMethodName       = "/grpc.tradeapi.v1.assets.AssetsService/Schedule"
 )
 
 // AssetsServiceClient is the client API for AssetsService service.
@@ -41,6 +42,15 @@ type AssetsServiceClient interface {
 	// GET /v1/assets
 	// Authorization: <token>
 	Assets(ctx context.Context, in *AssetsRequest, opts ...grpc.CallOption) (*AssetsResponse, error)
+	// Получение торговых параметров по инструменту
+	// Пример HTTP запроса:
+	// GET /v1/assets/SBER@MISX/params?account_id=1440399
+	// Authorization: <token>
+	//
+	// Параметры:
+	// - symbol - передается в URL пути
+	// - account_id - передаётся как query-параметр
+	GetAssetParams(ctx context.Context, in *GetAssetParamsRequest, opts ...grpc.CallOption) (*GetAssetParamsResponse, error)
 	// Получение цепочки опционов для базового актива
 	// Пример HTTP запроса:
 	// GET /v1/assets/SBER@MISX/options
@@ -75,6 +85,16 @@ func (c *assetsServiceClient) Assets(ctx context.Context, in *AssetsRequest, opt
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AssetsResponse)
 	err := c.cc.Invoke(ctx, AssetsService_Assets_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *assetsServiceClient) GetAssetParams(ctx context.Context, in *GetAssetParamsRequest, opts ...grpc.CallOption) (*GetAssetParamsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAssetParamsResponse)
+	err := c.cc.Invoke(ctx, AssetsService_GetAssetParams_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -117,6 +137,15 @@ type AssetsServiceServer interface {
 	// GET /v1/assets
 	// Authorization: <token>
 	Assets(context.Context, *AssetsRequest) (*AssetsResponse, error)
+	// Получение торговых параметров по инструменту
+	// Пример HTTP запроса:
+	// GET /v1/assets/SBER@MISX/params?account_id=1440399
+	// Authorization: <token>
+	//
+	// Параметры:
+	// - symbol - передается в URL пути
+	// - account_id - передаётся как query-параметр
+	GetAssetParams(context.Context, *GetAssetParamsRequest) (*GetAssetParamsResponse, error)
 	// Получение цепочки опционов для базового актива
 	// Пример HTTP запроса:
 	// GET /v1/assets/SBER@MISX/options
@@ -142,6 +171,9 @@ func (UnimplementedAssetsServiceServer) Exchanges(context.Context, *ExchangesReq
 }
 func (UnimplementedAssetsServiceServer) Assets(context.Context, *AssetsRequest) (*AssetsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Assets not implemented")
+}
+func (UnimplementedAssetsServiceServer) GetAssetParams(context.Context, *GetAssetParamsRequest) (*GetAssetParamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAssetParams not implemented")
 }
 func (UnimplementedAssetsServiceServer) OptionsChain(context.Context, *OptionsChainRequest) (*OptionsChainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OptionsChain not implemented")
@@ -206,6 +238,24 @@ func _AssetsService_Assets_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AssetsService_GetAssetParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAssetParamsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssetsServiceServer).GetAssetParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AssetsService_GetAssetParams_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssetsServiceServer).GetAssetParams(ctx, req.(*GetAssetParamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AssetsService_OptionsChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(OptionsChainRequest)
 	if err := dec(in); err != nil {
@@ -256,6 +306,10 @@ var AssetsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Assets",
 			Handler:    _AssetsService_Assets_Handler,
+		},
+		{
+			MethodName: "GetAssetParams",
+			Handler:    _AssetsService_GetAssetParams_Handler,
 		},
 		{
 			MethodName: "OptionsChain",

@@ -12,6 +12,10 @@ func NewAssetsRequest() *assets_service.AssetsRequest {
 	return &assets_service.AssetsRequest{}
 }
 
+func NewAssetParamsRequest(symbol, accountId string) *assets_service.GetAssetParamsRequest {
+	return &assets_service.GetAssetParamsRequest{Symbol: symbol, AccountId: accountId}
+}
+
 func NewOptionsChainRequest(symbol string) *assets_service.OptionsChainRequest {
 	return &assets_service.OptionsChainRequest{UnderlyingSymbol: symbol}
 }
