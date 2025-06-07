@@ -7,8 +7,6 @@
 *.test
 *.out
 
-# Go module stuff
-go.sum
 
 # IDE/editor
 .vscode/

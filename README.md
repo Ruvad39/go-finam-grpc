@@ -33,7 +33,7 @@ slog.Info("main", "res", res)
 ```
 
 ### Получить информацию по торговому счету
-```
+```go
 // добавим заголовок с авторизацией (accessToken)
 ctx, err = client.WithAuthToken(ctx)
 if err != nil {
