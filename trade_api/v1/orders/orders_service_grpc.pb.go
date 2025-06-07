@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	OrdersService_PlaceOrder_FullMethodName  = "/grpc.tradeapi.v1.orders.OrdersService/PlaceOrder"
-	OrdersService_CancelOrder_FullMethodName = "/grpc.tradeapi.v1.orders.OrdersService/CancelOrder"
-	OrdersService_GetOrders_FullMethodName   = "/grpc.tradeapi.v1.orders.OrdersService/GetOrders"
-	OrdersService_GetOrder_FullMethodName    = "/grpc.tradeapi.v1.orders.OrdersService/GetOrder"
+	OrdersService_PlaceOrder_FullMethodName          = "/grpc.tradeapi.v1.orders.OrdersService/PlaceOrder"
+	OrdersService_CancelOrder_FullMethodName         = "/grpc.tradeapi.v1.orders.OrdersService/CancelOrder"
+	OrdersService_GetOrders_FullMethodName           = "/grpc.tradeapi.v1.orders.OrdersService/GetOrders"
+	OrdersService_GetOrder_FullMethodName            = "/grpc.tradeapi.v1.orders.OrdersService/GetOrder"
+	OrdersService_SubscribeOrderTrade_FullMethodName = "/grpc.tradeapi.v1.orders.OrdersService/SubscribeOrderTrade"
 )
 
 // OrdersServiceClient is the client API for OrdersService service.
@@ -53,7 +54,7 @@ type OrdersServiceClient interface {
 	// DELETE /v1/accounts/A12345/orders/ORD789012
 	// Authorization: <token>
 	CancelOrder(ctx context.Context, in *CancelOrderRequest, opts ...grpc.CallOption) (*OrderState, error)
-	// Получение списка активных заявок для аккаунта
+	// Получение списка заявок для аккаунта
 	// Пример HTTP запроса:
 	// GET /v1/accounts/A12345/orders
 	// Authorization: <token>
@@ -63,6 +64,8 @@ type OrdersServiceClient interface {
 	// GET /v1/accounts/A12345/orders/ORD789012
 	// Authorization: <token>
 	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*OrderState, error)
+	// Подписка на собственные заявки и сделки. Стрим метод
+	SubscribeOrderTrade(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[OrderTradeRequest, OrderTradeResponse], error)
 }
 
 type ordersServiceClient struct {
@@ -113,6 +116,19 @@ func (c *ordersServiceClient) GetOrder(ctx context.Context, in *GetOrderRequest,
 	return out, nil
 }
 
+func (c *ordersServiceClient) SubscribeOrderTrade(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[OrderTradeRequest, OrderTradeResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &OrdersService_ServiceDesc.Streams[0], OrdersService_SubscribeOrderTrade_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[OrderTradeRequest, OrderTradeResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type OrdersService_SubscribeOrderTradeClient = grpc.BidiStreamingClient[OrderTradeRequest, OrderTradeResponse]
+
 // OrdersServiceServer is the server API for OrdersService service.
 // All implementations must embed UnimplementedOrdersServiceServer
 // for forward compatibility.
@@ -141,7 +157,7 @@ type OrdersServiceServer interface {
 	// DELETE /v1/accounts/A12345/orders/ORD789012
 	// Authorization: <token>
 	CancelOrder(context.Context, *CancelOrderRequest) (*OrderState, error)
-	// Получение списка активных заявок для аккаунта
+	// Получение списка заявок для аккаунта
 	// Пример HTTP запроса:
 	// GET /v1/accounts/A12345/orders
 	// Authorization: <token>
@@ -151,6 +167,8 @@ type OrdersServiceServer interface {
 	// GET /v1/accounts/A12345/orders/ORD789012
 	// Authorization: <token>
 	GetOrder(context.Context, *GetOrderRequest) (*OrderState, error)
+	// Подписка на собственные заявки и сделки. Стрим метод
+	SubscribeOrderTrade(grpc.BidiStreamingServer[OrderTradeRequest, OrderTradeResponse]) error
 	mustEmbedUnimplementedOrdersServiceServer()
 }
 
@@ -172,6 +190,9 @@ func (UnimplementedOrdersServiceServer) GetOrders(context.Context, *OrdersReques
 }
 func (UnimplementedOrdersServiceServer) GetOrder(context.Context, *GetOrderRequest) (*OrderState, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
+}
+func (UnimplementedOrdersServiceServer) SubscribeOrderTrade(grpc.BidiStreamingServer[OrderTradeRequest, OrderTradeResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method SubscribeOrderTrade not implemented")
 }
 func (UnimplementedOrdersServiceServer) mustEmbedUnimplementedOrdersServiceServer() {}
 func (UnimplementedOrdersServiceServer) testEmbeddedByValue()                       {}
@@ -266,6 +287,13 @@ func _OrdersService_GetOrder_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrdersService_SubscribeOrderTrade_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(OrdersServiceServer).SubscribeOrderTrade(&grpc.GenericServerStream[OrderTradeRequest, OrderTradeResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type OrdersService_SubscribeOrderTradeServer = grpc.BidiStreamingServer[OrderTradeRequest, OrderTradeResponse]
+
 // OrdersService_ServiceDesc is the grpc.ServiceDesc for OrdersService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -290,6 +318,13 @@ var OrdersService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OrdersService_GetOrder_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SubscribeOrderTrade",
+			Handler:       _OrdersService_SubscribeOrderTrade_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "grpc/tradeapi/v1/orders/orders_service.proto",
 }

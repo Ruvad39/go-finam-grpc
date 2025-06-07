@@ -4,6 +4,10 @@ import (
 	assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
 )
 
+func NewClockRequest() *assets_service.ClockRequest {
+	return &assets_service.ClockRequest{}
+}
+
 func NewExchangesRequest() *assets_service.ExchangesRequest {
 	return &assets_service.ExchangesRequest{}
 }
@@ -14,6 +18,10 @@ func NewAssetsRequest() *assets_service.AssetsRequest {
 
 func NewAssetParamsRequest(symbol, accountId string) *assets_service.GetAssetParamsRequest {
 	return &assets_service.GetAssetParamsRequest{Symbol: symbol, AccountId: accountId}
+}
+
+func NewAssetRequest(symbol, accountId string) *assets_service.GetAssetRequest {
+	return &assets_service.GetAssetRequest{Symbol: symbol, AccountId: accountId}
 }
 
 func NewOptionsChainRequest(symbol string) *assets_service.OptionsChainRequest {

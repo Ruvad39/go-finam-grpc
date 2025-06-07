@@ -16,9 +16,9 @@ import (
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
-	//side "trade_api/v1/side"
-	side "github.com/Ruvad39/go-finam-grpc/trade_api/v1"
-
+	//_ "trade_api/v1/side"
+	//side "github.com/Ruvad39/go-finam-grpc/trade_api/v1/side"
+	trade "github.com/Ruvad39/go-finam-grpc/trade_api/v1/trade"
 	unsafe "unsafe"
 )
 
@@ -31,8 +31,9 @@ const (
 
 // Запрос получения информации по конкретному аккаунту
 type GetAccountRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountId     string                 `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"` // Идентификатор аккаунта
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Идентификатор аккаунта
+	AccountId     string `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -242,7 +243,7 @@ func (x *TradesRequest) GetInterval() *interval.Interval {
 type TradesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Сделки по аккаунту
-	Trades        []*AccountTrade `protobuf:"bytes,1,rep,name=trades,proto3" json:"trades,omitempty"`
+	Trades        []*trade.AccountTrade `protobuf:"bytes,1,rep,name=trades,proto3" json:"trades,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -277,7 +278,7 @@ func (*TradesResponse) Descriptor() ([]byte, []int) {
 	return file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *TradesResponse) GetTrades() []*AccountTrade {
+func (x *TradesResponse) GetTrades() []*trade.AccountTrade {
 	if x != nil {
 		return x.Trades
 	}
@@ -467,97 +468,6 @@ func (x *Position) GetCurrentPrice() *decimal.Decimal {
 	return nil
 }
 
-// Информация о сделке
-type AccountTrade struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Идентификатор сделки
-	TradeId string `protobuf:"bytes,1,opt,name=trade_id,json=tradeId,proto3" json:"trade_id,omitempty"`
-	// Символ инструмента
-	Symbol string `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`
-	// Цена исполнения
-	Price *decimal.Decimal `protobuf:"bytes,3,opt,name=price,proto3" json:"price,omitempty"`
-	// Размер в шт.
-	Size *decimal.Decimal `protobuf:"bytes,4,opt,name=size,proto3" json:"size,omitempty"`
-	// Сторона сделки (long или short)
-	Side side.Side `protobuf:"varint,5,opt,name=side,proto3,enum=grpc.tradeapi.v1.Side" json:"side,omitempty"`
-	// Метка времени
-	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AccountTrade) Reset() {
-	*x = AccountTrade{}
-	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AccountTrade) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AccountTrade) ProtoMessage() {}
-
-func (x *AccountTrade) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AccountTrade.ProtoReflect.Descriptor instead.
-func (*AccountTrade) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *AccountTrade) GetTradeId() string {
-	if x != nil {
-		return x.TradeId
-	}
-	return ""
-}
-
-func (x *AccountTrade) GetSymbol() string {
-	if x != nil {
-		return x.Symbol
-	}
-	return ""
-}
-
-func (x *AccountTrade) GetPrice() *decimal.Decimal {
-	if x != nil {
-		return x.Price
-	}
-	return nil
-}
-
-func (x *AccountTrade) GetSize() *decimal.Decimal {
-	if x != nil {
-		return x.Size
-	}
-	return nil
-}
-
-func (x *AccountTrade) GetSide() side.Side {
-	if x != nil {
-		return x.Side
-	}
-	return side.Side(0)
-}
-
-func (x *AccountTrade) GetTimestamp() *timestamppb.Timestamp {
-	if x != nil {
-		return x.Timestamp
-	}
-	return nil
-}
-
 // Информация о транзакции
 type Transaction struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -579,7 +489,7 @@ type Transaction struct {
 
 func (x *Transaction) Reset() {
 	*x = Transaction{}
-	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[8]
+	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -591,7 +501,7 @@ func (x *Transaction) String() string {
 func (*Transaction) ProtoMessage() {}
 
 func (x *Transaction) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[8]
+	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -604,7 +514,7 @@ func (x *Transaction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Transaction.ProtoReflect.Descriptor instead.
 func (*Transaction) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescGZIP(), []int{8}
+	return file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Transaction) GetId() string {
@@ -664,7 +574,7 @@ type Transaction_Trade struct {
 
 func (x *Transaction_Trade) Reset() {
 	*x = Transaction_Trade{}
-	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[9]
+	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -676,7 +586,7 @@ func (x *Transaction_Trade) String() string {
 func (*Transaction_Trade) ProtoMessage() {}
 
 func (x *Transaction_Trade) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[9]
+	mi := &file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -689,7 +599,7 @@ func (x *Transaction_Trade) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Transaction_Trade.ProtoReflect.Descriptor instead.
 func (*Transaction_Trade) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescGZIP(), []int{8, 0}
+	return file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescGZIP(), []int{7, 0}
 }
 
 func (x *Transaction_Trade) GetSize() *decimal.Decimal {
@@ -717,7 +627,7 @@ var File_grpc_tradeapi_v1_accounts_accounts_service_proto protoreflect.FileDescr
 
 const file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDesc = "" +
 	"\n" +
-	"0grpc/tradeapi/v1/accounts/accounts_service.proto\x12\x19grpc.tradeapi.v1.accounts\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\x1a\x17google/type/money.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\"2\n" +
+	"0grpc/tradeapi/v1/accounts/accounts_service.proto\x12\x19grpc.tradeapi.v1.accounts\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\x1a\x17google/type/money.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\x1a\x1cgrpc/tradeapi/v1/trade.proto\"2\n" +
 	"\x11GetAccountRequest\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\"\xbb\x02\n" +
@@ -734,9 +644,9 @@ const file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDesc = "" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\x121\n" +
-	"\binterval\x18\x03 \x01(\v2\x15.google.type.IntervalR\binterval\"Q\n" +
-	"\x0eTradesResponse\x12?\n" +
-	"\x06trades\x18\x01 \x03(\v2'.grpc.tradeapi.v1.accounts.AccountTradeR\x06trades\"}\n" +
+	"\binterval\x18\x03 \x01(\v2\x15.google.type.IntervalR\binterval\"H\n" +
+	"\x0eTradesResponse\x126\n" +
+	"\x06trades\x18\x01 \x03(\v2\x1e.grpc.tradeapi.v1.AccountTradeR\x06trades\"}\n" +
 	"\x13TransactionsRequest\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\x12\x14\n" +
@@ -748,14 +658,7 @@ const file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDesc = "" +
 	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x120\n" +
 	"\bquantity\x18\x02 \x01(\v2\x14.google.type.DecimalR\bquantity\x129\n" +
 	"\raverage_price\x18\x03 \x01(\v2\x14.google.type.DecimalR\faveragePrice\x129\n" +
-	"\rcurrent_price\x18\x04 \x01(\v2\x14.google.type.DecimalR\fcurrentPrice\"\xfd\x01\n" +
-	"\fAccountTrade\x12\x19\n" +
-	"\btrade_id\x18\x01 \x01(\tR\atradeId\x12\x16\n" +
-	"\x06symbol\x18\x02 \x01(\tR\x06symbol\x12*\n" +
-	"\x05price\x18\x03 \x01(\v2\x14.google.type.DecimalR\x05price\x12(\n" +
-	"\x04size\x18\x04 \x01(\v2\x14.google.type.DecimalR\x04size\x12*\n" +
-	"\x04side\x18\x05 \x01(\x0e2\x16.grpc.tradeapi.v1.SideR\x04side\x128\n" +
-	"\ttimestamp\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\"\x9c\x03\n" +
+	"\rcurrent_price\x18\x04 \x01(\v2\x14.google.type.DecimalR\fcurrentPrice\"\x9c\x03\n" +
 	"\vTransaction\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bcategory\x18\x02 \x01(\tR\bcategory\x128\n" +
@@ -785,7 +688,7 @@ func file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescGZIP() []byte 
 	return file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescData
 }
 
-var file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_grpc_tradeapi_v1_accounts_accounts_service_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_grpc_tradeapi_v1_accounts_accounts_service_proto_goTypes = []any{
 	(*GetAccountRequest)(nil),     // 0: grpc.tradeapi.v1.accounts.GetAccountRequest
 	(*GetAccountResponse)(nil),    // 1: grpc.tradeapi.v1.accounts.GetAccountResponse
@@ -794,48 +697,43 @@ var file_grpc_tradeapi_v1_accounts_accounts_service_proto_goTypes = []any{
 	(*TransactionsRequest)(nil),   // 4: grpc.tradeapi.v1.accounts.TransactionsRequest
 	(*TransactionsResponse)(nil),  // 5: grpc.tradeapi.v1.accounts.TransactionsResponse
 	(*Position)(nil),              // 6: grpc.tradeapi.v1.accounts.Position
-	(*AccountTrade)(nil),          // 7: grpc.tradeapi.v1.accounts.AccountTrade
-	(*Transaction)(nil),           // 8: grpc.tradeapi.v1.accounts.Transaction
-	(*Transaction_Trade)(nil),     // 9: grpc.tradeapi.v1.accounts.Transaction.Trade
-	(*decimal.Decimal)(nil),       // 10: google.type.Decimal
-	(*money.Money)(nil),           // 11: google.type.Money
-	(*interval.Interval)(nil),     // 12: google.type.Interval
-	(side.Side)(0),                // 13: grpc.tradeapi.v1.Side
-	(*timestamppb.Timestamp)(nil), // 14: google.protobuf.Timestamp
+	(*Transaction)(nil),           // 7: grpc.tradeapi.v1.accounts.Transaction
+	(*Transaction_Trade)(nil),     // 8: grpc.tradeapi.v1.accounts.Transaction.Trade
+	(*decimal.Decimal)(nil),       // 9: google.type.Decimal
+	(*money.Money)(nil),           // 10: google.type.Money
+	(*interval.Interval)(nil),     // 11: google.type.Interval
+	(*trade.AccountTrade)(nil),    // 12: grpc.tradeapi.v1.AccountTrade
+	(*timestamppb.Timestamp)(nil), // 13: google.protobuf.Timestamp
 }
 var file_grpc_tradeapi_v1_accounts_accounts_service_proto_depIdxs = []int32{
-	10, // 0: grpc.tradeapi.v1.accounts.GetAccountResponse.equity:type_name -> google.type.Decimal
-	10, // 1: grpc.tradeapi.v1.accounts.GetAccountResponse.unrealized_profit:type_name -> google.type.Decimal
+	9,  // 0: grpc.tradeapi.v1.accounts.GetAccountResponse.equity:type_name -> google.type.Decimal
+	9,  // 1: grpc.tradeapi.v1.accounts.GetAccountResponse.unrealized_profit:type_name -> google.type.Decimal
 	6,  // 2: grpc.tradeapi.v1.accounts.GetAccountResponse.positions:type_name -> grpc.tradeapi.v1.accounts.Position
-	11, // 3: grpc.tradeapi.v1.accounts.GetAccountResponse.cash:type_name -> google.type.Money
-	12, // 4: grpc.tradeapi.v1.accounts.TradesRequest.interval:type_name -> google.type.Interval
-	7,  // 5: grpc.tradeapi.v1.accounts.TradesResponse.trades:type_name -> grpc.tradeapi.v1.accounts.AccountTrade
-	12, // 6: grpc.tradeapi.v1.accounts.TransactionsRequest.interval:type_name -> google.type.Interval
-	8,  // 7: grpc.tradeapi.v1.accounts.TransactionsResponse.transactions:type_name -> grpc.tradeapi.v1.accounts.Transaction
-	10, // 8: grpc.tradeapi.v1.accounts.Position.quantity:type_name -> google.type.Decimal
-	10, // 9: grpc.tradeapi.v1.accounts.Position.average_price:type_name -> google.type.Decimal
-	10, // 10: grpc.tradeapi.v1.accounts.Position.current_price:type_name -> google.type.Decimal
-	10, // 11: grpc.tradeapi.v1.accounts.AccountTrade.price:type_name -> google.type.Decimal
-	10, // 12: grpc.tradeapi.v1.accounts.AccountTrade.size:type_name -> google.type.Decimal
-	13, // 13: grpc.tradeapi.v1.accounts.AccountTrade.side:type_name -> grpc.tradeapi.v1.Side
-	14, // 14: grpc.tradeapi.v1.accounts.AccountTrade.timestamp:type_name -> google.protobuf.Timestamp
-	14, // 15: grpc.tradeapi.v1.accounts.Transaction.timestamp:type_name -> google.protobuf.Timestamp
-	11, // 16: grpc.tradeapi.v1.accounts.Transaction.change:type_name -> google.type.Money
-	9,  // 17: grpc.tradeapi.v1.accounts.Transaction.trade:type_name -> grpc.tradeapi.v1.accounts.Transaction.Trade
-	10, // 18: grpc.tradeapi.v1.accounts.Transaction.Trade.size:type_name -> google.type.Decimal
-	10, // 19: grpc.tradeapi.v1.accounts.Transaction.Trade.price:type_name -> google.type.Decimal
-	10, // 20: grpc.tradeapi.v1.accounts.Transaction.Trade.accrued_interest:type_name -> google.type.Decimal
-	0,  // 21: grpc.tradeapi.v1.accounts.AccountsService.GetAccount:input_type -> grpc.tradeapi.v1.accounts.GetAccountRequest
-	2,  // 22: grpc.tradeapi.v1.accounts.AccountsService.Trades:input_type -> grpc.tradeapi.v1.accounts.TradesRequest
-	4,  // 23: grpc.tradeapi.v1.accounts.AccountsService.Transactions:input_type -> grpc.tradeapi.v1.accounts.TransactionsRequest
-	1,  // 24: grpc.tradeapi.v1.accounts.AccountsService.GetAccount:output_type -> grpc.tradeapi.v1.accounts.GetAccountResponse
-	3,  // 25: grpc.tradeapi.v1.accounts.AccountsService.Trades:output_type -> grpc.tradeapi.v1.accounts.TradesResponse
-	5,  // 26: grpc.tradeapi.v1.accounts.AccountsService.Transactions:output_type -> grpc.tradeapi.v1.accounts.TransactionsResponse
-	24, // [24:27] is the sub-list for method output_type
-	21, // [21:24] is the sub-list for method input_type
-	21, // [21:21] is the sub-list for extension type_name
-	21, // [21:21] is the sub-list for extension extendee
-	0,  // [0:21] is the sub-list for field type_name
+	10, // 3: grpc.tradeapi.v1.accounts.GetAccountResponse.cash:type_name -> google.type.Money
+	11, // 4: grpc.tradeapi.v1.accounts.TradesRequest.interval:type_name -> google.type.Interval
+	12, // 5: grpc.tradeapi.v1.accounts.TradesResponse.trades:type_name -> grpc.tradeapi.v1.AccountTrade
+	11, // 6: grpc.tradeapi.v1.accounts.TransactionsRequest.interval:type_name -> google.type.Interval
+	7,  // 7: grpc.tradeapi.v1.accounts.TransactionsResponse.transactions:type_name -> grpc.tradeapi.v1.accounts.Transaction
+	9,  // 8: grpc.tradeapi.v1.accounts.Position.quantity:type_name -> google.type.Decimal
+	9,  // 9: grpc.tradeapi.v1.accounts.Position.average_price:type_name -> google.type.Decimal
+	9,  // 10: grpc.tradeapi.v1.accounts.Position.current_price:type_name -> google.type.Decimal
+	13, // 11: grpc.tradeapi.v1.accounts.Transaction.timestamp:type_name -> google.protobuf.Timestamp
+	10, // 12: grpc.tradeapi.v1.accounts.Transaction.change:type_name -> google.type.Money
+	8,  // 13: grpc.tradeapi.v1.accounts.Transaction.trade:type_name -> grpc.tradeapi.v1.accounts.Transaction.Trade
+	9,  // 14: grpc.tradeapi.v1.accounts.Transaction.Trade.size:type_name -> google.type.Decimal
+	9,  // 15: grpc.tradeapi.v1.accounts.Transaction.Trade.price:type_name -> google.type.Decimal
+	9,  // 16: grpc.tradeapi.v1.accounts.Transaction.Trade.accrued_interest:type_name -> google.type.Decimal
+	0,  // 17: grpc.tradeapi.v1.accounts.AccountsService.GetAccount:input_type -> grpc.tradeapi.v1.accounts.GetAccountRequest
+	2,  // 18: grpc.tradeapi.v1.accounts.AccountsService.Trades:input_type -> grpc.tradeapi.v1.accounts.TradesRequest
+	4,  // 19: grpc.tradeapi.v1.accounts.AccountsService.Transactions:input_type -> grpc.tradeapi.v1.accounts.TransactionsRequest
+	1,  // 20: grpc.tradeapi.v1.accounts.AccountsService.GetAccount:output_type -> grpc.tradeapi.v1.accounts.GetAccountResponse
+	3,  // 21: grpc.tradeapi.v1.accounts.AccountsService.Trades:output_type -> grpc.tradeapi.v1.accounts.TradesResponse
+	5,  // 22: grpc.tradeapi.v1.accounts.AccountsService.Transactions:output_type -> grpc.tradeapi.v1.accounts.TransactionsResponse
+	20, // [20:23] is the sub-list for method output_type
+	17, // [17:20] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_grpc_tradeapi_v1_accounts_accounts_service_proto_init() }
@@ -849,7 +747,7 @@ func file_grpc_tradeapi_v1_accounts_accounts_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDesc), len(file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -29,7 +29,7 @@ const (
 
 // Endpoints
 const (
-	endPoint = "ftrr01.finam.ru:443"
+	endPoint = "api.finam.ru:443" //"ftrr01.finam.ru:443"
 )
 
 var logLevel = &slog.LevelVar{} // INFO

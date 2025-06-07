@@ -15,7 +15,8 @@ import (
 	reflect "reflect"
 	sync "sync"
 	//side "trade_api/v1/side"
-	side "github.com/Ruvad39/go-finam-grpc/trade_api/v1"
+	side "github.com/Ruvad39/go-finam-grpc/trade_api/v1/side"
+	trade "github.com/Ruvad39/go-finam-grpc/trade_api/v1/trade"
 	unsafe "unsafe"
 )
 
@@ -378,6 +379,227 @@ func (OrderStatus) EnumDescriptor() ([]byte, []int) {
 	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{3}
 }
 
+// Доступные действия
+type OrderTradeRequest_Action int32
+
+const (
+	// Подписаться
+	OrderTradeRequest_ACTION_SUBSCRIBE OrderTradeRequest_Action = 0
+	// Отписаться
+	OrderTradeRequest_ACTION_UNSUBSCRIBE OrderTradeRequest_Action = 1
+)
+
+// Enum value maps for OrderTradeRequest_Action.
+var (
+	OrderTradeRequest_Action_name = map[int32]string{
+		0: "ACTION_SUBSCRIBE",
+		1: "ACTION_UNSUBSCRIBE",
+	}
+	OrderTradeRequest_Action_value = map[string]int32{
+		"ACTION_SUBSCRIBE":   0,
+		"ACTION_UNSUBSCRIBE": 1,
+	}
+)
+
+func (x OrderTradeRequest_Action) Enum() *OrderTradeRequest_Action {
+	p := new(OrderTradeRequest_Action)
+	*p = x
+	return p
+}
+
+func (x OrderTradeRequest_Action) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (OrderTradeRequest_Action) Descriptor() protoreflect.EnumDescriptor {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[4].Descriptor()
+}
+
+func (OrderTradeRequest_Action) Type() protoreflect.EnumType {
+	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[4]
+}
+
+func (x OrderTradeRequest_Action) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use OrderTradeRequest_Action.Descriptor instead.
+func (OrderTradeRequest_Action) EnumDescriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{0, 0}
+}
+
+// Тип подписки
+type OrderTradeRequest_DataType int32
+
+const (
+	// Все: заявки и сделки
+	OrderTradeRequest_DATA_TYPE_ALL OrderTradeRequest_DataType = 0
+	// Заявки
+	OrderTradeRequest_DATA_TYPE_ORDERS OrderTradeRequest_DataType = 1
+	// Сделки
+	OrderTradeRequest_DATA_TYPE_TRADES OrderTradeRequest_DataType = 2
+)
+
+// Enum value maps for OrderTradeRequest_DataType.
+var (
+	OrderTradeRequest_DataType_name = map[int32]string{
+		0: "DATA_TYPE_ALL",
+		1: "DATA_TYPE_ORDERS",
+		2: "DATA_TYPE_TRADES",
+	}
+	OrderTradeRequest_DataType_value = map[string]int32{
+		"DATA_TYPE_ALL":    0,
+		"DATA_TYPE_ORDERS": 1,
+		"DATA_TYPE_TRADES": 2,
+	}
+)
+
+func (x OrderTradeRequest_DataType) Enum() *OrderTradeRequest_DataType {
+	p := new(OrderTradeRequest_DataType)
+	*p = x
+	return p
+}
+
+func (x OrderTradeRequest_DataType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (OrderTradeRequest_DataType) Descriptor() protoreflect.EnumDescriptor {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5].Descriptor()
+}
+
+func (OrderTradeRequest_DataType) Type() protoreflect.EnumType {
+	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5]
+}
+
+func (x OrderTradeRequest_DataType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use OrderTradeRequest_DataType.Descriptor instead.
+func (OrderTradeRequest_DataType) EnumDescriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{0, 1}
+}
+
+// Запрос подписки на собственные заявки и сделки. Стрим
+type OrderTradeRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Изменение статуса подписки: подписка/отписка
+	Action OrderTradeRequest_Action `protobuf:"varint,1,opt,name=action,proto3,enum=grpc.tradeapi.v1.orders.OrderTradeRequest_Action" json:"action,omitempty"`
+	// Подписка только на заявки/ордера или на все сразу
+	DataType OrderTradeRequest_DataType `protobuf:"varint,2,opt,name=data_type,json=dataType,proto3,enum=grpc.tradeapi.v1.orders.OrderTradeRequest_DataType" json:"data_type,omitempty"`
+	// Идентификатор аккаунта
+	AccountId     string `protobuf:"bytes,3,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderTradeRequest) Reset() {
+	*x = OrderTradeRequest{}
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderTradeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderTradeRequest) ProtoMessage() {}
+
+func (x *OrderTradeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderTradeRequest.ProtoReflect.Descriptor instead.
+func (*OrderTradeRequest) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *OrderTradeRequest) GetAction() OrderTradeRequest_Action {
+	if x != nil {
+		return x.Action
+	}
+	return OrderTradeRequest_ACTION_SUBSCRIBE
+}
+
+func (x *OrderTradeRequest) GetDataType() OrderTradeRequest_DataType {
+	if x != nil {
+		return x.DataType
+	}
+	return OrderTradeRequest_DATA_TYPE_ALL
+}
+
+func (x *OrderTradeRequest) GetAccountId() string {
+	if x != nil {
+		return x.AccountId
+	}
+	return ""
+}
+
+// Список собственных заявок и сделок
+type OrderTradeResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Заявки
+	Orders []*OrderState `protobuf:"bytes,1,rep,name=orders,proto3" json:"orders,omitempty"`
+	// Сделки
+	Trades        []*trade.AccountTrade `protobuf:"bytes,2,rep,name=trades,proto3" json:"trades,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderTradeResponse) Reset() {
+	*x = OrderTradeResponse{}
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderTradeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderTradeResponse) ProtoMessage() {}
+
+func (x *OrderTradeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderTradeResponse.ProtoReflect.Descriptor instead.
+func (*OrderTradeResponse) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *OrderTradeResponse) GetOrders() []*OrderState {
+	if x != nil {
+		return x.Orders
+	}
+	return nil
+}
+
+func (x *OrderTradeResponse) GetTrades() []*trade.AccountTrade {
+	if x != nil {
+		return x.Trades
+	}
+	return nil
+}
+
 // Запрос на получение конкретного ордера
 type GetOrderRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -391,7 +613,7 @@ type GetOrderRequest struct {
 
 func (x *GetOrderRequest) Reset() {
 	*x = GetOrderRequest{}
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[0]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +625,7 @@ func (x *GetOrderRequest) String() string {
 func (*GetOrderRequest) ProtoMessage() {}
 
 func (x *GetOrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[0]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +638,7 @@ func (x *GetOrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOrderRequest.ProtoReflect.Descriptor instead.
 func (*GetOrderRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{0}
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetOrderRequest) GetAccountId() string {
@@ -464,7 +686,7 @@ type Order struct {
 
 func (x *Order) Reset() {
 	*x = Order{}
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[1]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -476,7 +698,7 @@ func (x *Order) String() string {
 func (*Order) ProtoMessage() {}
 
 func (x *Order) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[1]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -489,7 +711,7 @@ func (x *Order) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Order.ProtoReflect.Descriptor instead.
 func (*Order) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{1}
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Order) GetAccountId() string {
@@ -584,7 +806,7 @@ type Leg struct {
 
 func (x *Leg) Reset() {
 	*x = Leg{}
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[2]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -596,7 +818,7 @@ func (x *Leg) String() string {
 func (*Leg) ProtoMessage() {}
 
 func (x *Leg) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[2]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -609,7 +831,7 @@ func (x *Leg) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Leg.ProtoReflect.Descriptor instead.
 func (*Leg) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{2}
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Leg) GetSymbol() string {
@@ -656,7 +878,7 @@ type OrderState struct {
 
 func (x *OrderState) Reset() {
 	*x = OrderState{}
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[3]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -668,7 +890,7 @@ func (x *OrderState) String() string {
 func (*OrderState) ProtoMessage() {}
 
 func (x *OrderState) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[3]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -681,7 +903,7 @@ func (x *OrderState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderState.ProtoReflect.Descriptor instead.
 func (*OrderState) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{3}
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *OrderState) GetOrderId() string {
@@ -733,7 +955,7 @@ func (x *OrderState) GetWithdrawAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// Запрос получения списка активных торговых заявок
+// Запрос получения списка торговых заявок
 type OrdersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Идентификатор аккаунта
@@ -744,7 +966,7 @@ type OrdersRequest struct {
 
 func (x *OrdersRequest) Reset() {
 	*x = OrdersRequest{}
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[4]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -756,7 +978,7 @@ func (x *OrdersRequest) String() string {
 func (*OrdersRequest) ProtoMessage() {}
 
 func (x *OrdersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[4]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -769,7 +991,7 @@ func (x *OrdersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrdersRequest.ProtoReflect.Descriptor instead.
 func (*OrdersRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{4}
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *OrdersRequest) GetAccountId() string {
@@ -779,7 +1001,7 @@ func (x *OrdersRequest) GetAccountId() string {
 	return ""
 }
 
-// Список активных торговых заявок
+// Список торговых заявок
 type OrdersResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Заявки
@@ -790,7 +1012,7 @@ type OrdersResponse struct {
 
 func (x *OrdersResponse) Reset() {
 	*x = OrdersResponse{}
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[5]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -802,7 +1024,7 @@ func (x *OrdersResponse) String() string {
 func (*OrdersResponse) ProtoMessage() {}
 
 func (x *OrdersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[5]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -815,7 +1037,7 @@ func (x *OrdersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrdersResponse.ProtoReflect.Descriptor instead.
 func (*OrdersResponse) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{5}
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *OrdersResponse) GetOrders() []*OrderState {
@@ -838,7 +1060,7 @@ type CancelOrderRequest struct {
 
 func (x *CancelOrderRequest) Reset() {
 	*x = CancelOrderRequest{}
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[6]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -850,7 +1072,7 @@ func (x *CancelOrderRequest) String() string {
 func (*CancelOrderRequest) ProtoMessage() {}
 
 func (x *CancelOrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[6]
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -863,7 +1085,7 @@ func (x *CancelOrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelOrderRequest.ProtoReflect.Descriptor instead.
 func (*CancelOrderRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{6}
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CancelOrderRequest) GetAccountId() string {
@@ -884,7 +1106,22 @@ var File_grpc_tradeapi_v1_orders_orders_service_proto protoreflect.FileDescripto
 
 const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\n" +
-	",grpc/tradeapi/v1/orders/orders_service.proto\x12\x17grpc.tradeapi.v1.orders\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\"K\n" +
+	",grpc/tradeapi/v1/orders/orders_service.proto\x12\x17grpc.tradeapi.v1.orders\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\x1a\x1cgrpc/tradeapi/v1/trade.proto\"\xd2\x02\n" +
+	"\x11OrderTradeRequest\x12I\n" +
+	"\x06action\x18\x01 \x01(\x0e21.grpc.tradeapi.v1.orders.OrderTradeRequest.ActionR\x06action\x12P\n" +
+	"\tdata_type\x18\x02 \x01(\x0e23.grpc.tradeapi.v1.orders.OrderTradeRequest.DataTypeR\bdataType\x12\x1d\n" +
+	"\n" +
+	"account_id\x18\x03 \x01(\tR\taccountId\"6\n" +
+	"\x06Action\x12\x14\n" +
+	"\x10ACTION_SUBSCRIBE\x10\x00\x12\x16\n" +
+	"\x12ACTION_UNSUBSCRIBE\x10\x01\"I\n" +
+	"\bDataType\x12\x11\n" +
+	"\rDATA_TYPE_ALL\x10\x00\x12\x14\n" +
+	"\x10DATA_TYPE_ORDERS\x10\x01\x12\x14\n" +
+	"\x10DATA_TYPE_TRADES\x10\x02\"\x89\x01\n" +
+	"\x12OrderTradeResponse\x12;\n" +
+	"\x06orders\x18\x01 \x03(\v2#.grpc.tradeapi.v1.orders.OrderStateR\x06orders\x126\n" +
+	"\x06trades\x18\x02 \x03(\v2\x1e.grpc.tradeapi.v1.AccountTradeR\x06trades\"K\n" +
 	"\x0fGetOrderRequest\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\x12\x19\n" +
@@ -980,13 +1217,14 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x18ORDER_STATUS_TP_EXECUTED\x10\x1f\x12\x1e\n" +
 	"\x1aORDER_STATUS_TP_CORRECTION\x10 \x12\x1e\n" +
 	"\x1aORDER_STATUS_TP_FORWARDING\x10!\x12#\n" +
-	"\x1fORDER_STATUS_TP_CORR_GUARD_TIME\x10\"2\xc0\x04\n" +
+	"\x1fORDER_STATUS_TP_CORR_GUARD_TIME\x10\"2\xb4\x05\n" +
 	"\rOrdersService\x12~\n" +
 	"\n" +
 	"PlaceOrder\x12\x1e.grpc.tradeapi.v1.orders.Order\x1a#.grpc.tradeapi.v1.orders.OrderState\"+\x82\xd3\xe4\x93\x02%:\x01*\" /v1/accounts/{account_id}/orders\x12\x94\x01\n" +
 	"\vCancelOrder\x12+.grpc.tradeapi.v1.orders.CancelOrderRequest\x1a#.grpc.tradeapi.v1.orders.OrderState\"3\x82\xd3\xe4\x93\x02-*+/v1/accounts/{account_id}/orders/{order_id}\x12\x86\x01\n" +
 	"\tGetOrders\x12&.grpc.tradeapi.v1.orders.OrdersRequest\x1a'.grpc.tradeapi.v1.orders.OrdersResponse\"(\x82\xd3\xe4\x93\x02\"\x12 /v1/accounts/{account_id}/orders\x12\x8e\x01\n" +
-	"\bGetOrder\x12(.grpc.tradeapi.v1.orders.GetOrderRequest\x1a#.grpc.tradeapi.v1.orders.OrderState\"3\x82\xd3\xe4\x93\x02-\x12+/v1/accounts/{account_id}/orders/{order_id}B&P\x01Z\"trade_api/v1/orders/orders_serviceb\x06proto3"
+	"\bGetOrder\x12(.grpc.tradeapi.v1.orders.GetOrderRequest\x1a#.grpc.tradeapi.v1.orders.OrderState\"3\x82\xd3\xe4\x93\x02-\x12+/v1/accounts/{account_id}/orders/{order_id}\x12r\n" +
+	"\x13SubscribeOrderTrade\x12*.grpc.tradeapi.v1.orders.OrderTradeRequest\x1a+.grpc.tradeapi.v1.orders.OrderTradeResponse(\x010\x01B&P\x01Z\"trade_api/v1/orders/orders_serviceb\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescOnce sync.Once
@@ -1000,54 +1238,65 @@ func file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP() []byte {
 	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescData
 }
 
-var file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
+var file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_grpc_tradeapi_v1_orders_orders_service_proto_goTypes = []any{
-	(OrderType)(0),                // 0: grpc.tradeapi.v1.orders.OrderType
-	(TimeInForce)(0),              // 1: grpc.tradeapi.v1.orders.TimeInForce
-	(StopCondition)(0),            // 2: grpc.tradeapi.v1.orders.StopCondition
-	(OrderStatus)(0),              // 3: grpc.tradeapi.v1.orders.OrderStatus
-	(*GetOrderRequest)(nil),       // 4: grpc.tradeapi.v1.orders.GetOrderRequest
-	(*Order)(nil),                 // 5: grpc.tradeapi.v1.orders.Order
-	(*Leg)(nil),                   // 6: grpc.tradeapi.v1.orders.Leg
-	(*OrderState)(nil),            // 7: grpc.tradeapi.v1.orders.OrderState
-	(*OrdersRequest)(nil),         // 8: grpc.tradeapi.v1.orders.OrdersRequest
-	(*OrdersResponse)(nil),        // 9: grpc.tradeapi.v1.orders.OrdersResponse
-	(*CancelOrderRequest)(nil),    // 10: grpc.tradeapi.v1.orders.CancelOrderRequest
-	(*decimal.Decimal)(nil),       // 11: google.type.Decimal
-	(side.Side)(0),                // 12: grpc.tradeapi.v1.Side
-	(*timestamppb.Timestamp)(nil), // 13: google.protobuf.Timestamp
+	(OrderType)(0),                  // 0: grpc.tradeapi.v1.orders.OrderType
+	(TimeInForce)(0),                // 1: grpc.tradeapi.v1.orders.TimeInForce
+	(StopCondition)(0),              // 2: grpc.tradeapi.v1.orders.StopCondition
+	(OrderStatus)(0),                // 3: grpc.tradeapi.v1.orders.OrderStatus
+	(OrderTradeRequest_Action)(0),   // 4: grpc.tradeapi.v1.orders.OrderTradeRequest.Action
+	(OrderTradeRequest_DataType)(0), // 5: grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
+	(*OrderTradeRequest)(nil),       // 6: grpc.tradeapi.v1.orders.OrderTradeRequest
+	(*OrderTradeResponse)(nil),      // 7: grpc.tradeapi.v1.orders.OrderTradeResponse
+	(*GetOrderRequest)(nil),         // 8: grpc.tradeapi.v1.orders.GetOrderRequest
+	(*Order)(nil),                   // 9: grpc.tradeapi.v1.orders.Order
+	(*Leg)(nil),                     // 10: grpc.tradeapi.v1.orders.Leg
+	(*OrderState)(nil),              // 11: grpc.tradeapi.v1.orders.OrderState
+	(*OrdersRequest)(nil),           // 12: grpc.tradeapi.v1.orders.OrdersRequest
+	(*OrdersResponse)(nil),          // 13: grpc.tradeapi.v1.orders.OrdersResponse
+	(*CancelOrderRequest)(nil),      // 14: grpc.tradeapi.v1.orders.CancelOrderRequest
+	(*trade.AccountTrade)(nil),      // 15: grpc.tradeapi.v1.AccountTrade
+	(*decimal.Decimal)(nil),         // 16: google.type.Decimal
+	(side.Side)(0),                  // 17: grpc.tradeapi.v1.Side
+	(*timestamppb.Timestamp)(nil),   // 18: google.protobuf.Timestamp
 }
 var file_grpc_tradeapi_v1_orders_orders_service_proto_depIdxs = []int32{
-	11, // 0: grpc.tradeapi.v1.orders.Order.quantity:type_name -> google.type.Decimal
-	12, // 1: grpc.tradeapi.v1.orders.Order.side:type_name -> grpc.tradeapi.v1.Side
-	0,  // 2: grpc.tradeapi.v1.orders.Order.type:type_name -> grpc.tradeapi.v1.orders.OrderType
-	1,  // 3: grpc.tradeapi.v1.orders.Order.time_in_force:type_name -> grpc.tradeapi.v1.orders.TimeInForce
-	11, // 4: grpc.tradeapi.v1.orders.Order.limit_price:type_name -> google.type.Decimal
-	11, // 5: grpc.tradeapi.v1.orders.Order.stop_price:type_name -> google.type.Decimal
-	2,  // 6: grpc.tradeapi.v1.orders.Order.stop_condition:type_name -> grpc.tradeapi.v1.orders.StopCondition
-	6,  // 7: grpc.tradeapi.v1.orders.Order.legs:type_name -> grpc.tradeapi.v1.orders.Leg
-	11, // 8: grpc.tradeapi.v1.orders.Leg.quantity:type_name -> google.type.Decimal
-	12, // 9: grpc.tradeapi.v1.orders.Leg.side:type_name -> grpc.tradeapi.v1.Side
-	3,  // 10: grpc.tradeapi.v1.orders.OrderState.status:type_name -> grpc.tradeapi.v1.orders.OrderStatus
-	5,  // 11: grpc.tradeapi.v1.orders.OrderState.order:type_name -> grpc.tradeapi.v1.orders.Order
-	13, // 12: grpc.tradeapi.v1.orders.OrderState.transact_at:type_name -> google.protobuf.Timestamp
-	13, // 13: grpc.tradeapi.v1.orders.OrderState.accept_at:type_name -> google.protobuf.Timestamp
-	13, // 14: grpc.tradeapi.v1.orders.OrderState.withdraw_at:type_name -> google.protobuf.Timestamp
-	7,  // 15: grpc.tradeapi.v1.orders.OrdersResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
-	5,  // 16: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:input_type -> grpc.tradeapi.v1.orders.Order
-	10, // 17: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:input_type -> grpc.tradeapi.v1.orders.CancelOrderRequest
-	8,  // 18: grpc.tradeapi.v1.orders.OrdersService.GetOrders:input_type -> grpc.tradeapi.v1.orders.OrdersRequest
-	4,  // 19: grpc.tradeapi.v1.orders.OrdersService.GetOrder:input_type -> grpc.tradeapi.v1.orders.GetOrderRequest
-	7,  // 20: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	7,  // 21: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	9,  // 22: grpc.tradeapi.v1.orders.OrdersService.GetOrders:output_type -> grpc.tradeapi.v1.orders.OrdersResponse
-	7,  // 23: grpc.tradeapi.v1.orders.OrdersService.GetOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	20, // [20:24] is the sub-list for method output_type
-	16, // [16:20] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	4,  // 0: grpc.tradeapi.v1.orders.OrderTradeRequest.action:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.Action
+	5,  // 1: grpc.tradeapi.v1.orders.OrderTradeRequest.data_type:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
+	11, // 2: grpc.tradeapi.v1.orders.OrderTradeResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
+	15, // 3: grpc.tradeapi.v1.orders.OrderTradeResponse.trades:type_name -> grpc.tradeapi.v1.AccountTrade
+	16, // 4: grpc.tradeapi.v1.orders.Order.quantity:type_name -> google.type.Decimal
+	17, // 5: grpc.tradeapi.v1.orders.Order.side:type_name -> grpc.tradeapi.v1.Side
+	0,  // 6: grpc.tradeapi.v1.orders.Order.type:type_name -> grpc.tradeapi.v1.orders.OrderType
+	1,  // 7: grpc.tradeapi.v1.orders.Order.time_in_force:type_name -> grpc.tradeapi.v1.orders.TimeInForce
+	16, // 8: grpc.tradeapi.v1.orders.Order.limit_price:type_name -> google.type.Decimal
+	16, // 9: grpc.tradeapi.v1.orders.Order.stop_price:type_name -> google.type.Decimal
+	2,  // 10: grpc.tradeapi.v1.orders.Order.stop_condition:type_name -> grpc.tradeapi.v1.orders.StopCondition
+	10, // 11: grpc.tradeapi.v1.orders.Order.legs:type_name -> grpc.tradeapi.v1.orders.Leg
+	16, // 12: grpc.tradeapi.v1.orders.Leg.quantity:type_name -> google.type.Decimal
+	17, // 13: grpc.tradeapi.v1.orders.Leg.side:type_name -> grpc.tradeapi.v1.Side
+	3,  // 14: grpc.tradeapi.v1.orders.OrderState.status:type_name -> grpc.tradeapi.v1.orders.OrderStatus
+	9,  // 15: grpc.tradeapi.v1.orders.OrderState.order:type_name -> grpc.tradeapi.v1.orders.Order
+	18, // 16: grpc.tradeapi.v1.orders.OrderState.transact_at:type_name -> google.protobuf.Timestamp
+	18, // 17: grpc.tradeapi.v1.orders.OrderState.accept_at:type_name -> google.protobuf.Timestamp
+	18, // 18: grpc.tradeapi.v1.orders.OrderState.withdraw_at:type_name -> google.protobuf.Timestamp
+	11, // 19: grpc.tradeapi.v1.orders.OrdersResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
+	9,  // 20: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:input_type -> grpc.tradeapi.v1.orders.Order
+	14, // 21: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:input_type -> grpc.tradeapi.v1.orders.CancelOrderRequest
+	12, // 22: grpc.tradeapi.v1.orders.OrdersService.GetOrders:input_type -> grpc.tradeapi.v1.orders.OrdersRequest
+	8,  // 23: grpc.tradeapi.v1.orders.OrdersService.GetOrder:input_type -> grpc.tradeapi.v1.orders.GetOrderRequest
+	6,  // 24: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:input_type -> grpc.tradeapi.v1.orders.OrderTradeRequest
+	11, // 25: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	11, // 26: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	13, // 27: grpc.tradeapi.v1.orders.OrdersService.GetOrders:output_type -> grpc.tradeapi.v1.orders.OrdersResponse
+	11, // 28: grpc.tradeapi.v1.orders.OrdersService.GetOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	7,  // 29: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:output_type -> grpc.tradeapi.v1.orders.OrderTradeResponse
+	25, // [25:30] is the sub-list for method output_type
+	20, // [20:25] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_grpc_tradeapi_v1_orders_orders_service_proto_init() }
@@ -1060,8 +1309,8 @@ func file_grpc_tradeapi_v1_orders_orders_service_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc), len(file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc)),
-			NumEnums:      4,
-			NumMessages:   7,
+			NumEnums:      6,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

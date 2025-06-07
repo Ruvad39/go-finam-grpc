@@ -32,16 +32,16 @@ func main() {
 
 	symbol := "SBER@MISX" //"ROSN@MISX"  //"SIM5@RTSX"
 	// Получение последней котировки по инструменту
-	//getQuote(ctx, client, symbol)
+	getQuote(ctx, client, symbol)
 
 	// Получение исторических данных по инструменту (агрегированные свечи)
 	//getBars(ctx, client, symbol)
 
 	// Получение текущего стакана по инструменту
-	// getOrderBook(ctx, client, symbol)
+	//getOrderBook(ctx, client, symbol)
 
 	// Получение списка последних сделок по инструменту
-	getLatestTrades(ctx, client, symbol)
+	//getLatestTrades(ctx, client, symbol)
 
 }
 
@@ -85,8 +85,8 @@ func getBars(ctx context.Context, client *finam.Client, symbol string) {
 
 	//symbol := "SBER@MISX" //"SIM5@RTSX" MISX
 	// получение списка свечей
-	tf := marketdata_service.BarsRequest_TIME_FRAME_D
-	start, _ := time.Parse("2006-01-02", "2025-01-01")
+	tf := marketdata_service.TimeFrame_TIME_FRAME_D
+	start, _ := time.Parse("2006-01-02", "2025-05-01")
 	end := time.Now()
 	req := finam.NewBarsRequest(symbol, tf, start, end)
 	bars, err := client.MarketDataService.Bars(ctx, req)

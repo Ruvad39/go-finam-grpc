@@ -26,6 +26,7 @@ const (
 	MarketDataService_SubscribeQuote_FullMethodName        = "/grpc.tradeapi.v1.marketdata.MarketDataService/SubscribeQuote"
 	MarketDataService_SubscribeOrderBook_FullMethodName    = "/grpc.tradeapi.v1.marketdata.MarketDataService/SubscribeOrderBook"
 	MarketDataService_SubscribeLatestTrades_FullMethodName = "/grpc.tradeapi.v1.marketdata.MarketDataService/SubscribeLatestTrades"
+	MarketDataService_SubscribeBars_FullMethodName         = "/grpc.tradeapi.v1.marketdata.MarketDataService/SubscribeBars"
 )
 
 // MarketDataServiceClient is the client API for MarketDataService service.
@@ -64,6 +65,8 @@ type MarketDataServiceClient interface {
 	SubscribeOrderBook(ctx context.Context, in *SubscribeOrderBookRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeOrderBookResponse], error)
 	// Подписка на сделки по инструменту. Стрим метод
 	SubscribeLatestTrades(ctx context.Context, in *SubscribeLatestTradesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeLatestTradesResponse], error)
+	// Подписка на агрегированные свечи. Стрим метод
+	SubscribeBars(ctx context.Context, in *SubscribeBarsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeBarsResponse], error)
 }
 
 type marketDataServiceClient struct {
@@ -171,6 +174,25 @@ func (c *marketDataServiceClient) SubscribeLatestTrades(ctx context.Context, in 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type MarketDataService_SubscribeLatestTradesClient = grpc.ServerStreamingClient[SubscribeLatestTradesResponse]
 
+func (c *marketDataServiceClient) SubscribeBars(ctx context.Context, in *SubscribeBarsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeBarsResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &MarketDataService_ServiceDesc.Streams[3], MarketDataService_SubscribeBars_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[SubscribeBarsRequest, SubscribeBarsResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type MarketDataService_SubscribeBarsClient = grpc.ServerStreamingClient[SubscribeBarsResponse]
+
 // MarketDataServiceServer is the server API for MarketDataService service.
 // All implementations must embed UnimplementedMarketDataServiceServer
 // for forward compatibility.
@@ -207,6 +229,8 @@ type MarketDataServiceServer interface {
 	SubscribeOrderBook(*SubscribeOrderBookRequest, grpc.ServerStreamingServer[SubscribeOrderBookResponse]) error
 	// Подписка на сделки по инструменту. Стрим метод
 	SubscribeLatestTrades(*SubscribeLatestTradesRequest, grpc.ServerStreamingServer[SubscribeLatestTradesResponse]) error
+	// Подписка на агрегированные свечи. Стрим метод
+	SubscribeBars(*SubscribeBarsRequest, grpc.ServerStreamingServer[SubscribeBarsResponse]) error
 	mustEmbedUnimplementedMarketDataServiceServer()
 }
 
@@ -237,6 +261,9 @@ func (UnimplementedMarketDataServiceServer) SubscribeOrderBook(*SubscribeOrderBo
 }
 func (UnimplementedMarketDataServiceServer) SubscribeLatestTrades(*SubscribeLatestTradesRequest, grpc.ServerStreamingServer[SubscribeLatestTradesResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method SubscribeLatestTrades not implemented")
+}
+func (UnimplementedMarketDataServiceServer) SubscribeBars(*SubscribeBarsRequest, grpc.ServerStreamingServer[SubscribeBarsResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method SubscribeBars not implemented")
 }
 func (UnimplementedMarketDataServiceServer) mustEmbedUnimplementedMarketDataServiceServer() {}
 func (UnimplementedMarketDataServiceServer) testEmbeddedByValue()                           {}
@@ -364,6 +391,17 @@ func _MarketDataService_SubscribeLatestTrades_Handler(srv interface{}, stream gr
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type MarketDataService_SubscribeLatestTradesServer = grpc.ServerStreamingServer[SubscribeLatestTradesResponse]
 
+func _MarketDataService_SubscribeBars_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeBarsRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MarketDataServiceServer).SubscribeBars(m, &grpc.GenericServerStream[SubscribeBarsRequest, SubscribeBarsResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type MarketDataService_SubscribeBarsServer = grpc.ServerStreamingServer[SubscribeBarsResponse]
+
 // MarketDataService_ServiceDesc is the grpc.ServiceDesc for MarketDataService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -402,6 +440,11 @@ var MarketDataService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "SubscribeLatestTrades",
 			Handler:       _MarketDataService_SubscribeLatestTrades_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "SubscribeBars",
+			Handler:       _MarketDataService_SubscribeBars_Handler,
 			ServerStreams: true,
 		},
 	},

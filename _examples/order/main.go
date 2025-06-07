@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log/slog"
 	"os"
 
@@ -33,7 +34,7 @@ func main() {
 
 	// получим список всех ордеров по заданному счету
 	_ = accountId
-	getOrders(ctx, client, "1347034")
+	//getOrders(ctx, client, "1347034")
 
 	// получим информацию по заданному ордеру
 	//orderId := "1892950515808633522"
@@ -48,7 +49,7 @@ func main() {
 
 	// пример выставления ордера на покупку\продажу
 	//placeOrder(ctx, client, accountId)
-	//buyLimit(ctx, client, accountId)
+	buyLimit(ctx, client, accountId)
 }
 
 // getOrders получим список всех ордеров по заданному счету
@@ -65,6 +66,19 @@ func getOrders(ctx context.Context, client *finam.Client, accountId string) {
 	if err != nil {
 		slog.Error("OrdersService", "GetOrders", err.Error())
 	}
+	// Преобразуем структуру в JSON
+	// jsonData, err := json.MarshalIndent(person, "", "  ")
+	jsonData, err := json.Marshal(orders)
+	if err != nil {
+		slog.Error("Ошибка при маршалинге JSON: ", "err", err.Error())
+	}
+	filePath := "orders.json"
+	err = os.WriteFile(filePath, jsonData, 0644)
+	if err != nil {
+		slog.Error("Ошибка при записи в файл:", "err", err.Error())
+	}
+	slog.Info("Данные успешно сохранены в файл ")
+
 	for n, row := range orders.Orders {
 		slog.Info("OrdersService", "n", n,
 			"order", row)
@@ -145,7 +159,7 @@ func buyLimit(ctx context.Context, client *finam.Client, accountId string) {
 		Side:        side.Side_SIDE_BUY,
 		Type:        orders_service.OrderType_ORDER_TYPE_LIMIT,
 		Quantity:    finam.IntToDecimal(10),
-		LimitPrice:  finam.Float64ToDecimal(294.65),
+		LimitPrice:  finam.Float64ToDecimal(316.1),
 		TimeInForce: orders_service.TimeInForce_TIME_IN_FORCE_DAY,
 		//TimeInForce: orders_service.TimeInForce_TIME_IN_FORCE_GOOD_TILL_CANCEL,
 		//ClientOrderId: ""

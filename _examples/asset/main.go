@@ -39,6 +39,9 @@ func main() {
 		return
 	}
 
+	// получить время сервера
+	getClock(ctx, client)
+
 	// Получение списка доступных бирж, названия и mic коды
 	//getExchanges(ctx, client)
 	// test Получение списка доступных бирж =  подсчет кол-ва дублей
@@ -47,12 +50,21 @@ func main() {
 	// Получение списка доступных инструментов, их описание
 	//getAssets(ctx, client)
 	//
-	accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
-	getGetAssetParams(ctx, client, "SBER@MISX", accountId)
+	//accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
+	// getAsset(ctx, client, "SBER@MISX", accountId)
+	//getAssetParams(ctx, client, "SBER@MISX", accountId)
 
 	// Получение расписания торгов для инструмента
 	//getSchedule(ctx, client, "SBER@MISX")
 
+}
+
+func getClock(ctx context.Context, client *finam.Client) {
+	resp, err := client.AssetsService.Clock(ctx, finam.NewClockRequest())
+	if err != nil {
+		slog.Error("AssetsService.getClock", "err", err.Error())
+	}
+	slog.Info("main", "clock", resp)
 }
 
 // Получение списка доступных бирж, названия и mic коды
@@ -95,7 +107,15 @@ func getAssets(ctx context.Context, client *finam.Client) {
 	}
 }
 
-func getGetAssetParams(ctx context.Context, client *finam.Client, symbol, accountId string) {
+func getAsset(ctx context.Context, client *finam.Client, symbol, accountId string) {
+	assetInfo, err := client.AssetsService.GetAsset(ctx, finam.NewAssetRequest(symbol, accountId))
+	if err != nil {
+		slog.Error("AssetsInfo", "err", err.Error())
+	}
+	slog.Info("AssetsService.GetAsset", slog.Any("assetInfo", assetInfo))
+}
+
+func getAssetParams(ctx context.Context, client *finam.Client, symbol, accountId string) {
 	assetParams, err := client.AssetsService.GetAssetParams(ctx, finam.NewAssetParamsRequest(symbol, accountId))
 	if err != nil {
 		slog.Error("AssetsParams", "err", err.Error())

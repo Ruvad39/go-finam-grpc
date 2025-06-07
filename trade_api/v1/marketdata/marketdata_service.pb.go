@@ -15,6 +15,8 @@ import (
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
+	//side "trade_api/v1/side"
+	side "github.com/Ruvad39/go-finam-grpc/trade_api/v1/side"
 	unsafe "unsafe"
 )
 
@@ -26,40 +28,40 @@ const (
 )
 
 // Доступные таймфреймы для свечей
-type BarsRequest_TimeFrame int32
+type TimeFrame int32
 
 const (
 	// Таймфрейм не указан
-	BarsRequest_TIME_FRAME_UNSPECIFIED BarsRequest_TimeFrame = 0
-	// 1 минута
-	BarsRequest_TIME_FRAME_M1 BarsRequest_TimeFrame = 1
-	// 5 минут
-	BarsRequest_TIME_FRAME_M5 BarsRequest_TimeFrame = 5
-	// 15 минут
-	BarsRequest_TIME_FRAME_M15 BarsRequest_TimeFrame = 9
-	// 30 минут
-	BarsRequest_TIME_FRAME_M30 BarsRequest_TimeFrame = 11
-	// 1 час
-	BarsRequest_TIME_FRAME_H1 BarsRequest_TimeFrame = 12
-	// 2 часа
-	BarsRequest_TIME_FRAME_H2 BarsRequest_TimeFrame = 13
-	// 4 часа
-	BarsRequest_TIME_FRAME_H4 BarsRequest_TimeFrame = 15
-	// 8 часов
-	BarsRequest_TIME_FRAME_H8 BarsRequest_TimeFrame = 17
-	// День
-	BarsRequest_TIME_FRAME_D BarsRequest_TimeFrame = 19
-	// Неделя
-	BarsRequest_TIME_FRAME_W BarsRequest_TimeFrame = 20
-	// Месяц
-	BarsRequest_TIME_FRAME_MN BarsRequest_TimeFrame = 21
-	// Квартал
-	BarsRequest_TIME_FRAME_QR BarsRequest_TimeFrame = 22
+	TimeFrame_TIME_FRAME_UNSPECIFIED TimeFrame = 0
+	// 1 минута. Глубина данных 7 дней.
+	TimeFrame_TIME_FRAME_M1 TimeFrame = 1
+	// 5 минут. Глубина данных 30 дней.
+	TimeFrame_TIME_FRAME_M5 TimeFrame = 5
+	// 15 минут. Глубина данных 30 дней.
+	TimeFrame_TIME_FRAME_M15 TimeFrame = 9
+	// 30 минут. Глубина данных 30 дней.
+	TimeFrame_TIME_FRAME_M30 TimeFrame = 11
+	// 1 час. Глубина данных 30 дней.
+	TimeFrame_TIME_FRAME_H1 TimeFrame = 12
+	// 2 часа. Глубина данных 30 дней.
+	TimeFrame_TIME_FRAME_H2 TimeFrame = 13
+	// 4 часа. Глубина данных 30 дней.
+	TimeFrame_TIME_FRAME_H4 TimeFrame = 15
+	// 8 часов. Глубина данных 30 дней.
+	TimeFrame_TIME_FRAME_H8 TimeFrame = 17
+	// День. Глубина данных 365 дней.
+	TimeFrame_TIME_FRAME_D TimeFrame = 19
+	// Неделя. Глубина данных 365*5 дней.
+	TimeFrame_TIME_FRAME_W TimeFrame = 20
+	// Месяц. Глубина данных 365*5 дней.
+	TimeFrame_TIME_FRAME_MN TimeFrame = 21
+	// Квартал. Глубина данных 365*5 дней.
+	TimeFrame_TIME_FRAME_QR TimeFrame = 22
 )
 
-// Enum value maps for BarsRequest_TimeFrame.
+// Enum value maps for TimeFrame.
 var (
-	BarsRequest_TimeFrame_name = map[int32]string{
+	TimeFrame_name = map[int32]string{
 		0:  "TIME_FRAME_UNSPECIFIED",
 		1:  "TIME_FRAME_M1",
 		5:  "TIME_FRAME_M5",
@@ -74,7 +76,7 @@ var (
 		21: "TIME_FRAME_MN",
 		22: "TIME_FRAME_QR",
 	}
-	BarsRequest_TimeFrame_value = map[string]int32{
+	TimeFrame_value = map[string]int32{
 		"TIME_FRAME_UNSPECIFIED": 0,
 		"TIME_FRAME_M1":          1,
 		"TIME_FRAME_M5":          5,
@@ -91,31 +93,31 @@ var (
 	}
 )
 
-func (x BarsRequest_TimeFrame) Enum() *BarsRequest_TimeFrame {
-	p := new(BarsRequest_TimeFrame)
+func (x TimeFrame) Enum() *TimeFrame {
+	p := new(TimeFrame)
 	*p = x
 	return p
 }
 
-func (x BarsRequest_TimeFrame) String() string {
+func (x TimeFrame) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (BarsRequest_TimeFrame) Descriptor() protoreflect.EnumDescriptor {
+func (TimeFrame) Descriptor() protoreflect.EnumDescriptor {
 	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_enumTypes[0].Descriptor()
 }
 
-func (BarsRequest_TimeFrame) Type() protoreflect.EnumType {
+func (TimeFrame) Type() protoreflect.EnumType {
 	return &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_enumTypes[0]
 }
 
-func (x BarsRequest_TimeFrame) Number() protoreflect.EnumNumber {
+func (x TimeFrame) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use BarsRequest_TimeFrame.Descriptor instead.
-func (BarsRequest_TimeFrame) EnumDescriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{0, 0}
+// Deprecated: Use TimeFrame.Descriptor instead.
+func (TimeFrame) EnumDescriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{0}
 }
 
 // Команда
@@ -172,7 +174,7 @@ func (x OrderBook_Row_Action) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use OrderBook_Row_Action.Descriptor instead.
 func (OrderBook_Row_Action) EnumDescriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{14, 0, 0}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{16, 0, 0}
 }
 
 // Команда
@@ -229,7 +231,7 @@ func (x StreamOrderBook_Row_Action) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StreamOrderBook_Row_Action.Descriptor instead.
 func (StreamOrderBook_Row_Action) EnumDescriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{17, 0, 0}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{19, 0, 0}
 }
 
 // Запрос получения исторических данных по инструменту (агрегированные свечи)
@@ -238,7 +240,7 @@ type BarsRequest struct {
 	// Символ инструмента
 	Symbol string `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
 	// Необходимый таймфрейм
-	Timeframe BarsRequest_TimeFrame `protobuf:"varint,2,opt,name=timeframe,proto3,enum=grpc.tradeapi.v1.marketdata.BarsRequest_TimeFrame" json:"timeframe,omitempty"`
+	Timeframe TimeFrame `protobuf:"varint,2,opt,name=timeframe,proto3,enum=grpc.tradeapi.v1.marketdata.TimeFrame" json:"timeframe,omitempty"`
 	// Начало и окончание запрашиваемого периода
 	Interval      *interval.Interval `protobuf:"bytes,3,opt,name=interval,proto3" json:"interval,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -282,11 +284,11 @@ func (x *BarsRequest) GetSymbol() string {
 	return ""
 }
 
-func (x *BarsRequest) GetTimeframe() BarsRequest_TimeFrame {
+func (x *BarsRequest) GetTimeframe() TimeFrame {
 	if x != nil {
 		return x.Timeframe
 	}
-	return BarsRequest_TIME_FRAME_UNSPECIFIED
+	return TimeFrame_TIME_FRAME_UNSPECIFIED
 }
 
 func (x *BarsRequest) GetInterval() *interval.Interval {
@@ -704,7 +706,6 @@ func (x *SubscribeQuoteRequest) GetSymbols() []string {
 type SubscribeQuoteResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Список котировок
-	//Quote *Quote `protobuf:"bytes,1,rep,name=quote,proto3" json:"quote,omitempty"`
 	Quote []*Quote `protobuf:"bytes,1,rep,name=quote,proto3" json:"quote,omitempty"`
 	// Ошибка стрим сервиса
 	Error         *StreamError `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
@@ -848,6 +849,116 @@ func (x *SubscribeOrderBookResponse) GetOrderBook() []*StreamOrderBook {
 	return nil
 }
 
+// Запрос подписки на агрегированные свечи. Стрим
+type SubscribeBarsRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Символ инструмента
+	Symbol string `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	// Необходимый таймфрейм
+	Timeframe     TimeFrame `protobuf:"varint,2,opt,name=timeframe,proto3,enum=grpc.tradeapi.v1.marketdata.TimeFrame" json:"timeframe,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubscribeBarsRequest) Reset() {
+	*x = SubscribeBarsRequest{}
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubscribeBarsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubscribeBarsRequest) ProtoMessage() {}
+
+func (x *SubscribeBarsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubscribeBarsRequest.ProtoReflect.Descriptor instead.
+func (*SubscribeBarsRequest) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *SubscribeBarsRequest) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+func (x *SubscribeBarsRequest) GetTimeframe() TimeFrame {
+	if x != nil {
+		return x.Timeframe
+	}
+	return TimeFrame_TIME_FRAME_UNSPECIFIED
+}
+
+// Список агрегированных свеч. Стрим
+type SubscribeBarsResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Символ инструмента
+	Symbol string `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	// Агрегированная свеча
+	Bars          []*Bar `protobuf:"bytes,2,rep,name=bars,proto3" json:"bars,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubscribeBarsResponse) Reset() {
+	*x = SubscribeBarsResponse{}
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubscribeBarsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubscribeBarsResponse) ProtoMessage() {}
+
+func (x *SubscribeBarsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubscribeBarsResponse.ProtoReflect.Descriptor instead.
+func (*SubscribeBarsResponse) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *SubscribeBarsResponse) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+func (x *SubscribeBarsResponse) GetBars() []*Bar {
+	if x != nil {
+		return x.Bars
+	}
+	return nil
+}
+
 // Информация об агрегированной свече
 type Bar struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -861,7 +972,7 @@ type Bar struct {
 	Low *decimal.Decimal `protobuf:"bytes,4,opt,name=low,proto3" json:"low,omitempty"`
 	// Цена закрытия свечи
 	Close *decimal.Decimal `protobuf:"bytes,5,opt,name=close,proto3" json:"close,omitempty"`
-	// Объём торгов за свечу
+	// Объём торгов за свечу в шт.
 	Volume        *decimal.Decimal `protobuf:"bytes,6,opt,name=volume,proto3" json:"volume,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -869,7 +980,7 @@ type Bar struct {
 
 func (x *Bar) Reset() {
 	*x = Bar{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[12]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -881,7 +992,7 @@ func (x *Bar) String() string {
 func (*Bar) ProtoMessage() {}
 
 func (x *Bar) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[12]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -894,7 +1005,7 @@ func (x *Bar) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Bar.ProtoReflect.Descriptor instead.
 func (*Bar) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{12}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *Bar) GetTimestamp() *timestamppb.Timestamp {
@@ -982,7 +1093,7 @@ type Quote struct {
 
 func (x *Quote) Reset() {
 	*x = Quote{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[13]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -994,7 +1105,7 @@ func (x *Quote) String() string {
 func (*Quote) ProtoMessage() {}
 
 func (x *Quote) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[13]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1007,7 +1118,7 @@ func (x *Quote) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Quote.ProtoReflect.Descriptor instead.
 func (*Quote) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{13}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *Quote) GetSymbol() string {
@@ -1153,7 +1264,7 @@ type OrderBook struct {
 
 func (x *OrderBook) Reset() {
 	*x = OrderBook{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[14]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1165,7 +1276,7 @@ func (x *OrderBook) String() string {
 func (*OrderBook) ProtoMessage() {}
 
 func (x *OrderBook) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[14]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1178,7 +1289,7 @@ func (x *OrderBook) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderBook.ProtoReflect.Descriptor instead.
 func (*OrderBook) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{14}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *OrderBook) GetRows() []*OrderBook_Row {
@@ -1200,14 +1311,16 @@ type Trade struct {
 	// Цена сделки
 	Price *decimal.Decimal `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`
 	// Размер сделки
-	Size          *decimal.Decimal `protobuf:"bytes,5,opt,name=size,proto3" json:"size,omitempty"`
+	Size *decimal.Decimal `protobuf:"bytes,5,opt,name=size,proto3" json:"size,omitempty"`
+	// Сторона сделки (buy или sell)
+	Side          side.Side `protobuf:"varint,6,opt,name=side,proto3,enum=grpc.tradeapi.v1.Side" json:"side,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Trade) Reset() {
 	*x = Trade{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[15]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1219,7 +1332,7 @@ func (x *Trade) String() string {
 func (*Trade) ProtoMessage() {}
 
 func (x *Trade) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[15]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1232,7 +1345,7 @@ func (x *Trade) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Trade.ProtoReflect.Descriptor instead.
 func (*Trade) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{15}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *Trade) GetTradeId() string {
@@ -1270,6 +1383,13 @@ func (x *Trade) GetSize() *decimal.Decimal {
 	return nil
 }
 
+func (x *Trade) GetSide() side.Side {
+	if x != nil {
+		return x.Side
+	}
+	return side.Side(0)
+}
+
 // Ошибка стрим сервиса
 type StreamError struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1283,7 +1403,7 @@ type StreamError struct {
 
 func (x *StreamError) Reset() {
 	*x = StreamError{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[16]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1295,7 +1415,7 @@ func (x *StreamError) String() string {
 func (*StreamError) ProtoMessage() {}
 
 func (x *StreamError) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[16]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1308,7 +1428,7 @@ func (x *StreamError) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamError.ProtoReflect.Descriptor instead.
 func (*StreamError) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{16}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *StreamError) GetCode() int32 {
@@ -1338,7 +1458,7 @@ type StreamOrderBook struct {
 
 func (x *StreamOrderBook) Reset() {
 	*x = StreamOrderBook{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[17]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1350,7 +1470,7 @@ func (x *StreamOrderBook) String() string {
 func (*StreamOrderBook) ProtoMessage() {}
 
 func (x *StreamOrderBook) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[17]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1363,7 +1483,7 @@ func (x *StreamOrderBook) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamOrderBook.ProtoReflect.Descriptor instead.
 func (*StreamOrderBook) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{17}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *StreamOrderBook) GetSymbol() string {
@@ -1391,7 +1511,7 @@ type SubscribeLatestTradesRequest struct {
 
 func (x *SubscribeLatestTradesRequest) Reset() {
 	*x = SubscribeLatestTradesRequest{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[18]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1403,7 +1523,7 @@ func (x *SubscribeLatestTradesRequest) String() string {
 func (*SubscribeLatestTradesRequest) ProtoMessage() {}
 
 func (x *SubscribeLatestTradesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[18]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1416,7 +1536,7 @@ func (x *SubscribeLatestTradesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscribeLatestTradesRequest.ProtoReflect.Descriptor instead.
 func (*SubscribeLatestTradesRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{18}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *SubscribeLatestTradesRequest) GetSymbol() string {
@@ -1439,7 +1559,7 @@ type SubscribeLatestTradesResponse struct {
 
 func (x *SubscribeLatestTradesResponse) Reset() {
 	*x = SubscribeLatestTradesResponse{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[19]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1451,7 +1571,7 @@ func (x *SubscribeLatestTradesResponse) String() string {
 func (*SubscribeLatestTradesResponse) ProtoMessage() {}
 
 func (x *SubscribeLatestTradesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[19]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1464,7 +1584,7 @@ func (x *SubscribeLatestTradesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscribeLatestTradesResponse.ProtoReflect.Descriptor instead.
 func (*SubscribeLatestTradesResponse) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{19}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *SubscribeLatestTradesResponse) GetSymbol() string {
@@ -1506,7 +1626,7 @@ type Quote_Option struct {
 
 func (x *Quote_Option) Reset() {
 	*x = Quote_Option{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[20]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1518,7 +1638,7 @@ func (x *Quote_Option) String() string {
 func (*Quote_Option) ProtoMessage() {}
 
 func (x *Quote_Option) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[20]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1531,7 +1651,7 @@ func (x *Quote_Option) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Quote_Option.ProtoReflect.Descriptor instead.
 func (*Quote_Option) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{13, 0}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{15, 0}
 }
 
 func (x *Quote_Option) GetOpenInterest() *decimal.Decimal {
@@ -1612,7 +1732,7 @@ type OrderBook_Row struct {
 
 func (x *OrderBook_Row) Reset() {
 	*x = OrderBook_Row{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[21]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1624,7 +1744,7 @@ func (x *OrderBook_Row) String() string {
 func (*OrderBook_Row) ProtoMessage() {}
 
 func (x *OrderBook_Row) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[21]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1637,7 +1757,7 @@ func (x *OrderBook_Row) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderBook_Row.ProtoReflect.Descriptor instead.
 func (*OrderBook_Row) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{14, 0}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{16, 0}
 }
 
 func (x *OrderBook_Row) GetPrice() *decimal.Decimal {
@@ -1733,7 +1853,7 @@ type StreamOrderBook_Row struct {
 
 func (x *StreamOrderBook_Row) Reset() {
 	*x = StreamOrderBook_Row{}
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[22]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1745,7 +1865,7 @@ func (x *StreamOrderBook_Row) String() string {
 func (*StreamOrderBook_Row) ProtoMessage() {}
 
 func (x *StreamOrderBook_Row) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[22]
+	mi := &file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1758,7 +1878,7 @@ func (x *StreamOrderBook_Row) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamOrderBook_Row.ProtoReflect.Descriptor instead.
 func (*StreamOrderBook_Row) Descriptor() ([]byte, []int) {
-	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{17, 0}
+	return file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP(), []int{19, 0}
 }
 
 func (x *StreamOrderBook_Row) GetPrice() *decimal.Decimal {
@@ -1836,25 +1956,11 @@ var File_grpc_tradeapi_v1_marketdata_marketdata_service_proto protoreflect.FileD
 
 const file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc = "" +
 	"\n" +
-	"4grpc/tradeapi/v1/marketdata/marketdata_service.proto\x12\x1bgrpc.tradeapi.v1.marketdata\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\"\xb8\x03\n" +
+	"4grpc/tradeapi/v1/marketdata/marketdata_service.proto\x12\x1bgrpc.tradeapi.v1.marketdata\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\"\x9e\x01\n" +
 	"\vBarsRequest\x12\x16\n" +
-	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12P\n" +
-	"\ttimeframe\x18\x02 \x01(\x0e22.grpc.tradeapi.v1.marketdata.BarsRequest.TimeFrameR\ttimeframe\x121\n" +
-	"\binterval\x18\x03 \x01(\v2\x15.google.type.IntervalR\binterval\"\x8b\x02\n" +
-	"\tTimeFrame\x12\x1a\n" +
-	"\x16TIME_FRAME_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rTIME_FRAME_M1\x10\x01\x12\x11\n" +
-	"\rTIME_FRAME_M5\x10\x05\x12\x12\n" +
-	"\x0eTIME_FRAME_M15\x10\t\x12\x12\n" +
-	"\x0eTIME_FRAME_M30\x10\v\x12\x11\n" +
-	"\rTIME_FRAME_H1\x10\f\x12\x11\n" +
-	"\rTIME_FRAME_H2\x10\r\x12\x11\n" +
-	"\rTIME_FRAME_H4\x10\x0f\x12\x11\n" +
-	"\rTIME_FRAME_H8\x10\x11\x12\x10\n" +
-	"\fTIME_FRAME_D\x10\x13\x12\x10\n" +
-	"\fTIME_FRAME_W\x10\x14\x12\x11\n" +
-	"\rTIME_FRAME_MN\x10\x15\x12\x11\n" +
-	"\rTIME_FRAME_QR\x10\x16\"\\\n" +
+	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12D\n" +
+	"\ttimeframe\x18\x02 \x01(\x0e2&.grpc.tradeapi.v1.marketdata.TimeFrameR\ttimeframe\x121\n" +
+	"\binterval\x18\x03 \x01(\v2\x15.google.type.IntervalR\binterval\"\\\n" +
 	"\fBarsResponse\x12\x16\n" +
 	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x124\n" +
 	"\x04bars\x18\x02 \x03(\v2 .grpc.tradeapi.v1.marketdata.BarR\x04bars\"&\n" +
@@ -1882,7 +1988,13 @@ const file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc = "" +
 	"\x06symbol\x18\x01 \x01(\tR\x06symbol\"i\n" +
 	"\x1aSubscribeOrderBookResponse\x12K\n" +
 	"\n" +
-	"order_book\x18\x01 \x03(\v2,.grpc.tradeapi.v1.marketdata.StreamOrderBookR\torderBook\"\x95\x02\n" +
+	"order_book\x18\x01 \x03(\v2,.grpc.tradeapi.v1.marketdata.StreamOrderBookR\torderBook\"t\n" +
+	"\x14SubscribeBarsRequest\x12\x16\n" +
+	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12D\n" +
+	"\ttimeframe\x18\x02 \x01(\x0e2&.grpc.tradeapi.v1.marketdata.TimeFrameR\ttimeframe\"e\n" +
+	"\x15SubscribeBarsResponse\x12\x16\n" +
+	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x124\n" +
+	"\x04bars\x18\x02 \x03(\v2 .grpc.tradeapi.v1.marketdata.BarR\x04bars\"\x95\x02\n" +
 	"\x03Bar\x128\n" +
 	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12(\n" +
 	"\x04open\x18\x02 \x01(\v2\x14.google.type.DecimalR\x04open\x12(\n" +
@@ -1933,13 +2045,14 @@ const file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc = "" +
 	"\n" +
 	"ACTION_ADD\x10\x02\x12\x11\n" +
 	"\rACTION_UPDATE\x10\x03B\x06\n" +
-	"\x04side\"\xc6\x01\n" +
+	"\x04side\"\xf2\x01\n" +
 	"\x05Trade\x12\x19\n" +
 	"\btrade_id\x18\x01 \x01(\tR\atradeId\x12\x12\n" +
 	"\x04mpid\x18\x02 \x01(\tR\x04mpid\x128\n" +
 	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12*\n" +
 	"\x05price\x18\x04 \x01(\v2\x14.google.type.DecimalR\x05price\x12(\n" +
-	"\x04size\x18\x05 \x01(\v2\x14.google.type.DecimalR\x04size\"C\n" +
+	"\x04size\x18\x05 \x01(\v2\x14.google.type.DecimalR\x04size\x12*\n" +
+	"\x04side\x18\x06 \x01(\x0e2\x16.grpc.tradeapi.v1.SideR\x04side\"C\n" +
 	"\vStreamError\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\x05R\x04code\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\"\x8a\x04\n" +
@@ -1964,7 +2077,21 @@ const file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc = "" +
 	"\x06symbol\x18\x01 \x01(\tR\x06symbol\"s\n" +
 	"\x1dSubscribeLatestTradesResponse\x12\x16\n" +
 	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12:\n" +
-	"\x06trades\x18\x02 \x03(\v2\".grpc.tradeapi.v1.marketdata.TradeR\x06trades2\x86\b\n" +
+	"\x06trades\x18\x02 \x03(\v2\".grpc.tradeapi.v1.marketdata.TradeR\x06trades*\x8b\x02\n" +
+	"\tTimeFrame\x12\x1a\n" +
+	"\x16TIME_FRAME_UNSPECIFIED\x10\x00\x12\x11\n" +
+	"\rTIME_FRAME_M1\x10\x01\x12\x11\n" +
+	"\rTIME_FRAME_M5\x10\x05\x12\x12\n" +
+	"\x0eTIME_FRAME_M15\x10\t\x12\x12\n" +
+	"\x0eTIME_FRAME_M30\x10\v\x12\x11\n" +
+	"\rTIME_FRAME_H1\x10\f\x12\x11\n" +
+	"\rTIME_FRAME_H2\x10\r\x12\x11\n" +
+	"\rTIME_FRAME_H4\x10\x0f\x12\x11\n" +
+	"\rTIME_FRAME_H8\x10\x11\x12\x10\n" +
+	"\fTIME_FRAME_D\x10\x13\x12\x10\n" +
+	"\fTIME_FRAME_W\x10\x14\x12\x11\n" +
+	"\rTIME_FRAME_MN\x10\x15\x12\x11\n" +
+	"\rTIME_FRAME_QR\x10\x162\x80\t\n" +
 	"\x11MarketDataService\x12\x82\x01\n" +
 	"\x04Bars\x12(.grpc.tradeapi.v1.marketdata.BarsRequest\x1a).grpc.tradeapi.v1.marketdata.BarsResponse\"%\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/instruments/{symbol}/bars\x12\x92\x01\n" +
 	"\tLastQuote\x12).grpc.tradeapi.v1.marketdata.QuoteRequest\x1a*.grpc.tradeapi.v1.marketdata.QuoteResponse\".\x82\xd3\xe4\x93\x02(\x12&/v1/instruments/{symbol}/quotes/latest\x12\x96\x01\n" +
@@ -1972,7 +2099,8 @@ const file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc = "" +
 	"\fLatestTrades\x120.grpc.tradeapi.v1.marketdata.LatestTradesRequest\x1a1.grpc.tradeapi.v1.marketdata.LatestTradesResponse\".\x82\xd3\xe4\x93\x02(\x12&/v1/instruments/{symbol}/trades/latest\x12{\n" +
 	"\x0eSubscribeQuote\x122.grpc.tradeapi.v1.marketdata.SubscribeQuoteRequest\x1a3.grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse0\x01\x12\x87\x01\n" +
 	"\x12SubscribeOrderBook\x126.grpc.tradeapi.v1.marketdata.SubscribeOrderBookRequest\x1a7.grpc.tradeapi.v1.marketdata.SubscribeOrderBookResponse0\x01\x12\x90\x01\n" +
-	"\x15SubscribeLatestTrades\x129.grpc.tradeapi.v1.marketdata.SubscribeLatestTradesRequest\x1a:.grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse0\x01B.P\x01Z*trade_api/v1/marketdata/marketdata_serviceb\x06proto3"
+	"\x15SubscribeLatestTrades\x129.grpc.tradeapi.v1.marketdata.SubscribeLatestTradesRequest\x1a:.grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse0\x01\x12x\n" +
+	"\rSubscribeBars\x121.grpc.tradeapi.v1.marketdata.SubscribeBarsRequest\x1a2.grpc.tradeapi.v1.marketdata.SubscribeBarsResponse0\x01B.P\x01Z*trade_api/v1/marketdata/marketdata_serviceb\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescOnce sync.Once
@@ -1987,9 +2115,9 @@ func file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescGZIP() []b
 }
 
 var file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_goTypes = []any{
-	(BarsRequest_TimeFrame)(0),            // 0: grpc.tradeapi.v1.marketdata.BarsRequest.TimeFrame
+	(TimeFrame)(0),                        // 0: grpc.tradeapi.v1.marketdata.TimeFrame
 	(OrderBook_Row_Action)(0),             // 1: grpc.tradeapi.v1.marketdata.OrderBook.Row.Action
 	(StreamOrderBook_Row_Action)(0),       // 2: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.Action
 	(*BarsRequest)(nil),                   // 3: grpc.tradeapi.v1.marketdata.BarsRequest
@@ -2004,95 +2132,103 @@ var file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_goTypes = []any{
 	(*SubscribeQuoteResponse)(nil),        // 12: grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse
 	(*SubscribeOrderBookRequest)(nil),     // 13: grpc.tradeapi.v1.marketdata.SubscribeOrderBookRequest
 	(*SubscribeOrderBookResponse)(nil),    // 14: grpc.tradeapi.v1.marketdata.SubscribeOrderBookResponse
-	(*Bar)(nil),                           // 15: grpc.tradeapi.v1.marketdata.Bar
-	(*Quote)(nil),                         // 16: grpc.tradeapi.v1.marketdata.Quote
-	(*OrderBook)(nil),                     // 17: grpc.tradeapi.v1.marketdata.OrderBook
-	(*Trade)(nil),                         // 18: grpc.tradeapi.v1.marketdata.Trade
-	(*StreamError)(nil),                   // 19: grpc.tradeapi.v1.marketdata.StreamError
-	(*StreamOrderBook)(nil),               // 20: grpc.tradeapi.v1.marketdata.StreamOrderBook
-	(*SubscribeLatestTradesRequest)(nil),  // 21: grpc.tradeapi.v1.marketdata.SubscribeLatestTradesRequest
-	(*SubscribeLatestTradesResponse)(nil), // 22: grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse
-	(*Quote_Option)(nil),                  // 23: grpc.tradeapi.v1.marketdata.Quote.Option
-	(*OrderBook_Row)(nil),                 // 24: grpc.tradeapi.v1.marketdata.OrderBook.Row
-	(*StreamOrderBook_Row)(nil),           // 25: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row
-	(*interval.Interval)(nil),             // 26: google.type.Interval
-	(*timestamppb.Timestamp)(nil),         // 27: google.protobuf.Timestamp
-	(*decimal.Decimal)(nil),               // 28: google.type.Decimal
+	(*SubscribeBarsRequest)(nil),          // 15: grpc.tradeapi.v1.marketdata.SubscribeBarsRequest
+	(*SubscribeBarsResponse)(nil),         // 16: grpc.tradeapi.v1.marketdata.SubscribeBarsResponse
+	(*Bar)(nil),                           // 17: grpc.tradeapi.v1.marketdata.Bar
+	(*Quote)(nil),                         // 18: grpc.tradeapi.v1.marketdata.Quote
+	(*OrderBook)(nil),                     // 19: grpc.tradeapi.v1.marketdata.OrderBook
+	(*Trade)(nil),                         // 20: grpc.tradeapi.v1.marketdata.Trade
+	(*StreamError)(nil),                   // 21: grpc.tradeapi.v1.marketdata.StreamError
+	(*StreamOrderBook)(nil),               // 22: grpc.tradeapi.v1.marketdata.StreamOrderBook
+	(*SubscribeLatestTradesRequest)(nil),  // 23: grpc.tradeapi.v1.marketdata.SubscribeLatestTradesRequest
+	(*SubscribeLatestTradesResponse)(nil), // 24: grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse
+	(*Quote_Option)(nil),                  // 25: grpc.tradeapi.v1.marketdata.Quote.Option
+	(*OrderBook_Row)(nil),                 // 26: grpc.tradeapi.v1.marketdata.OrderBook.Row
+	(*StreamOrderBook_Row)(nil),           // 27: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row
+	(*interval.Interval)(nil),             // 28: google.type.Interval
+	(*timestamppb.Timestamp)(nil),         // 29: google.protobuf.Timestamp
+	(*decimal.Decimal)(nil),               // 30: google.type.Decimal
+	(side.Side)(0),                        // 31: grpc.tradeapi.v1.Side
 }
 var file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_depIdxs = []int32{
-	0,  // 0: grpc.tradeapi.v1.marketdata.BarsRequest.timeframe:type_name -> grpc.tradeapi.v1.marketdata.BarsRequest.TimeFrame
-	26, // 1: grpc.tradeapi.v1.marketdata.BarsRequest.interval:type_name -> google.type.Interval
-	15, // 2: grpc.tradeapi.v1.marketdata.BarsResponse.bars:type_name -> grpc.tradeapi.v1.marketdata.Bar
-	16, // 3: grpc.tradeapi.v1.marketdata.QuoteResponse.quote:type_name -> grpc.tradeapi.v1.marketdata.Quote
-	17, // 4: grpc.tradeapi.v1.marketdata.OrderBookResponse.orderbook:type_name -> grpc.tradeapi.v1.marketdata.OrderBook
-	18, // 5: grpc.tradeapi.v1.marketdata.LatestTradesResponse.trades:type_name -> grpc.tradeapi.v1.marketdata.Trade
-	16, // 6: grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse.quote:type_name -> grpc.tradeapi.v1.marketdata.Quote
-	19, // 7: grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse.error:type_name -> grpc.tradeapi.v1.marketdata.StreamError
-	20, // 8: grpc.tradeapi.v1.marketdata.SubscribeOrderBookResponse.order_book:type_name -> grpc.tradeapi.v1.marketdata.StreamOrderBook
-	27, // 9: grpc.tradeapi.v1.marketdata.Bar.timestamp:type_name -> google.protobuf.Timestamp
-	28, // 10: grpc.tradeapi.v1.marketdata.Bar.open:type_name -> google.type.Decimal
-	28, // 11: grpc.tradeapi.v1.marketdata.Bar.high:type_name -> google.type.Decimal
-	28, // 12: grpc.tradeapi.v1.marketdata.Bar.low:type_name -> google.type.Decimal
-	28, // 13: grpc.tradeapi.v1.marketdata.Bar.close:type_name -> google.type.Decimal
-	28, // 14: grpc.tradeapi.v1.marketdata.Bar.volume:type_name -> google.type.Decimal
-	27, // 15: grpc.tradeapi.v1.marketdata.Quote.timestamp:type_name -> google.protobuf.Timestamp
-	28, // 16: grpc.tradeapi.v1.marketdata.Quote.ask:type_name -> google.type.Decimal
-	28, // 17: grpc.tradeapi.v1.marketdata.Quote.ask_size:type_name -> google.type.Decimal
-	28, // 18: grpc.tradeapi.v1.marketdata.Quote.bid:type_name -> google.type.Decimal
-	28, // 19: grpc.tradeapi.v1.marketdata.Quote.bid_size:type_name -> google.type.Decimal
-	28, // 20: grpc.tradeapi.v1.marketdata.Quote.last:type_name -> google.type.Decimal
-	28, // 21: grpc.tradeapi.v1.marketdata.Quote.last_size:type_name -> google.type.Decimal
-	28, // 22: grpc.tradeapi.v1.marketdata.Quote.volume:type_name -> google.type.Decimal
-	28, // 23: grpc.tradeapi.v1.marketdata.Quote.turnover:type_name -> google.type.Decimal
-	28, // 24: grpc.tradeapi.v1.marketdata.Quote.open:type_name -> google.type.Decimal
-	28, // 25: grpc.tradeapi.v1.marketdata.Quote.high:type_name -> google.type.Decimal
-	28, // 26: grpc.tradeapi.v1.marketdata.Quote.low:type_name -> google.type.Decimal
-	28, // 27: grpc.tradeapi.v1.marketdata.Quote.close:type_name -> google.type.Decimal
-	28, // 28: grpc.tradeapi.v1.marketdata.Quote.change:type_name -> google.type.Decimal
-	23, // 29: grpc.tradeapi.v1.marketdata.Quote.option:type_name -> grpc.tradeapi.v1.marketdata.Quote.Option
-	24, // 30: grpc.tradeapi.v1.marketdata.OrderBook.rows:type_name -> grpc.tradeapi.v1.marketdata.OrderBook.Row
-	27, // 31: grpc.tradeapi.v1.marketdata.Trade.timestamp:type_name -> google.protobuf.Timestamp
-	28, // 32: grpc.tradeapi.v1.marketdata.Trade.price:type_name -> google.type.Decimal
-	28, // 33: grpc.tradeapi.v1.marketdata.Trade.size:type_name -> google.type.Decimal
-	25, // 34: grpc.tradeapi.v1.marketdata.StreamOrderBook.rows:type_name -> grpc.tradeapi.v1.marketdata.StreamOrderBook.Row
-	18, // 35: grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse.trades:type_name -> grpc.tradeapi.v1.marketdata.Trade
-	28, // 36: grpc.tradeapi.v1.marketdata.Quote.Option.open_interest:type_name -> google.type.Decimal
-	28, // 37: grpc.tradeapi.v1.marketdata.Quote.Option.implied_volatility:type_name -> google.type.Decimal
-	28, // 38: grpc.tradeapi.v1.marketdata.Quote.Option.theoretical_price:type_name -> google.type.Decimal
-	28, // 39: grpc.tradeapi.v1.marketdata.Quote.Option.delta:type_name -> google.type.Decimal
-	28, // 40: grpc.tradeapi.v1.marketdata.Quote.Option.gamma:type_name -> google.type.Decimal
-	28, // 41: grpc.tradeapi.v1.marketdata.Quote.Option.theta:type_name -> google.type.Decimal
-	28, // 42: grpc.tradeapi.v1.marketdata.Quote.Option.vega:type_name -> google.type.Decimal
-	28, // 43: grpc.tradeapi.v1.marketdata.Quote.Option.rho:type_name -> google.type.Decimal
-	28, // 44: grpc.tradeapi.v1.marketdata.OrderBook.Row.price:type_name -> google.type.Decimal
-	28, // 45: grpc.tradeapi.v1.marketdata.OrderBook.Row.sell_size:type_name -> google.type.Decimal
-	28, // 46: grpc.tradeapi.v1.marketdata.OrderBook.Row.buy_size:type_name -> google.type.Decimal
-	1,  // 47: grpc.tradeapi.v1.marketdata.OrderBook.Row.action:type_name -> grpc.tradeapi.v1.marketdata.OrderBook.Row.Action
-	27, // 48: grpc.tradeapi.v1.marketdata.OrderBook.Row.timestamp:type_name -> google.protobuf.Timestamp
-	28, // 49: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.price:type_name -> google.type.Decimal
-	28, // 50: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.sell_size:type_name -> google.type.Decimal
-	28, // 51: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.buy_size:type_name -> google.type.Decimal
-	2,  // 52: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.action:type_name -> grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.Action
-	27, // 53: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.timestamp:type_name -> google.protobuf.Timestamp
-	3,  // 54: grpc.tradeapi.v1.marketdata.MarketDataService.Bars:input_type -> grpc.tradeapi.v1.marketdata.BarsRequest
-	5,  // 55: grpc.tradeapi.v1.marketdata.MarketDataService.LastQuote:input_type -> grpc.tradeapi.v1.marketdata.QuoteRequest
-	7,  // 56: grpc.tradeapi.v1.marketdata.MarketDataService.OrderBook:input_type -> grpc.tradeapi.v1.marketdata.OrderBookRequest
-	9,  // 57: grpc.tradeapi.v1.marketdata.MarketDataService.LatestTrades:input_type -> grpc.tradeapi.v1.marketdata.LatestTradesRequest
-	11, // 58: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeQuote:input_type -> grpc.tradeapi.v1.marketdata.SubscribeQuoteRequest
-	13, // 59: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeOrderBook:input_type -> grpc.tradeapi.v1.marketdata.SubscribeOrderBookRequest
-	21, // 60: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeLatestTrades:input_type -> grpc.tradeapi.v1.marketdata.SubscribeLatestTradesRequest
-	4,  // 61: grpc.tradeapi.v1.marketdata.MarketDataService.Bars:output_type -> grpc.tradeapi.v1.marketdata.BarsResponse
-	6,  // 62: grpc.tradeapi.v1.marketdata.MarketDataService.LastQuote:output_type -> grpc.tradeapi.v1.marketdata.QuoteResponse
-	8,  // 63: grpc.tradeapi.v1.marketdata.MarketDataService.OrderBook:output_type -> grpc.tradeapi.v1.marketdata.OrderBookResponse
-	10, // 64: grpc.tradeapi.v1.marketdata.MarketDataService.LatestTrades:output_type -> grpc.tradeapi.v1.marketdata.LatestTradesResponse
-	12, // 65: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeQuote:output_type -> grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse
-	14, // 66: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeOrderBook:output_type -> grpc.tradeapi.v1.marketdata.SubscribeOrderBookResponse
-	22, // 67: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeLatestTrades:output_type -> grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse
-	61, // [61:68] is the sub-list for method output_type
-	54, // [54:61] is the sub-list for method input_type
-	54, // [54:54] is the sub-list for extension type_name
-	54, // [54:54] is the sub-list for extension extendee
-	0,  // [0:54] is the sub-list for field type_name
+	0,  // 0: grpc.tradeapi.v1.marketdata.BarsRequest.timeframe:type_name -> grpc.tradeapi.v1.marketdata.TimeFrame
+	28, // 1: grpc.tradeapi.v1.marketdata.BarsRequest.interval:type_name -> google.type.Interval
+	17, // 2: grpc.tradeapi.v1.marketdata.BarsResponse.bars:type_name -> grpc.tradeapi.v1.marketdata.Bar
+	18, // 3: grpc.tradeapi.v1.marketdata.QuoteResponse.quote:type_name -> grpc.tradeapi.v1.marketdata.Quote
+	19, // 4: grpc.tradeapi.v1.marketdata.OrderBookResponse.orderbook:type_name -> grpc.tradeapi.v1.marketdata.OrderBook
+	20, // 5: grpc.tradeapi.v1.marketdata.LatestTradesResponse.trades:type_name -> grpc.tradeapi.v1.marketdata.Trade
+	18, // 6: grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse.quote:type_name -> grpc.tradeapi.v1.marketdata.Quote
+	21, // 7: grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse.error:type_name -> grpc.tradeapi.v1.marketdata.StreamError
+	22, // 8: grpc.tradeapi.v1.marketdata.SubscribeOrderBookResponse.order_book:type_name -> grpc.tradeapi.v1.marketdata.StreamOrderBook
+	0,  // 9: grpc.tradeapi.v1.marketdata.SubscribeBarsRequest.timeframe:type_name -> grpc.tradeapi.v1.marketdata.TimeFrame
+	17, // 10: grpc.tradeapi.v1.marketdata.SubscribeBarsResponse.bars:type_name -> grpc.tradeapi.v1.marketdata.Bar
+	29, // 11: grpc.tradeapi.v1.marketdata.Bar.timestamp:type_name -> google.protobuf.Timestamp
+	30, // 12: grpc.tradeapi.v1.marketdata.Bar.open:type_name -> google.type.Decimal
+	30, // 13: grpc.tradeapi.v1.marketdata.Bar.high:type_name -> google.type.Decimal
+	30, // 14: grpc.tradeapi.v1.marketdata.Bar.low:type_name -> google.type.Decimal
+	30, // 15: grpc.tradeapi.v1.marketdata.Bar.close:type_name -> google.type.Decimal
+	30, // 16: grpc.tradeapi.v1.marketdata.Bar.volume:type_name -> google.type.Decimal
+	29, // 17: grpc.tradeapi.v1.marketdata.Quote.timestamp:type_name -> google.protobuf.Timestamp
+	30, // 18: grpc.tradeapi.v1.marketdata.Quote.ask:type_name -> google.type.Decimal
+	30, // 19: grpc.tradeapi.v1.marketdata.Quote.ask_size:type_name -> google.type.Decimal
+	30, // 20: grpc.tradeapi.v1.marketdata.Quote.bid:type_name -> google.type.Decimal
+	30, // 21: grpc.tradeapi.v1.marketdata.Quote.bid_size:type_name -> google.type.Decimal
+	30, // 22: grpc.tradeapi.v1.marketdata.Quote.last:type_name -> google.type.Decimal
+	30, // 23: grpc.tradeapi.v1.marketdata.Quote.last_size:type_name -> google.type.Decimal
+	30, // 24: grpc.tradeapi.v1.marketdata.Quote.volume:type_name -> google.type.Decimal
+	30, // 25: grpc.tradeapi.v1.marketdata.Quote.turnover:type_name -> google.type.Decimal
+	30, // 26: grpc.tradeapi.v1.marketdata.Quote.open:type_name -> google.type.Decimal
+	30, // 27: grpc.tradeapi.v1.marketdata.Quote.high:type_name -> google.type.Decimal
+	30, // 28: grpc.tradeapi.v1.marketdata.Quote.low:type_name -> google.type.Decimal
+	30, // 29: grpc.tradeapi.v1.marketdata.Quote.close:type_name -> google.type.Decimal
+	30, // 30: grpc.tradeapi.v1.marketdata.Quote.change:type_name -> google.type.Decimal
+	25, // 31: grpc.tradeapi.v1.marketdata.Quote.option:type_name -> grpc.tradeapi.v1.marketdata.Quote.Option
+	26, // 32: grpc.tradeapi.v1.marketdata.OrderBook.rows:type_name -> grpc.tradeapi.v1.marketdata.OrderBook.Row
+	29, // 33: grpc.tradeapi.v1.marketdata.Trade.timestamp:type_name -> google.protobuf.Timestamp
+	30, // 34: grpc.tradeapi.v1.marketdata.Trade.price:type_name -> google.type.Decimal
+	30, // 35: grpc.tradeapi.v1.marketdata.Trade.size:type_name -> google.type.Decimal
+	31, // 36: grpc.tradeapi.v1.marketdata.Trade.side:type_name -> grpc.tradeapi.v1.Side
+	27, // 37: grpc.tradeapi.v1.marketdata.StreamOrderBook.rows:type_name -> grpc.tradeapi.v1.marketdata.StreamOrderBook.Row
+	20, // 38: grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse.trades:type_name -> grpc.tradeapi.v1.marketdata.Trade
+	30, // 39: grpc.tradeapi.v1.marketdata.Quote.Option.open_interest:type_name -> google.type.Decimal
+	30, // 40: grpc.tradeapi.v1.marketdata.Quote.Option.implied_volatility:type_name -> google.type.Decimal
+	30, // 41: grpc.tradeapi.v1.marketdata.Quote.Option.theoretical_price:type_name -> google.type.Decimal
+	30, // 42: grpc.tradeapi.v1.marketdata.Quote.Option.delta:type_name -> google.type.Decimal
+	30, // 43: grpc.tradeapi.v1.marketdata.Quote.Option.gamma:type_name -> google.type.Decimal
+	30, // 44: grpc.tradeapi.v1.marketdata.Quote.Option.theta:type_name -> google.type.Decimal
+	30, // 45: grpc.tradeapi.v1.marketdata.Quote.Option.vega:type_name -> google.type.Decimal
+	30, // 46: grpc.tradeapi.v1.marketdata.Quote.Option.rho:type_name -> google.type.Decimal
+	30, // 47: grpc.tradeapi.v1.marketdata.OrderBook.Row.price:type_name -> google.type.Decimal
+	30, // 48: grpc.tradeapi.v1.marketdata.OrderBook.Row.sell_size:type_name -> google.type.Decimal
+	30, // 49: grpc.tradeapi.v1.marketdata.OrderBook.Row.buy_size:type_name -> google.type.Decimal
+	1,  // 50: grpc.tradeapi.v1.marketdata.OrderBook.Row.action:type_name -> grpc.tradeapi.v1.marketdata.OrderBook.Row.Action
+	29, // 51: grpc.tradeapi.v1.marketdata.OrderBook.Row.timestamp:type_name -> google.protobuf.Timestamp
+	30, // 52: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.price:type_name -> google.type.Decimal
+	30, // 53: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.sell_size:type_name -> google.type.Decimal
+	30, // 54: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.buy_size:type_name -> google.type.Decimal
+	2,  // 55: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.action:type_name -> grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.Action
+	29, // 56: grpc.tradeapi.v1.marketdata.StreamOrderBook.Row.timestamp:type_name -> google.protobuf.Timestamp
+	3,  // 57: grpc.tradeapi.v1.marketdata.MarketDataService.Bars:input_type -> grpc.tradeapi.v1.marketdata.BarsRequest
+	5,  // 58: grpc.tradeapi.v1.marketdata.MarketDataService.LastQuote:input_type -> grpc.tradeapi.v1.marketdata.QuoteRequest
+	7,  // 59: grpc.tradeapi.v1.marketdata.MarketDataService.OrderBook:input_type -> grpc.tradeapi.v1.marketdata.OrderBookRequest
+	9,  // 60: grpc.tradeapi.v1.marketdata.MarketDataService.LatestTrades:input_type -> grpc.tradeapi.v1.marketdata.LatestTradesRequest
+	11, // 61: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeQuote:input_type -> grpc.tradeapi.v1.marketdata.SubscribeQuoteRequest
+	13, // 62: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeOrderBook:input_type -> grpc.tradeapi.v1.marketdata.SubscribeOrderBookRequest
+	23, // 63: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeLatestTrades:input_type -> grpc.tradeapi.v1.marketdata.SubscribeLatestTradesRequest
+	15, // 64: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeBars:input_type -> grpc.tradeapi.v1.marketdata.SubscribeBarsRequest
+	4,  // 65: grpc.tradeapi.v1.marketdata.MarketDataService.Bars:output_type -> grpc.tradeapi.v1.marketdata.BarsResponse
+	6,  // 66: grpc.tradeapi.v1.marketdata.MarketDataService.LastQuote:output_type -> grpc.tradeapi.v1.marketdata.QuoteResponse
+	8,  // 67: grpc.tradeapi.v1.marketdata.MarketDataService.OrderBook:output_type -> grpc.tradeapi.v1.marketdata.OrderBookResponse
+	10, // 68: grpc.tradeapi.v1.marketdata.MarketDataService.LatestTrades:output_type -> grpc.tradeapi.v1.marketdata.LatestTradesResponse
+	12, // 69: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeQuote:output_type -> grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse
+	14, // 70: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeOrderBook:output_type -> grpc.tradeapi.v1.marketdata.SubscribeOrderBookResponse
+	24, // 71: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeLatestTrades:output_type -> grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse
+	16, // 72: grpc.tradeapi.v1.marketdata.MarketDataService.SubscribeBars:output_type -> grpc.tradeapi.v1.marketdata.SubscribeBarsResponse
+	65, // [65:73] is the sub-list for method output_type
+	57, // [57:65] is the sub-list for method input_type
+	57, // [57:57] is the sub-list for extension type_name
+	57, // [57:57] is the sub-list for extension extendee
+	0,  // [0:57] is the sub-list for field type_name
 }
 
 func init() { file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_init() }
@@ -2100,14 +2236,14 @@ func file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_init() {
 	if File_grpc_tradeapi_v1_marketdata_marketdata_service_proto != nil {
 		return
 	}
-	file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[13].OneofWrappers = []any{
+	file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[15].OneofWrappers = []any{
 		(*Quote_Option_)(nil),
 	}
-	file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[21].OneofWrappers = []any{
+	file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[23].OneofWrappers = []any{
 		(*OrderBook_Row_SellSize)(nil),
 		(*OrderBook_Row_BuySize)(nil),
 	}
-	file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[22].OneofWrappers = []any{
+	file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_msgTypes[24].OneofWrappers = []any{
 		(*StreamOrderBook_Row_SellSize)(nil),
 		(*StreamOrderBook_Row_BuySize)(nil),
 	}
@@ -2117,7 +2253,7 @@ func file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc), len(file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   23,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

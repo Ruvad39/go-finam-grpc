@@ -2,10 +2,11 @@ package finam
 
 import (
 	"fmt"
+	"time"
+
 	marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
 	"google.golang.org/genproto/googleapis/type/interval"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 // Информация о котировке
@@ -73,7 +74,7 @@ func (qs *QuoteStore) processQuote(rq *marketdata_service.Quote) (Quote, error) 
 }
 
 // NewBarsRequest
-func NewBarsRequest(symbol string, tf marketdata_service.BarsRequest_TimeFrame, start, end time.Time) *marketdata_service.BarsRequest {
+func NewBarsRequest(symbol string, tf marketdata_service.TimeFrame, start, end time.Time) *marketdata_service.BarsRequest {
 	i := &interval.Interval{
 		StartTime: timestamppb.New(start),
 		EndTime:   timestamppb.New(end),
