@@ -1,8 +1,19 @@
 package finam
 
 import (
+	"context"
 	assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
+	"time"
 )
+
+// GetTime вернем текущее время сервера (в TzMoscow)
+func (c *Client) GetTime(ctx context.Context) (time.Time, error) {
+	resp, err := c.AssetsService.Clock(ctx, &assets_service.ClockRequest{})
+	if err != nil {
+		return time.Time{}, err
+	}
+	return resp.Timestamp.AsTime().In(TzMoscow), err
+}
 
 func NewClockRequest() *assets_service.ClockRequest {
 	return &assets_service.ClockRequest{}

@@ -30,6 +30,13 @@ if err != nil {
 }
 slog.Info("main", "res", res)
 
+// текущее врем сервера 
+currTime, err := client.GetTime(ctx)
+if err != nil {
+    slog.Error("AssetsService.Clock", "err", err.Error())
+}
+slog.Info("main", "current time server", currTime)
+
 ```
 
 ### Получить информацию по торговому счету

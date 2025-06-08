@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// получить время сервера
-	//getClock(ctx, client)
+	getClock(ctx, client)
 
 	// Получение списка доступных бирж, названия и mic коды
 	//getExchanges(ctx, client)
@@ -50,10 +50,10 @@ func main() {
 	// Получение списка доступных инструментов, их описание
 	//getAssets(ctx, client)
 	//
-	accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
+	//accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
 	// getAsset(ctx, client, "SBER@MISX", accountId)
-	symbol := "SIM5@RTSX" // "SBER@MISX" // "RU000A106L18@MISX"
-	getAssetParams(ctx, client, symbol, accountId)
+	//symbol := "SIM5@RTSX" // "SBER@MISX" // "RU000A106L18@MISX"
+	//getAssetParams(ctx, client, symbol, accountId)
 
 	// Получение расписания торгов для инструмента
 	//getSchedule(ctx, client, "SBER@MISX")
@@ -61,11 +61,12 @@ func main() {
 }
 
 func getClock(ctx context.Context, client *finam.Client) {
-	resp, err := client.AssetsService.Clock(ctx, finam.NewClockRequest())
+	//resp, err := client.AssetsService.Clock(ctx, finam.NewClockRequest()) // old
+	currTime, err := client.GetTime(ctx)
 	if err != nil {
 		slog.Error("AssetsService.getClock", "err", err.Error())
 	}
-	slog.Info("main", "clock", resp)
+	slog.Info("main", "current time server", currTime)
 }
 
 // Получение списка доступных бирж, названия и mic коды
