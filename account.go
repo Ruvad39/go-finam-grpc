@@ -1,13 +1,38 @@
 package finam
 
 import (
+	"context"
 	accounts_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/accounts"
 	"google.golang.org/genproto/googleapis/type/interval"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 )
 
-// NewGetAccountRequest
+// AccountRequest Получение Информация о конкретном аккаунте
+type AccountRequest struct {
+	client         *Client
+	accountRequest *accounts_service.GetAccountRequest
+}
+
+// NewAccountRequest
+func (c *Client) NewAccountRequest(accountId string) *AccountRequest {
+	return &AccountRequest{
+		client:         c,
+		accountRequest: &accounts_service.GetAccountRequest{AccountId: accountId},
+	}
+
+}
+
+// Do выполним запрос AccountsService.GetAccount()
+func (r *AccountRequest) Do(ctx context.Context) (*accounts_service.GetAccountResponse, error) {
+	// добавим заголовок с авторизацией (accessToken)
+	ctx, err := r.client.WithAuthToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return r.client.AccountsService.GetAccount(ctx, r.accountRequest)
+}
+
 func NewGetAccountRequest(accountId string) *accounts_service.GetAccountRequest {
 	return &accounts_service.GetAccountRequest{AccountId: accountId}
 

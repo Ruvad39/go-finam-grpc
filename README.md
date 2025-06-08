@@ -34,21 +34,21 @@ slog.Info("main", "res", res)
 
 ### Получить информацию по торговому счету
 ```go
-// добавим заголовок с авторизацией (accessToken)
-ctx, err = client.WithAuthToken(ctx)
-if err != nil {
-	slog.Error("main", "WithAuthToken", err.Error())
-	// если прошла ошибка, дальше работа бесполезна, не будет авторизации
-	return
-}
-
 // Получение информации по конкретному аккаунту
 accountId := "FINAM_ACCOUNT_ID"
-res, err := client.AccountsService.GetAccount(ctx, &accounts_service.GetAccountRequest{AccountId: accountId})
+res, err := client.NewAccountRequest(accountId).Do(ctx)
 if err != nil {
-	slog.Error("accountService", "GetAccount", err.Error())
+    slog.Error("AccountRequest.Do", "GetAccount", err.Error())
+    return
 }
-slog.Info("main", "Account", res)
+slog.Info("AccountRequest.Do",
+    "AccountId", res.AccountId,
+    "Type", res.Type,
+    "Status", res.Status,
+    "Equity", fmt.Sprintf("%.2f", finam.DecimalToFloat64(res.Equity)),
+    "UnrealizedProfit", fmt.Sprintf("%.2f", finam.DecimalToFloat64(res.UnrealizedProfit)),
+    "Cash", res.Cash,
+    )
 
 // список позиций
 //slog.Info("main", "Positions", res.Positions)

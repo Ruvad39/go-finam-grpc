@@ -35,11 +35,11 @@ func main() {
 
 	stream := client.NewStream()
 	// подпишемся на котировки (Quote)
-	stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
+	//stream.Subscribe(finam.QuoteChannel, "SIM5@RTSX")
 	stream.Subscribe(finam.QuoteChannel, "SBER@MISX")
 
 	// подпишемся на стакан
-	//stream.Subscribe(finam.BookChannel, "SBER@MISX")
+	stream.Subscribe(finam.BookChannel, "SBER@MISX")
 	//stream.Subscribe(finam.BookChannel, "RIM5@RTSX")
 
 	// подпишемся на все сделки

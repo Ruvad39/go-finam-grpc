@@ -32,7 +32,7 @@ func main() {
 
 	symbol := "SBER@MISX" //"ROSN@MISX"  //"SIM5@RTSX"
 	// Получение последней котировки по инструменту
-	getQuote(ctx, client, symbol)
+	//getQuote(ctx, client, symbol)
 
 	// Получение исторических данных по инструменту (агрегированные свечи)
 	//getBars(ctx, client, symbol)
