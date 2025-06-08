@@ -5,6 +5,7 @@ import (
 	accounts_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/accounts"
 	"google.golang.org/genproto/googleapis/type/interval"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	"log/slog"
 	"time"
 )
 
@@ -36,6 +37,58 @@ func (r *AccountRequest) Do(ctx context.Context) (*accounts_service.GetAccountRe
 func NewGetAccountRequest(accountId string) *accounts_service.GetAccountRequest {
 	return &accounts_service.GetAccountRequest{AccountId: accountId}
 
+}
+
+// AccountTradesRequest Получение истории по сделкам аккаунта
+type AccountTradesRequest struct {
+	client    *Client
+	accountId string    // Идентификатор аккаунта
+	limit     int32     // Лимит количества сделок
+	startTime time.Time // Начало запрашиваемого периода
+	endTime   time.Time // Окончание запрашиваемого периода
+}
+
+func (c *Client) NewAccountTradesRequest(accountId string) *AccountTradesRequest {
+	return &AccountTradesRequest{
+		client:    c,
+		accountId: accountId,
+	}
+}
+
+func (r *AccountTradesRequest) Limit(value int32) *AccountTradesRequest {
+	r.limit = value
+	return r
+}
+
+func (r *AccountTradesRequest) StartTime(value time.Time) *AccountTradesRequest {
+	r.startTime = value
+	return r
+}
+
+func (r *AccountTradesRequest) EndTime(value time.Time) *AccountTradesRequest {
+	r.endTime = value
+	return r
+}
+
+// Do Получение истории по сделкам аккаунта
+func (r *AccountTradesRequest) Do(ctx context.Context) (*accounts_service.TradesResponse, error) {
+	// добавим заголовок с авторизацией (accessToken)
+	ctx, err := r.client.WithAuthToken(ctx)
+	if err != nil {
+		slog.Error("main", "WithAuthToken", err.Error())
+		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
+		return nil, err
+	}
+	inv := &interval.Interval{
+		StartTime: timestamppb.New(r.startTime),
+		EndTime:   timestamppb.New(r.endTime),
+	}
+	req := &accounts_service.TradesRequest{
+		AccountId: r.accountId,
+		Limit:     r.limit,
+		Interval:  inv,
+	}
+	return r.client.AccountsService.Trades(ctx, req)
 }
 
 // NewTradesRequest

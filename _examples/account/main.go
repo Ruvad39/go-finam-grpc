@@ -29,15 +29,9 @@ func main() {
 	}
 	defer client.Close()
 
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err = client.WithAuthToken(ctx)
-	if err != nil {
-		slog.Error("main", "WithAuthToken", err.Error())
-		// если прошла ошибка, дальше работа бесполезна, не будет авторизации
-		return
-	}
-
 	//accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
+	//getTrades_new(ctx, client, accountId)
+	//return
 
 	// Получение информации о токене сессии. Возьмем список счетов
 	res, err := client.GetTokenDetails(ctx)
@@ -45,13 +39,12 @@ func main() {
 		slog.Error("main", "AuthService.TokenDetails", err.Error())
 	}
 	for row, accountId := range res.AccountIds {
-		// Получение информации по конкретному аккаунту
-		slog.Info("TokenDetails.AccountIds", "row", row, "accoiuntId", accountId)
+		slog.Info("TokenDetails.AccountIds", "row", row, "accountId", accountId)
 		// получим информацию по конкретному счету
-		getAccount_new(ctx, client, accountId)
-		getPositions(ctx, client, accountId)
+		//getAccount_new(ctx, client, accountId)
+		//getPositions(ctx, client, accountId)
 		//getAccount(ctx, client, accountId)
-		//getTrades(ctx, client, accountId)
+		getTrades_new(ctx, client, accountId)
 		//getTransactions(ctx, client, accountId)
 	}
 
@@ -129,6 +122,23 @@ func getAccount(ctx context.Context, client *finam.Client, accountId string) {
 
 	}
 
+}
+
+// Запрос получения истории по сделкам
+func getTrades_new(ctx context.Context, client *finam.Client, accountId string) {
+	// запросим все сделки за последние 24 часа
+	var limit int32 = 0
+	start_time := time.Now().Add(-24 * time.Hour) //  24 часа назад
+	end_time := time.Now()
+
+	resp, err := client.NewAccountTradesRequest(accountId).StartTime(start_time).EndTime(end_time).Limit(limit).Do(ctx)
+	if err != nil {
+		slog.Error("accountService", "Trades", err.Error())
+	}
+	slog.Info("accountService.Trades", "кол-во сделок", len(resp.Trades))
+	for row, t := range resp.Trades {
+		slog.Info("AccountsService.Trades", "row", row, "trade", t)
+	}
 }
 
 // Запрос получения истории по сделкам
