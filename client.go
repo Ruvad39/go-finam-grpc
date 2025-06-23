@@ -11,11 +11,11 @@ import (
 	"os"
 	"time"
 
-	accounts_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/accounts"
-	assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
-	auth_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/auth"
-	marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
-	orders_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/orders"
+	//accounts_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/accounts"
+	//assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
+	//auth_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/auth"
+	//marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
+	//orders_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/orders"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
@@ -52,16 +52,12 @@ func SetLogDebug(debug bool) {
 
 // Client
 type Client struct {
-	token             string    // Основой токен пользователя
-	accessToken       string    // JWT токен для дальнейшей авторизации
-	ttlJWT            time.Time // Время завершения действия JWT токена
-	conn              *grpc.ClientConn
-	AuthService       auth_service.AuthServiceClient
-	AccountsService   accounts_service.AccountsServiceClient
-	AssetsService     assets_service.AssetsServiceClient
-	MarketDataService marketdata_service.MarketDataServiceClient
-	OrdersService     orders_service.OrdersServiceClient
-	Securities        map[string]Security //  Список инструментов с которыми работаем (или весь список? )
+	token       string    // Основой токен пользователя
+	accessToken string    // JWT токен для дальнейшей авторизации
+	ttlJWT      time.Time // Время завершения действия JWT токена
+	conn        *grpc.ClientConn
+	//AuthService       auth_service.AuthServiceClient
+
 }
 
 func NewClient(ctx context.Context, token string) (*Client, error) {
@@ -79,14 +75,10 @@ func NewClient(ctx context.Context, token string) (*Client, error) {
 		return nil, err
 	}
 	client := &Client{
-		token:             token,
-		conn:              conn,
-		AuthService:       auth_service.NewAuthServiceClient(conn),
-		AccountsService:   accounts_service.NewAccountsServiceClient(conn),
-		AssetsService:     assets_service.NewAssetsServiceClient(conn),
-		MarketDataService: marketdata_service.NewMarketDataServiceClient(conn),
-		OrdersService:     orders_service.NewOrdersServiceClient(conn),
-		Securities:        make(map[string]Security),
+		token: token,
+		conn:  conn,
+		//AuthService:       auth_service.NewAuthServiceClient(conn),
+
 	}
 	log.Debug("NewClient есть connect")
 	err = client.UpdateJWT(ctx) // сразу получим и запишем accessToken для работы
