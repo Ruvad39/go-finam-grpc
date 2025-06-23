@@ -17,9 +17,9 @@ import (
 )
 
 const (
-	Name        = "FINAM-API-gRPC GO"
-	Version     = "0.1.1"
-	VersionDate = "2025-04-22"
+	Name        = "FINAM-API-gRPC"
+	Version     = "0.2.0"
+	VersionDate = "2025-06-23"
 )
 
 // Endpoints
@@ -33,12 +33,11 @@ type Client struct {
 	token       string    // Основой токен пользователя
 	accessToken string    // JWT токен для дальнейшей авторизации
 	ttlJWT      time.Time // Время завершения действия JWT токена
-	AccountId   string    // Код счета по умолчанию
 	conn        *grpc.ClientConn
 	AuthService pb.AuthServiceClient
 }
 
-func NewClient(ctx context.Context, token, accountId string, opts ...Option) (*Client, error) {
+func NewClient(ctx context.Context, token string, opts ...Option) (*Client, error) {
 	// Устанавливаем значения по умолчанию
 	o := &options{
 		EndPoint: endPoint,
@@ -61,9 +60,9 @@ func NewClient(ctx context.Context, token, accountId string, opts ...Option) (*C
 	}
 	//
 	client := &Client{
-		opts:        *o,
-		token:       token,
-		accessToken: accountId,
+		opts:  *o,
+		token: token,
+		//accessToken: accountId,
 		conn:        conn,
 		AuthService: pb.NewAuthServiceClient(conn),
 	}
@@ -80,4 +79,9 @@ func NewClient(ctx context.Context, token, accountId string, opts ...Option) (*C
 func (c *Client) Close() error {
 	return c.conn.Close()
 
+}
+
+// NewAccountServiceClien созадем клиент для доступа к AccountService
+func (c *Client) NewAccountServiceClient() *AccountServiceClient {
+	return NewAccountServiceClient(c)
 }

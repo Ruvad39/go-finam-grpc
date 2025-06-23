@@ -19,12 +19,11 @@ func init() {
 func main() {
 	ctx := context.Background()
 	token, _ := os.LookupEnv("FINAM_TOKEN")
-	//accountId ,_ := os.LookupEnv("FINAM_ACCOUNT_ID")
-	//
+
 	slog.Info("start connect")
 	finam.SetLogLevel(slog.LevelDebug)
 
-	client, err := finam.NewClient(ctx, token, "")
+	client, err := finam.NewClient(ctx, token)
 	if err != nil {
 		slog.Error("NewClient", "err", err.Error())
 		return
