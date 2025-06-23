@@ -1,7 +1,12 @@
-# go-finam-grpc
+# Неофициальный Go SDK для Finam Trade API
 
-**gRPC-клиент на Go для работы с API Финама**  
-[tradeapi.finam](https://tradeapi.finam.ru/docs/about/)
+**gRPC-клиент создан на базе [proto файлов](https://github.com/FinamWeb/finam-trade-api)**
+
+⚠️ **Важное предупреждение**  
+Это **неофициальная** библиотека для работы с [Finam Trade API](https://tradeapi.finam.ru/docs/guides/grpc/).  
+Возможны ошибки как в реализации SDK, так и в самом Trade API.  
+**Используйте этот код на свой страх и риск.**  
+Разработчик не несет ответственности за потери.
 
 
 ## Установка
@@ -55,7 +60,6 @@ slog.Info("AccountsService.GetAccount",
 )
 
 // список позиций
-// список позиций
 for row, pos := range res.Positions {
     slog.Info("AccountsService.GetAccount.Positions",
         "row", row,
@@ -67,11 +71,68 @@ for row, pos := range res.Positions {
 }	
 ```
 
+### Подробные примеры смотрите [тут](/_examples)
 
-### Примеры смотрите [тут](/_examples)
 
+### Методы реализованные на текущие момент
+
+```go
+// AssetServiceClient 
+// вернем текущее время сервера (в TzMoscow)
+GetTime(ctx context.Context) (time.Time, error)
+// Получение списка доступных бирж, названия и mic коды
+GetExchanges(ctx context.Context) (*pb.ExchangesResponse, error)
+// Получение списка доступных инструментов, их описание
+GetAssets(ctx context.Context) (*pb.AssetsResponse, error)
+// Получение информации по конкретному инструменту
+GetAsset(ctx context.Context, accountId, symbol string) (*pb.GetAssetResponse, error)
+// Получение торговых параметров по инструменту
+GetAssetParams(ctx context.Context, accountId, symbol string) (*pb.GetAssetParamsResponse, error)
+// Получение расписания торгов для инструмента
+GetSchedule(ctx context.Context, symbol string) (*pb.ScheduleResponse, error)
+// TODO OptionsChain
+
+
+// AccountServiceClient 
+// Получение информации по конкретному счету
+GetAccount(ctx context.Context, accountId string) (*pb.GetAccountResponse, error)
+// Получение истории по сделкам заданного счета
+GetTrades(ctx context.Context, accountId string, start, end time.Time, limit int32) (*pb.TradesResponse, error)
+// Получение списка транзакций по счету
+GetTransactions(ctx context.Context, accountId string, start, end time.Time, limit int32) (*pb.TransactionsResponse, error)
+
+
+// MarketDataServiceClient 
+//Получение исторических данных по инструменту (агрегированные свечи)
+GetBars(ctx context.Context, symbol string, tf pb.TimeFrame, start, end time.Time)
+// Получение последней котировки по инструменту
+GetLastQuote(ctx context.Context, symbol string) (*pb.QuoteResponse, error)
+// получение списка последних сделок по инструменту
+GetLatestTrades(ctx context.Context, symbol string) (*pb.BarsResponse, error)
+// Получение текущего стакана по инструменту
+GetOrderBook(ctx context.Context, symbol string) (*pb.OrderBookResponse, error)
+
+
+// OrderServiceClient
+// Получение списка заявок по заданному счету
+GetOrders(ctx context.Context, accountId string) (*pb.OrdersResponse, error)
+// Получение информации о конкретном ордере
+GetOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error)
+// Отмена биржевой заявки
+CancelOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error)
+// Выставление биржевой заявки
+PlaceOrder(ctx context.Context, order *pb.Order) (*pb.OrderState, error)
+
+// Вспомогательные методы для создания ордера
+// создать ордер на покупку по рынку
+NewBuyOrder(accountId, symbol string, quantity int) *pb.Order {
+// создать ордер на продажу по рынку
+NewSellOrder(accountId, symbol string, quantity int) *pb.Order {
+// создать ордер на покупку по лимитной цене
+NewBuyLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Order
+// создать ордер на продажу по лимитной цене
+NewSellLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Order
+```
 
 ## TODO
-* [ ] MarketDataServiceClient
-* [ ] OrderServiceClient
 * [ ] streams
