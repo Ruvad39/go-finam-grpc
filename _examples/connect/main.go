@@ -19,9 +19,12 @@ func init() {
 func main() {
 	ctx := context.Background()
 	token, _ := os.LookupEnv("FINAM_TOKEN")
-	slog.Info("start")
-	finam.SetLogDebug(true)
-	client, err := finam.NewClient(ctx, token)
+	//accountId ,_ := os.LookupEnv("FINAM_ACCOUNT_ID")
+	//
+	slog.Info("start connect")
+	finam.SetLogLevel(slog.LevelDebug)
+
+	client, err := finam.NewClient(ctx, token, "")
 	if err != nil {
 		slog.Error("NewClient", "err", err.Error())
 		return
@@ -34,5 +37,6 @@ func main() {
 		slog.Error("main", "AuthService.TokenDetails", err.Error())
 	}
 	slog.Info("main", "res", res)
-	//slog.Info("main", "res.AccountIds", res.AccountIds)
+	// список счетов
+	slog.Info("main", "res.AccountIds", res.AccountIds)
 }

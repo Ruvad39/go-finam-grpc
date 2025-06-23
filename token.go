@@ -1,7 +1,3 @@
-/*
-TODO создать метод обновляющий токен каждые 20 минут в отдельном потоке
-*/
-
 package finam
 
 import (
@@ -9,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	auth_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/auth"
+	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -25,7 +21,7 @@ func (c *Client) GetJWT(ctx context.Context) (string, error) {
 		c.accessToken = ""
 		return c.accessToken, nil
 	}
-	req := &auth_service.AuthRequest{Secret: c.token}
+	req := &pb.AuthRequest{Secret: c.token}
 	log.Debug("GetJWT start AuthService.Auth")
 	t := time.Now()
 	res, err := c.AuthService.Auth(ctx, req)
@@ -93,8 +89,8 @@ func (c *Client) runJwtRefresher(ctx context.Context) {
 // GetTokenDetails Получение информации о токене сессии
 //
 // идет вызов AuthService.TokenDetails
-func (c *Client) GetTokenDetails(ctx context.Context) (*auth_service.TokenDetailsResponse, error) {
-	return c.AuthService.TokenDetails(ctx, &auth_service.TokenDetailsRequest{Token: c.accessToken})
+func (c *Client) GetTokenDetails(ctx context.Context) (*pb.TokenDetailsResponse, error) {
+	return c.AuthService.TokenDetails(ctx, &pb.TokenDetailsRequest{Token: c.accessToken})
 }
 
 // WithAuthToken Создаем новый контекст с заголовком Authorization
@@ -105,10 +101,6 @@ func (c *Client) WithAuthToken(ctx context.Context) (context.Context, error) {
 	if err != nil {
 		return ctx, err
 	}
-
-	//_ = authKey
-	//ctx = context.WithValue(ctx, authKey, c.accessToken)
-	//return ctx, nil
 	// добавим заголовок
 	md := metadata.New(map[string]string{
 		authKey: c.accessToken,

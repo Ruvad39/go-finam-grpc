@@ -7,15 +7,10 @@ package finam
 import (
 	"context"
 	"crypto/tls"
-	"log/slog"
-	"os"
 	"time"
 
-	//accounts_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/accounts"
-	//assets_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/assets"
-	//auth_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/auth"
-	//marketdata_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/marketdata"
-	//orders_service "github.com/Ruvad39/go-finam-grpc/trade_api/v1/orders"
+	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
@@ -32,38 +27,28 @@ const (
 	endPoint = "api.finam.ru:443" //"ftrr01.finam.ru:443"
 )
 
-var logLevel = &slog.LevelVar{} // INFO
-var log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-	Level: logLevel,
-})).With(slog.String("package", "go-finam-grpc"))
-
-func SetLogger(logger *slog.Logger) {
-	log = logger
-}
-
-// SetLogDebug установим уровень логгирования Debug
-func SetLogDebug(debug bool) {
-	if debug {
-		logLevel.Set(slog.LevelDebug)
-	} else {
-		logLevel.Set(slog.LevelInfo)
-	}
-}
-
 // Client
 type Client struct {
+	opts        options   // Параметры клиента
 	token       string    // Основой токен пользователя
 	accessToken string    // JWT токен для дальнейшей авторизации
 	ttlJWT      time.Time // Время завершения действия JWT токена
+	AccountId   string    // Код счета по умолчанию
 	conn        *grpc.ClientConn
-	//AuthService       auth_service.AuthServiceClient
-
+	AuthService pb.AuthServiceClient
 }
 
-func NewClient(ctx context.Context, token string) (*Client, error) {
-	// TODO выделить в отдельный метод connect()
-	log.Debug("NewClient start connect")
-	conn, err := grpc.NewClient(endPoint,
+func NewClient(ctx context.Context, token, accountId string, opts ...Option) (*Client, error) {
+	// Устанавливаем значения по умолчанию
+	o := &options{
+		EndPoint: endPoint,
+	}
+	// Применяем переданные опции
+	for _, opt := range opts {
+		opt(o)
+	}
+	//
+	conn, err := grpc.NewClient(o.EndPoint,
 		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
 			Time:                15 * time.Minute, // отправлять ping каждые 15 минут
@@ -74,14 +59,16 @@ func NewClient(ctx context.Context, token string) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
+	//
 	client := &Client{
-		token: token,
-		conn:  conn,
-		//AuthService:       auth_service.NewAuthServiceClient(conn),
-
+		opts:        *o,
+		token:       token,
+		accessToken: accountId,
+		conn:        conn,
+		AuthService: pb.NewAuthServiceClient(conn),
 	}
-	log.Debug("NewClient есть connect")
-	err = client.UpdateJWT(ctx) // сразу получим и запишем accessToken для работы
+	// сразу получим и запишем accessToken для работы
+	err = client.UpdateJWT(ctx)
 	if err != nil {
 		return nil, err
 	}
