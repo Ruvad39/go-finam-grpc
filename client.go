@@ -90,3 +90,8 @@ func (c *Client) NewAccountServiceClient() *AccountServiceClient {
 func (c *Client) NewAssetServiceClient() *AssetServiceClient {
 	return NewAssetServiceClient(c)
 }
+
+// NewMarketDataServiceClient создаем клиент для работы MarketDataService
+func (c *Client) NewMarketDataServiceClient() *MarketDataServiceClient {
+	return NewMarketDataServiceClient(c)
+}

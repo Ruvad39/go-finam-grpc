@@ -1,14 +1,18 @@
 # Changelog
 
-## [0.2.0] - 2025-06-..
+
+## [0.2.0] - 2025-06-23
+### Update
+- Полная реорганизация проекта
+- proto файлы все в одном каталоге tradeapi\v1
+- для работы с сервисами теперь создаем отдельные "клиенты" 
+
 ### Added
-- runJwtRefresher (в отдельном потоке периодически обновляем токен)
-- AssetsService.GetAssetParams
-- new proto файлы (Версия 2.4.0 (05.06.2025))
-- client.NewAccountRequest(accountId string).Do(ctx) = обертка для более "простого" получения данных по счету  
-- client.NewAccountTradesRequest(accountId string).Do(ctx) = обертка для более "простого" получения сделок по счету
-- client.GetTime(ctx context.Context) (time.Time, error)
-- 
+- NewAccountServiceClient = создаем клиент для доступа к AccountService
+- NewAssetServiceClient = создаем клиент для доступа к AssetService
+- NewMarketDataServiceClient = создаем клиент для работы MarketDataService
+
+
 ## [0.1.0] - 2025-04-17
 ### Added
 - реализован (почти) весь функционал для работы с api.
