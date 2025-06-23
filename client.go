@@ -95,3 +95,8 @@ func (c *Client) NewAssetServiceClient() *AssetServiceClient {
 func (c *Client) NewMarketDataServiceClient() *MarketDataServiceClient {
 	return NewMarketDataServiceClient(c)
 }
+
+// NewOrderServiceClient создаем клиент для работы OrdersService
+func (c *Client) NewOrderServiceClient() *OrderServiceClient {
+	return NewOrderServiceClient(c)
+}
