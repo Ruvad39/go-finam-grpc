@@ -81,7 +81,12 @@ func (c *Client) Close() error {
 
 }
 
-// NewAccountServiceClien созадем клиент для доступа к AccountService
+// NewAccountServiceClien создаем клиент для доступа к AccountService
 func (c *Client) NewAccountServiceClient() *AccountServiceClient {
 	return NewAccountServiceClient(c)
+}
+
+// NewAssetServiceClient создаем клиент для доступа к AssetService
+func (c *Client) NewAssetServiceClient() *AssetServiceClient {
+	return NewAssetServiceClient(c)
 }

@@ -30,43 +30,40 @@ if err != nil {
 }
 slog.Info("main", "res", res)
 
-// текущее врем сервера 
-currTime, err := client.GetTime(ctx)
-if err != nil {
-    slog.Error("AssetsService.Clock", "err", err.Error())
-}
-slog.Info("main", "current time server", currTime)
 
 ```
 
 ### Получить информацию по торговому счету
 ```go
-// Получение информации по конкретному аккаунту
-accountId := "FINAM_ACCOUNT_ID"
-res, err := client.NewAccountRequest(accountId).Do(ctx)
+
+// создаем клиент для доступа к AccountService
+accountService := client.NewAccountServiceClient()
+
+// запрос по заданному счету
+res, err := accountServicet.GetAccount(ctx,  "FINAM_ACCOUNT_ID")
 if err != nil {
-    slog.Error("AccountRequest.Do", "GetAccount", err.Error())
+    slog.Error("AccountsService.GetAccount", "GetAccount", err.Error())
     return
 }
-slog.Info("AccountRequest.Do",
+slog.Info("AccountsService.GetAccount",
     "AccountId", res.AccountId,
     "Type", res.Type,
     "Status", res.Status,
     "Equity", fmt.Sprintf("%.2f", finam.DecimalToFloat64(res.Equity)),
     "UnrealizedProfit", fmt.Sprintf("%.2f", finam.DecimalToFloat64(res.UnrealizedProfit)),
     "Cash", res.Cash,
-    )
+)
 
 // список позиций
-//slog.Info("main", "Positions", res.Positions)
+// список позиций
 for row, pos := range res.Positions {
-	slog.Info("positions",
-		"row", row,
-		"Symbol", pos.Symbol,
-		"Quantity", finam.DecimalToFloat64(pos.Quantity),
-		"AveragePrice", finam.DecimalToFloat64(pos.AveragePrice),
-		"CurrentPrice", finam.DecimalToFloat64(pos.CurrentPrice),
-	)
+    slog.Info("AccountsService.GetAccount.Positions",
+        "row", row,
+        "Symbol", pos.Symbol,
+        "Quantity", finam.DecimalToFloat64(pos.Quantity),
+        "AveragePrice", finam.DecimalToFloat64(pos.AveragePrice),
+        "CurrentPrice", finam.DecimalToFloat64(pos.CurrentPrice),
+    )
 }	
 ```
 
@@ -75,4 +72,6 @@ for row, pos := range res.Positions {
 
 
 ## TODO
-* [ ] MarketDataService.SubscribeLatestTrades
+* [ ] MarketDataServiceClient
+* [ ] OrderServiceClient
+* [ ] streams
