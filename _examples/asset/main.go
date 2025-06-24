@@ -52,7 +52,7 @@ func main() {
 	// возьмем номер счета из .env
 	accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
 	_ = accountId
-	symbol := "SBER@MISX" // "SIU5@RTSX" // "SBER@MISX" // "RU000A106L18@MISX"
+	symbol := "FEES@MISX" //"SBER@MISX" // "SIU5@RTSX" // "SBER@MISX" // "RU000A106L18@MISX"
 	_ = symbol
 	// Получение информации по конкретному инструменту
 	getAsset(ctx, assetService, accountId, symbol)

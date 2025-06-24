@@ -132,6 +132,10 @@ NewSellOrder(accountId, symbol string, quantity int) *pb.Order {
 NewBuyLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Order
 // создать ордер на продажу по лимитной цене
 NewSellLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Order
+
+// Потоки данных (stream)
+// Подписка на собственные заявки и сделки
+NewOrderTradeStream
 ```
 
 ## TODO
