@@ -127,3 +127,11 @@ func valueOrZero(v *decimal.Decimal) string {
 	}
 	return v.Value
 }
+
+// TimestampToUnixMilli переведем в миллисекунды с эпохи Unix
+func TimestampToUnixMilli(ts *timestamppb.Timestamp) int64 {
+	if ts == nil {
+		return 0
+	}
+	return ts.Seconds*1000 + int64(ts.Nanos)/1_000_000
+}

@@ -50,7 +50,7 @@ func main() {
 		getAccount(ctx, accountService, accountId)
 
 		// получим список сделок
-		//getTrades(ctx, accountService, accountId)
+		getTrades(ctx, accountService, accountId)
 
 		//getTransactions(ctx, accountService, accountId)
 	}

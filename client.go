@@ -27,6 +27,11 @@ const (
 	endPoint = "api.finam.ru:443" //"ftrr01.finam.ru:443"
 )
 
+const (
+	initialDelay = 2 * time.Second
+	maxDelay     = 50 * time.Second
+)
+
 // Client
 type Client struct {
 	opts        options   // Параметры клиента
@@ -50,8 +55,8 @@ func NewClient(ctx context.Context, token string, opts ...Option) (*Client, erro
 	conn, err := grpc.NewClient(o.EndPoint,
 		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
-			Time:                15 * time.Minute, // отправлять ping каждые 15 минут
-			Timeout:             30 * time.Second, // ждать ответа не дольше 10 сек
+			Time:                4 * time.Minute,  // отправлять ping каждые 4 минут
+			Timeout:             30 * time.Second, // ждать ответа не дольше 30 сек
 			PermitWithoutStream: true,             // пинговать даже без активных RPC
 		}),
 	)

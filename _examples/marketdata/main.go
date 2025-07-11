@@ -47,10 +47,10 @@ func main() {
 	//getBars(ctx, marketDataService, symbol)
 
 	// Получение текущего стакана по инструменту
-	//getOrderBook(ctx, marketDataService, symbol)
+	getOrderBook(ctx, marketDataService, symbol)
 
 	// Получение списка последних сделок по инструменту
-	getLatestTrades(ctx, marketDataService, symbol)
+	//getLatestTrades(ctx, marketDataService, symbol)
 }
 
 // Получение последней котировки по инструменту
