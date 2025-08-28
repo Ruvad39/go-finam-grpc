@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
+	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/auth"
 	"google.golang.org/grpc/metadata"
 )
 

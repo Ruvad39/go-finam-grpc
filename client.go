@@ -9,8 +9,7 @@ import (
 	"crypto/tls"
 	"time"
 
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
-
+	auth_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/auth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
@@ -39,7 +38,7 @@ type Client struct {
 	accessToken string    // JWT токен для дальнейшей авторизации
 	ttlJWT      time.Time // Время завершения действия JWT токена
 	conn        *grpc.ClientConn
-	AuthService pb.AuthServiceClient
+	AuthService auth_service.AuthServiceClient
 }
 
 func NewClient(ctx context.Context, token string, opts ...Option) (*Client, error) {
@@ -69,7 +68,7 @@ func NewClient(ctx context.Context, token string, opts ...Option) (*Client, erro
 		token: token,
 		//accessToken: accountId,
 		conn:        conn,
-		AuthService: pb.NewAuthServiceClient(conn),
+		AuthService: auth_service.NewAuthServiceClient(conn),
 	}
 	// сразу получим и запишем accessToken для работы
 	err = client.UpdateJWT(ctx)

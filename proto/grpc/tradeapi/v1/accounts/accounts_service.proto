@@ -1,0 +1,208 @@
+syntax = "proto3";
+
+package grpc.tradeapi.v1.accounts;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "google/type/decimal.proto";
+import "google/type/interval.proto";
+import "google/type/money.proto";
+import "grpc/tradeapi/v1/side.proto";
+import "grpc/tradeapi/v1/trade.proto";
+
+option go_package = "trade_api/v1/accounts/accounts_service";
+option java_multiple_files = true;
+
+// Сервис аккаунтов
+service AccountsService {
+  // Получение информации по конкретному аккаунту
+  // Пример HTTP запроса:
+  // GET /v1/accounts/A12345
+  // Authorization: <token>
+  rpc GetAccount(GetAccountRequest) returns (GetAccountResponse) {
+    option (google.api.http) = {
+      get: "/v1/accounts/{account_id}"
+    };
+  };
+
+  // Получение истории по сделкам аккаунта
+  // Пример HTTP запроса:
+  // GET /v1/accounts/A12345/trades?limit=50&interval.start_time=2023-01-01T00:00:00Z&interval.end_time=2023-01-31T23:59:59Z
+  // Authorization: <token>
+  //
+  // Параметры:
+  // - account_id - передается в URL пути
+  // - limit и interval - передаются как query-параметры
+  rpc Trades(TradesRequest) returns (TradesResponse) {
+    option (google.api.http) = {
+      get: "/v1/accounts/{account_id}/trades"
+    };
+  };
+
+  // Получение списка транзакций аккаунта
+  // Пример HTTP запроса:
+  // GET /v1/accounts/A12345/transactions?limit=50&interval.start_time=2023-01-01T00:00:00Z&interval.end_time=2023-01-31T23:59:59Z
+  // Authorization: <token>
+  //
+  // Параметры:
+  // - account_id - передается в URL пути
+  // - limit и interval - передаются как query-параметры
+  rpc Transactions(TransactionsRequest) returns (TransactionsResponse) {
+    option (google.api.http) = {
+      get: "/v1/accounts/{account_id}/transactions"
+    };
+  };
+}
+
+// Запрос получения информации по конкретному аккаунту
+message GetAccountRequest {
+  // Идентификатор аккаунта
+  string account_id = 1;
+}
+
+// Информация о конкретном аккаунте
+message GetAccountResponse {
+  // Идентификатор аккаунта
+  string account_id = 1;
+  // Тип аккаунта
+  string type = 2;
+  // Статус аккаунта
+  string status = 3;
+  // Доступные средства плюс стоимость открытых позиций
+  google.type.Decimal equity = 4;
+  // Нереализованная прибыль
+  google.type.Decimal unrealized_profit = 5;
+  // Позиции. Открытые, плюс теоретические (по неисполненным активным заявкам)
+  repeated Position positions = 6;
+  // Сумма собственных денежных средств на счете, доступная для торговли. Не включает маржинальные средства.
+  repeated google.type.Money cash = 7;
+
+  oneof portfolio {
+    MC portfolio_mc = 8;
+    MCT portfolio_mct = 9;
+    FORTS portfolio_forts = 10;
+  }
+}
+
+/*
+ Общий тип для счетов Московской Биржи. Включает в себя как единые, так и специализированные (моно) счета для разных секций биржи.
+ - Единый торговый счет (ЕТС): Позволяет торговать на нескольких рынках (фондовый, валютный. срочный, spb, иностранные бумаги, иностранные фьючерсы) с единой денежной позиции.
+ - Моно-счет фондового рынка MOEX: Изолированный счет для торговли акциями, облигациями и паями.
+ - Моно-счет валютного рынка MOEX: Изолированный счет для операций с валютными парами (например, CNYRUB_TOM).
+*/
+message MC {
+  // Сумма собственных денежных средств на счете, доступная для торговли. Включает маржинальные средства.
+  google.type.Decimal available_cash = 1;
+  google.type.Decimal initial_margin = 2;
+  google.type.Decimal maintenance_margin = 3;
+}
+
+// Тип портфеля для счетов на американских рынках.
+// Предоставляет доступ к биржам США: NYSE, NASDAQ, CBOE, CME, сделки с американскими акциями, фьючерсами и опционами.
+message MCT {
+}
+
+// Тип портфеля для торговли на срочном рынке Московской Биржи.
+// Предназначен для работы с производными финансовыми инструментами: фьючерсами и опционами.
+message FORTS {
+  // Сумма собственных денежных средств на счете, доступная для торговли. Включает маржинальные средства.
+  google.type.Decimal available_cash = 1;
+  google.type.Decimal money_reserved = 2;
+}
+
+// Запрос получения истории по сделкам
+message TradesRequest {
+  // Идентификатор аккаунта
+  string account_id = 1;
+  // Лимит количества сделок
+  int32 limit = 2;
+  // Начало и окончание запрашиваемого периода, Unix epoch time
+  google.type.Interval interval = 3;
+}
+
+// История по сделкам
+message TradesResponse {
+  // Сделки по аккаунту
+  repeated AccountTrade trades = 1;
+}
+
+// Запрос получения списка транзакций
+message TransactionsRequest {
+  // Идентификатор аккаунта
+  string account_id = 1;
+  // Лимит количества транзакций
+  int32 limit = 2;
+  // Начало и окончание запрашиваемого периода, Unix epoch time
+  google.type.Interval interval = 3;
+}
+
+// Список транзакций
+message TransactionsResponse {
+  // Транзакции по аккаунту
+  repeated Transaction transactions = 1;
+}
+
+// Информация о позиции
+message Position {
+  // Символ инструмента
+  string symbol = 1;
+  // Количество в шт., значение со знаком определяющее (long-short)
+  google.type.Decimal quantity = 2;
+  // Средняя цена. Не заполняется для FORTS позиций
+  google.type.Decimal average_price = 3;
+  // Текущая цена
+  google.type.Decimal current_price = 4;
+  // Поддерживающее гарантийное обеспечение. Заполняется только для FORTS позиций
+  google.type.Decimal maintenance_margin = 5;
+  // Прибыль за текущий день. Не заполняется для FORTS позиций
+  google.type.Decimal daily_pnl = 6;
+  // Нереализованная прибыль текущей позиции
+  google.type.Decimal unrealized_pnl = 7;
+}
+
+// Информация о транзакции
+message Transaction {
+  // Объект заполняется для торговых типов транзакций
+  message Trade {
+    // Количество в шт.
+    google.type.Decimal size = 1;
+    // Цена сделки за штуку. Цена исполнения/Размер премии по опциону. Это цена заключения, значение берется из сделки.
+    google.type.Decimal price = 2;
+    // НКД. Заполнено если в сделке есть НКД
+    google.type.Decimal accrued_interest = 3;
+  }
+
+  // Категории транзакции.
+  enum TransactionCategory
+  {
+    OTHERS = 0; // Прочее
+    DEPOSIT = 1; // Ввод ДС
+    WITHDRAW = 2; //Вывод ДС
+    INCOME = 5; // Доход
+    COMMISSION = 7; // Комиссии
+    TAX = 8; // Налог
+    INHERITANCE = 9; // Наследство
+    TRANSFER = 11; // Перевод ДС
+    CONTRACT_TERMINATION = 12; // Расторжение договора
+    OUTCOMES = 13; // Расходы
+    FINE = 15; // Штраф
+    LOAN = 19; // Займ
+  }
+
+  // Идентификатор транзакции
+  string id = 1;
+  // Тип транзакции из TransactionCategory
+  string category = 2 [deprecated = true];
+  // Метка времени
+  google.protobuf.Timestamp timestamp = 4;
+  // Символ инструмента
+  string symbol = 5;
+  // Изменение в деньгах
+  google.type.Money change = 6;
+  // Информация о сделке
+  Trade trade = 7;
+  // Категория транзакции из TransactionCategory.
+  TransactionCategory transaction_category = 8;
+  // Наименование транзакции
+  string transaction_name = 9;
+}

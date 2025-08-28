@@ -4,8 +4,7 @@
 // - protoc             v6.30.1
 // source: grpc/tradeapi/v1/assets/assets_service.proto
 
-// package assets_service
-package proto
+package assets_service
 
 import (
 	context "context"

@@ -4,8 +4,7 @@
 // - protoc             v6.30.1
 // source: grpc/tradeapi/v1/auth/auth_service.proto
 
-// package auth_service
-package proto
+package auth_service
 
 import (
 	context "context"

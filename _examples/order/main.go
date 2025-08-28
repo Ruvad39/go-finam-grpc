@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"github.com/Ruvad39/go-finam-grpc"
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
+	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
+	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
@@ -23,7 +24,7 @@ func main() {
 	ctx := context.Background()
 	// получаем переменные из .env
 	token, _ := os.LookupEnv("FINAM_TOKEN")
-	accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
+	accountId, _ := os.LookupEnv("FINAM_ACCOUNT")
 	_ = accountId
 
 	finam.SetLogLevel(slog.LevelDebug)
@@ -42,13 +43,13 @@ func main() {
 	getOrders(ctx, orderService, accountId)
 
 	// получим информацию по заданному ордеру
-	// getOrder(ctx, orderService, accountId, "1892950717670866559")
+	//getOrder(ctx, orderService, accountId, "69970064220")
 
 	// Отмена биржевой заявки
-	// cancelOrder(ctx, orderService, accountId, "1892950717670866559")
+	//cancelOrder(ctx, orderService, accountId, "69970064220")
 
 	// Выставление биржевой заявки
-	// placeOrder(ctx, orderService, accountId)
+	//placeOrder(ctx, orderService, accountId)
 
 }
 
@@ -90,10 +91,10 @@ func cancelOrder(ctx context.Context, client *finam.OrderServiceClient, accountI
 // Выставление биржевой заявки
 func placeOrder(ctx context.Context, client *finam.OrderServiceClient, accountId string) {
 	symbol := "SBER@MISX"                      // инструмент
-	quantity := 10                             // кол-во в штуках
-	price := 306.44                            // по какой цене выставить лимитку
+	quantity := 1                              // кол-во в штуках
+	price := 312.44                            // по какой цене выставить лимитку
 	orderType := pb.OrderType_ORDER_TYPE_LIMIT // лимитная
-	side := pb.Side_SIDE_BUY                   // покупка
+	side := v1.Side_SIDE_BUY                   // покупка
 
 	newOrder := &pb.Order{
 		AccountId:   accountId,

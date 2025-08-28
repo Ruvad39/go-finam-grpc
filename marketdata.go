@@ -20,7 +20,7 @@ package finam
 
 import (
 	"context"
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
+	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
 	"google.golang.org/genproto/googleapis/type/interval"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"

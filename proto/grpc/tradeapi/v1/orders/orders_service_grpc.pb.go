@@ -4,8 +4,7 @@
 // - protoc             v6.30.1
 // source: grpc/tradeapi/v1/orders/orders_service.proto
 
-//package orders_service
-package proto
+package orders_service
 
 import (
 	context "context"
@@ -41,11 +40,15 @@ type OrdersServiceClient interface {
 	//
 	//	{
 	//	  "symbol": "SBER@MISX",
-	//	  "quantity": "10",
+	//	  "quantity": {
+	//				 "value": "10"
+	//			 },
 	//	  "side": "SIDE_BUY",
 	//	  "type": "ORDER_TYPE_LIMIT",
 	//	  "time_in_force": "TIME_IN_FORCE_DAY",
-	//	  "limit_price": "150.50"
+	//	  "limit_price": {
+	//				 "value": "150.50"
+	//			 }
 	//	}
 	//
 	// Поле account_id берется из URL-пути, остальные поля передаются в теле запроса
@@ -144,11 +147,15 @@ type OrdersServiceServer interface {
 	//
 	//	{
 	//	  "symbol": "SBER@MISX",
-	//	  "quantity": "10",
+	//	  "quantity": {
+	//				 "value": "10"
+	//			 },
 	//	  "side": "SIDE_BUY",
 	//	  "type": "ORDER_TYPE_LIMIT",
 	//	  "time_in_force": "TIME_IN_FORCE_DAY",
-	//	  "limit_price": "150.50"
+	//	  "limit_price": {
+	//				 "value": "150.50"
+	//			 }
 	//	}
 	//
 	// Поле account_id берется из URL-пути, остальные поля передаются в теле запроса

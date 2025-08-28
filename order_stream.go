@@ -10,7 +10,8 @@ package finam
 import (
 	"context"
 	"fmt"
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
+	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
+	orders_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 	"google.golang.org/grpc"
 	"math/rand"
 	"time"
@@ -23,9 +24,9 @@ const (
 
 // типы подписок
 const (
-	OrderTradeChannel = pb.OrderTradeRequest_DATA_TYPE_ALL    // Подписка на Ордера и на Сделки
-	OrderChannel      = pb.OrderTradeRequest_DATA_TYPE_ORDERS // Подписка только на Ордера
-	TradeChannel      = pb.OrderTradeRequest_DATA_TYPE_TRADES // Подписка только на Сделки
+	OrderTradeChannel = orders_service.OrderTradeRequest_DATA_TYPE_ALL    // Подписка на Ордера и на Сделки
+	OrderChannel      = orders_service.OrderTradeRequest_DATA_TYPE_ORDERS // Подписка только на Ордера
+	TradeChannel      = orders_service.OrderTradeRequest_DATA_TYPE_TRADES // Подписка только на Сделки
 )
 
 // OrderTradeStream
@@ -35,24 +36,24 @@ type OrderTradeStream struct {
 	done         chan struct{}
 	retryDelay   time.Duration
 	client       *Client
-	OrderService pb.OrdersServiceClient
-	onOrder      func(*pb.OrderState)
-	onTrade      func(*pb.AccountTrade)
+	OrderService orders_service.OrdersServiceClient
+	onOrder      func(*orders_service.OrderState)
+	onTrade      func(*v1.AccountTrade)
 	accountId    string // Номер счета для подписки
 }
 
 // callback func(book []*pb.StreamOrderBook)
 func (c *Client) NewOrderTradeStream(parent context.Context,
 	accountId string,
-	callbackOrder func(*pb.OrderState),
-	callbackTrade func(*pb.AccountTrade),
+	callbackOrder func(*orders_service.OrderState),
+	callbackTrade func(*v1.AccountTrade),
 ) *OrderTradeStream {
 	ctx, cancel := context.WithCancel(parent)
 	s := &OrderTradeStream{
 		ctx:          ctx,
 		cancel:       cancel,
 		client:       c,
-		OrderService: pb.NewOrdersServiceClient(c.conn),
+		OrderService: orders_service.NewOrdersServiceClient(c.conn),
 		done:         make(chan struct{}),
 		retryDelay:   initialDelay,
 		accountId:    accountId,
@@ -115,16 +116,16 @@ func (s *OrderTradeStream) subscribeAndListen() error {
 	}
 
 	// тип подписки
-	dateType := pb.OrderTradeRequest_DATA_TYPE_ALL
+	dateType := orders_service.OrderTradeRequest_DATA_TYPE_ALL
 	if s.onOrder == nil {
-		dateType = pb.OrderTradeRequest_DATA_TYPE_TRADES
+		dateType = orders_service.OrderTradeRequest_DATA_TYPE_TRADES
 	}
 	if s.onTrade == nil {
-		dateType = pb.OrderTradeRequest_DATA_TYPE_ORDERS
+		dateType = orders_service.OrderTradeRequest_DATA_TYPE_ORDERS
 	}
 	// Отправляем запрос подписки
-	if err = stream.Send(&pb.OrderTradeRequest{
-		Action:    pb.OrderTradeRequest_ACTION_SUBSCRIBE,
+	if err = stream.Send(&orders_service.OrderTradeRequest{
+		Action:    orders_service.OrderTradeRequest_ACTION_SUBSCRIBE,
 		DataType:  dateType,
 		AccountId: s.accountId,
 	}); err != nil {
@@ -138,7 +139,7 @@ func (s *OrderTradeStream) subscribeAndListen() error {
 
 }
 
-func (s *OrderTradeStream) listen(ctx context.Context, stream grpc.BidiStreamingClient[pb.OrderTradeRequest, pb.OrderTradeResponse]) error {
+func (s *OrderTradeStream) listen(ctx context.Context, stream grpc.BidiStreamingClient[orders_service.OrderTradeRequest, orders_service.OrderTradeResponse]) error {
 	log.Debug("[OrderTradeStream] listenMessage", "accountId", s.accountId)
 	for {
 		select {
@@ -157,7 +158,7 @@ func (s *OrderTradeStream) listen(ctx context.Context, stream grpc.BidiStreaming
 }
 
 // handleMessage обработка сообщения
-func (s *OrderTradeStream) handleMessage(msg *pb.OrderTradeResponse) {
+func (s *OrderTradeStream) handleMessage(msg *orders_service.OrderTradeResponse) {
 	//log.Info("OrderTradeStream.handleMessage", "msg", msg)
 	// DEBUG
 	//log.Info("------------------")
@@ -178,7 +179,7 @@ func (s *OrderTradeStream) handleMessage(msg *pb.OrderTradeResponse) {
 }
 
 // handleOrders обработка ордеров
-func (s *OrderTradeStream) handleOrders(orders []*pb.OrderState) {
+func (s *OrderTradeStream) handleOrders(orders []*orders_service.OrderState) {
 	if orders != nil {
 		// обработка
 		for _, order := range orders {
@@ -190,7 +191,7 @@ func (s *OrderTradeStream) handleOrders(orders []*pb.OrderState) {
 }
 
 // handleTrades обработка сделок
-func (s *OrderTradeStream) handleTrades(trades []*pb.AccountTrade) {
+func (s *OrderTradeStream) handleTrades(trades []*v1.AccountTrade) {
 	if trades != nil {
 		// обработка
 		for _, trade := range trades {

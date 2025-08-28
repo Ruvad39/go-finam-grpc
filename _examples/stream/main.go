@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"github.com/Ruvad39/go-finam-grpc"
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
+	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
+	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
@@ -69,22 +70,6 @@ func onOrder(order *pb.OrderState) {
 }
 
 // callback
-func onTrade(trade *pb.AccountTrade) {
+func onTrade(trade *v1.AccountTrade) {
 	slog.Info("onTrade", slog.Any("AccountTrade", trade))
 }
-
-// waitForSignal Ожидание сигнала о закрытие
-//func waitForSignal(ctx context.Context, signals ...os.Signal) os.Signal {
-//	var exit = make(chan os.Signal, 1)
-//	signal.Notify(exit, signals...)
-//	defer signal.Stop(exit)
-//
-//	select {
-//	case sig := <-exit:
-//		slog.Info("WaitForSignal", "signals", sig)
-//		return sig
-//	case <-ctx.Done():
-//		return nil
-//	}
-//	return nil
-//}

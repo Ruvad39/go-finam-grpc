@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Ruvad39/go-finam-grpc"
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
+	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
 	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
@@ -41,13 +41,13 @@ func main() {
 	//
 	symbol := "SBER@MISX" //"ROSN@MISX"  //"SIU5@RTSX"
 	// Получение последней котировки по инструменту
-	//getQuote(ctx, marketDataService, symbol)
+	getQuote(ctx, marketDataService, symbol)
 
 	// Получение исторических данных по инструменту (агрегированные свечи)
-	//getBars(ctx, marketDataService, symbol)
+	getBars(ctx, marketDataService, symbol)
 
 	// Получение текущего стакана по инструменту
-	getOrderBook(ctx, marketDataService, symbol)
+	//getOrderBook(ctx, marketDataService, symbol)
 
 	// Получение списка последних сделок по инструменту
 	//getLatestTrades(ctx, marketDataService, symbol)
@@ -76,7 +76,7 @@ func getQuote(ctx context.Context, client *finam.MarketDataServiceClient, symbol
 // Получение исторических данных по инструменту (агрегированные свечи)
 func getBars(ctx context.Context, client *finam.MarketDataServiceClient, symbol string) {
 	tf := pb.TimeFrame_TIME_FRAME_D
-	start, _ := time.Parse("2006-01-02", "2025-05-01")
+	start, _ := time.Parse("2006-01-02", "2025-08-01")
 	end := time.Now()
 	// запрос
 	bars, err := client.GetBars(ctx, symbol, tf, start, end)

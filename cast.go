@@ -2,14 +2,16 @@ package finam
 
 import (
 	"fmt"
-	"google.golang.org/genproto/googleapis/type/decimal"
-	"google.golang.org/genproto/googleapis/type/interval"
-	"google.golang.org/genproto/googleapis/type/money"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"math"
 	"strconv"
 	"strings"
 	"time"
+
+	"google.golang.org/genproto/googleapis/type/date"
+	"google.golang.org/genproto/googleapis/type/decimal"
+	"google.golang.org/genproto/googleapis/type/interval"
+	"google.golang.org/genproto/googleapis/type/money"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var TzMoscow = initMoscow()
@@ -134,4 +136,34 @@ func TimestampToUnixMilli(ts *timestamppb.Timestamp) int64 {
 		return 0
 	}
 	return ts.Seconds*1000 + int64(ts.Nanos)/1_000_000
+}
+
+// DateToTimeToTime преобразует google.type.Date в time.Time
+func DateToTime(d *date.Date) time.Time {
+	if d == nil {
+		return time.Time{} // нулевое значение
+	}
+
+	return time.Date(
+		int(d.Year),
+		time.Month(d.Month),
+		int(d.Day),
+		0, 0, 0, 0, // время всегда 00:00:00
+		time.UTC, // используем UTC для дат без времени
+	)
+}
+
+// DateToTimeWithLocation преобразует с указанием локации
+func DateToTimeWithLocation(d *date.Date, loc *time.Location) time.Time {
+	if d == nil || loc == nil {
+		return time.Time{}
+	}
+
+	return time.Date(
+		int(d.Year),
+		time.Month(d.Month),
+		int(d.Day),
+		0, 0, 0, 0,
+		loc,
+	)
 }

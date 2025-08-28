@@ -33,7 +33,8 @@ package finam
 
 import (
 	"context"
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
+	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
+	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 )
 
 // OrderServiceClient клиент для работы OrdersService
@@ -100,7 +101,7 @@ func (s *OrderServiceClient) PlaceOrder(ctx context.Context, order *pb.Order) (*
 func (s *OrderServiceClient) NewBuyOrder(accountId, symbol string, quantity int) *pb.Order {
 	return &pb.Order{
 		Type:      pb.OrderType_ORDER_TYPE_MARKET, // по рынку
-		Side:      pb.Side_SIDE_BUY,               // покупка
+		Side:      v1.Side_SIDE_BUY,               // покупка
 		AccountId: accountId,
 		Symbol:    symbol,
 		Quantity:  IntToDecimal(quantity),
@@ -114,7 +115,7 @@ func (s *OrderServiceClient) NewBuyOrder(accountId, symbol string, quantity int)
 func (s *OrderServiceClient) NewSellOrder(accountId, symbol string, quantity int) *pb.Order {
 	return &pb.Order{
 		Type:      pb.OrderType_ORDER_TYPE_MARKET, // по рынку
-		Side:      pb.Side_SIDE_SELL,              // продажа
+		Side:      v1.Side_SIDE_SELL,              // продажа
 		AccountId: accountId,
 		Symbol:    symbol,
 		Quantity:  IntToDecimal(quantity),
@@ -129,7 +130,7 @@ func (s *OrderServiceClient) NewSellOrder(accountId, symbol string, quantity int
 func (s *OrderServiceClient) NewBuyLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Order {
 	return &pb.Order{
 		Type:       pb.OrderType_ORDER_TYPE_LIMIT, // лимитная
-		Side:       pb.Side_SIDE_BUY,              // покупка
+		Side:       v1.Side_SIDE_BUY,              // покупка
 		AccountId:  accountId,
 		Symbol:     symbol,
 		Quantity:   IntToDecimal(quantity),
@@ -145,7 +146,7 @@ func (s *OrderServiceClient) NewBuyLimitOrder(accountId, symbol string, quantity
 func (s *OrderServiceClient) NewSellLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Order {
 	return &pb.Order{
 		Type:       pb.OrderType_ORDER_TYPE_LIMIT, // лимитная
-		Side:       pb.Side_SIDE_SELL,             // покупка
+		Side:       v1.Side_SIDE_SELL,             // покупка
 		AccountId:  accountId,
 		Symbol:     symbol,
 		Quantity:   IntToDecimal(quantity),

@@ -4,8 +4,7 @@
 // - protoc             v6.30.1
 // source: grpc/tradeapi/v1/accounts/accounts_service.proto
 
-//package accounts_service
-package proto
+package accounts_service
 
 import (
 	context "context"

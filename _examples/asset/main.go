@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/Ruvad39/go-finam-grpc"
-	pb "github.com/Ruvad39/go-finam-grpc/tradeapi/v1"
-	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
+
+	"github.com/Ruvad39/go-finam-grpc"
+	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/assets"
+	"github.com/joho/godotenv"
 )
 
 // предполагаем что есть файл .env
@@ -50,9 +51,9 @@ func main() {
 	//getAssets(ctx, assetService)
 
 	// возьмем номер счета из .env
-	accountId, _ := os.LookupEnv("FINAM_ACCOUNT_ID")
+	accountId, _ := os.LookupEnv("FINAM_ACCOUNT")
 	_ = accountId
-	symbol := "FEES@MISX" //"SBER@MISX" // "SIU5@RTSX" // "SBER@MISX" // "RU000A106L18@MISX"
+	symbol := "SBER@MISX" //"FEES@MISX" //"SBER@MISX" // "SIU5@RTSX" // "SBER@MISX" // "RU000A106L18@MISX"
 	_ = symbol
 	// Получение информации по конкретному инструменту
 	getAsset(ctx, assetService, accountId, symbol)
@@ -61,7 +62,7 @@ func main() {
 	//getAssetParams(ctx, assetService, accountId, symbol)
 
 	// Получение расписания торгов для инструмента
-	// getSchedule(ctx, assetService, symbol)
+	//getSchedule(ctx, assetService, symbol)
 }
 
 // Получение списка доступных бирж, названия и mic коды
@@ -110,6 +111,7 @@ func getAsset(ctx context.Context, client *finam.AssetServiceClient, accountId, 
 		slog.Error("AssetsInfo", "err", err.Error())
 	}
 	slog.Info("AssetsService.GetAsset", slog.Any("assetInfo", assetInfo))
+
 }
 
 // Получение торговых параметров по инструменту
