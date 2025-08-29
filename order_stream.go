@@ -17,11 +17,6 @@ import (
 	"time"
 )
 
-const (
-	orderBufferSize = 100 // Размер буфера канала ордеров
-	tradeBufferSize = 100 // Размер буфера канала сделок
-)
-
 // типы подписок
 const (
 	OrderTradeChannel = orders_service.OrderTradeRequest_DATA_TYPE_ALL    // Подписка на Ордера и на Сделки
@@ -42,7 +37,7 @@ type OrderTradeStream struct {
 	accountId    string // Номер счета для подписки
 }
 
-// callback func(book []*pb.StreamOrderBook)
+// создание стрима на ордера и свои сделки
 func (c *Client) NewOrderTradeStream(parent context.Context,
 	accountId string,
 	callbackOrder func(*orders_service.OrderState),
@@ -104,13 +99,8 @@ func (s *OrderTradeStream) run() {
 func (s *OrderTradeStream) subscribeAndListen() error {
 	log.Debug("[OrderTradeStream].subscribeAndListen", "accountId", s.accountId)
 
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(s.ctx)
-	if err != nil {
-		return err
-	}
 	// создаем стрим
-	stream, err := s.OrderService.SubscribeOrderTrade(ctx)
+	stream, err := s.OrderService.SubscribeOrderTrade(s.ctx)
 	if err != nil {
 		return err
 	}
@@ -135,7 +125,7 @@ func (s *OrderTradeStream) subscribeAndListen() error {
 	//stream.CloseSend()
 
 	// чтение потока
-	return s.listen(ctx, stream)
+	return s.listen(s.ctx, stream)
 
 }
 

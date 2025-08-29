@@ -17,65 +17,69 @@ import (
 
 const (
 	Name        = "FINAM-API-gRPC"
-	Version     = "0.2.0"
-	VersionDate = "2025-06-23"
+	Version     = "0.4.0"
+	VersionDate = "2025-08-29"
 )
 
 // Endpoints
 const (
-	endPoint = "api.finam.ru:443" //"ftrr01.finam.ru:443"
+	endPoint = "api.finam.ru:443" // "ftrr01.finam.ru:443"
 )
 
 const (
-	initialDelay = 2 * time.Second
-	maxDelay     = 50 * time.Second
+	initialDelay     = 2 * time.Second
+	maxDelay         = 50 * time.Second
+	keepaliveTime    = 4 * time.Minute  // Отправлять ping каждые 4 минут
+	keepaliveTimeout = 30 * time.Second // Ждать ответа не дольше 30 сек
 )
 
 // Client
 type Client struct {
-	opts        options   // Параметры клиента
-	token       string    // Основой токен пользователя
-	accessToken string    // JWT токен для дальнейшей авторизации
-	ttlJWT      time.Time // Время завершения действия JWT токена
+	opts        clientOptions // Параметры клиента
+	TokenAgent  *TokenAgent
+	token       string // Основой токен пользователя
 	conn        *grpc.ClientConn
 	AuthService auth_service.AuthServiceClient
 }
 
-func NewClient(ctx context.Context, token string, opts ...Option) (*Client, error) {
+func NewClient(ctx context.Context, token string, opts ...ClientOption) (*Client, error) {
 	// Устанавливаем значения по умолчанию
-	o := &options{
-		EndPoint: endPoint,
-	}
+	o := ClientOptionsDefault()
 	// Применяем переданные опции
 	for _, opt := range opts {
 		opt(o)
 	}
-	//
+
+	tokenAgent := NewTokenAgent()
 	conn, err := grpc.NewClient(o.EndPoint,
 		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
-			Time:                4 * time.Minute,  // отправлять ping каждые 4 минут
-			Timeout:             30 * time.Second, // ждать ответа не дольше 30 сек
-			PermitWithoutStream: true,             // пинговать даже без активных RPC
+			Time:                o.keepaliveTime,    // отправлять ping каждые 4 минут
+			Timeout:             o.keepaliveTimeout, // ждать ответа не дольше 30 сек
+			PermitWithoutStream: true,               // пинговать даже без активных RPC
 		}),
+		grpc.WithPerRPCCredentials(tokenAgent),
 	)
 	if err != nil {
 		return nil, err
 	}
-	//
+
+	// создание клиента
 	client := &Client{
-		opts:  *o,
-		token: token,
-		//accessToken: accountId,
+		opts:        *o,
+		TokenAgent:  tokenAgent,
+		token:       token,
 		conn:        conn,
 		AuthService: auth_service.NewAuthServiceClient(conn),
 	}
-	// сразу получим и запишем accessToken для работы
-	err = client.UpdateJWT(ctx)
+
+	// сразу получим и запишем jwt для работы
+	err = client.JwtRefresh(ctx)
 	if err != nil {
 		return nil, err
 	}
-	// в отдельном потоке периодически обновляем accessToken
+
+	// в отдельном потоке периодически обновляем Jwt
 	go client.runJwtRefresher(ctx)
 	return client, nil
 }

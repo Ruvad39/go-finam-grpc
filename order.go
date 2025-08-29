@@ -52,31 +52,16 @@ func NewOrderServiceClient(c *Client) *OrderServiceClient {
 
 // GetOrders Получение списка заявок по заданному счету
 func (s *OrderServiceClient) GetOrders(ctx context.Context, accountId string) (*pb.OrdersResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.OrderService.GetOrders(ctx, &pb.OrdersRequest{AccountId: accountId})
 }
 
 // GetOrder Получение информации о конкретном ордере
 func (s *OrderServiceClient) GetOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.OrderService.GetOrder(ctx, &pb.GetOrderRequest{AccountId: accountId, OrderId: orderId})
 }
 
 // CancelOrder Отмена биржевой заявки
 func (s *OrderServiceClient) CancelOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.OrderService.CancelOrder(ctx, &pb.CancelOrderRequest{AccountId: accountId, OrderId: orderId})
 }
 
@@ -85,11 +70,6 @@ func (s *OrderServiceClient) CancelOrder(ctx context.Context, accountId, orderId
 // на входе
 // order *pb.Order = заполненный ордер
 func (s *OrderServiceClient) PlaceOrder(ctx context.Context, order *pb.Order) (*pb.OrderState, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.OrderService.PlaceOrder(ctx, order)
 
 }

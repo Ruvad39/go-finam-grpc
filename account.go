@@ -37,21 +37,11 @@ func NewAccountServiceClient(c *Client) *AccountServiceClient {
 
 // GetAccount Получение информации по конкретному аккаунту
 func (s *AccountServiceClient) GetAccount(ctx context.Context, accountId string) (*accounts_service.GetAccountResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.AccountsService.GetAccount(ctx, &accounts_service.GetAccountRequest{AccountId: accountId})
 }
 
 // GetTrades Получение истории по сделкам аккаунта
 func (s *AccountServiceClient) GetTrades(ctx context.Context, accountId string, start, end time.Time, limit int32) (*accounts_service.TradesResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	i := &interval.Interval{
 		StartTime: timestamppb.New(start),
 		EndTime:   timestamppb.New(end),
@@ -61,11 +51,6 @@ func (s *AccountServiceClient) GetTrades(ctx context.Context, accountId string, 
 
 // GetTransactions Получение списка транзакций аккаунта
 func (s *AccountServiceClient) GetTransactions(ctx context.Context, accountId string, start, end time.Time, limit int32) (*accounts_service.TransactionsResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	i := &interval.Interval{
 		StartTime: timestamppb.New(start),
 		EndTime:   timestamppb.New(end),

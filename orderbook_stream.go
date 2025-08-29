@@ -80,15 +80,8 @@ func (s *OrderBookStream) run() {
 // запускаем в отдельном потоке метод для прослушивания стрима (listen)
 func (s *OrderBookStream) subscribeAndListen() error {
 	log.Debug("[OrderBookStream] subscribeAndListen", "symbol", s.symbol)
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(s.ctx)
-	if err != nil {
-		// критичная ошибка = должен быть полный выход
-		s.cancel()
-		return err
-	}
 
-	stream, err := s.MarketDataService.SubscribeOrderBook(ctx, &pb.SubscribeOrderBookRequest{Symbol: s.symbol})
+	stream, err := s.MarketDataService.SubscribeOrderBook(s.ctx, &pb.SubscribeOrderBookRequest{Symbol: s.symbol})
 	if err != nil {
 		// критичная ошибка = должен быть полный выход
 		s.cancel()
@@ -97,7 +90,7 @@ func (s *OrderBookStream) subscribeAndListen() error {
 	// успешный коннект = обнулим время
 	s.retryDelay = initialDelay
 	// запустим чтения данных из стрима
-	return s.listen(ctx, stream)
+	return s.listen(s.ctx, stream)
 
 }
 

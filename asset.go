@@ -47,11 +47,6 @@ func NewAssetServiceClient(c *Client) *AssetServiceClient {
 
 // GetTime вернем текущее время сервера (в TzMoscow)
 func (s *AssetServiceClient) GetTime(ctx context.Context) (time.Time, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return time.Time{}, err
-	}
 	resp, err := s.AssetService.Clock(ctx, &assets_service.ClockRequest{})
 	if err != nil {
 		return time.Time{}, err
@@ -61,50 +56,25 @@ func (s *AssetServiceClient) GetTime(ctx context.Context) (time.Time, error) {
 
 // GetExchanges Получение списка доступных бирж, названия и mic коды
 func (s *AssetServiceClient) GetExchanges(ctx context.Context) (*assets_service.ExchangesResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.AssetService.Exchanges(ctx, &assets_service.ExchangesRequest{})
 }
 
 // GetAssets Получение списка доступных инструментов, их описание
 func (s *AssetServiceClient) GetAssets(ctx context.Context) (*assets_service.AssetsResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.AssetService.Assets(ctx, &assets_service.AssetsRequest{})
 }
 
 // GetAsset Получение информации по конкретному инструменту
 func (s *AssetServiceClient) GetAsset(ctx context.Context, accountId, symbol string) (*assets_service.GetAssetResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.AssetService.GetAsset(ctx, &assets_service.GetAssetRequest{AccountId: accountId, Symbol: symbol})
 }
 
 // GetAssetParams Получение торговых параметров по инструменту
 func (s *AssetServiceClient) GetAssetParams(ctx context.Context, accountId, symbol string) (*assets_service.GetAssetParamsResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.AssetService.GetAssetParams(ctx, &assets_service.GetAssetParamsRequest{AccountId: accountId, Symbol: symbol})
 }
 
 // GetSchedule Получение расписания торгов для инструмента
 func (s *AssetServiceClient) GetSchedule(ctx context.Context, symbol string) (*assets_service.ScheduleResponse, error) {
-	// добавим заголовок с авторизацией (accessToken)
-	ctx, err := s.client.WithAuthToken(ctx)
-	if err != nil {
-		return nil, err
-	}
 	return s.AssetService.Schedule(ctx, &assets_service.ScheduleRequest{Symbol: symbol})
 }

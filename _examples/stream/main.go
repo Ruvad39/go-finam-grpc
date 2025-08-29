@@ -4,8 +4,13 @@ import (
 	"context"
 	"github.com/Ruvad39/go-finam-grpc"
 	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
-	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
+	market_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
+	order_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 	"github.com/joho/godotenv"
+	"io"
+	"time"
+
+	slogw "github.com/yougg/slog-writer"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -32,9 +37,14 @@ func main() {
 	token, _ = os.LookupEnv("FINAM_TOKEN")
 	accountID, _ = os.LookupEnv("FINAM_ACCOUNT")
 
-	finam.SetLogLevel(slog.LevelDebug)
+	// init logger
+	log_system := InitLogger("logs/stream_test.log")
+	finam.SetLogger(log_system)
+	log_order := InitLogger("logs/order.log")
+	slog.SetDefault(log_order)
+
 	// создаем клиент
-	client, err := finam.NewClient(ctx, token)
+	client, err := finam.NewClient(ctx, token, finam.WithJwtRefreshInterval(3*time.Minute))
 	if err != nil {
 		slog.Error("NewClient", "err", err.Error())
 		return
@@ -43,6 +53,13 @@ func main() {
 
 	// создадим поток ордеров и сделок
 	newOrderTradeStream(ctx, client)
+
+	symbol := "SBER@MISX"
+	//tf1 := market_service.TimeFrame_TIME_FRAME_M1
+	tf := market_service.TimeFrame_TIME_FRAME_D
+	_ = symbol
+	_ = tf
+	//newBarStream(ctx, client, symbol, tf)
 
 	// Graceful shutdown
 	stop := make(chan os.Signal, 1)
@@ -63,8 +80,16 @@ func newOrderTradeStream(ctx context.Context, client *finam.Client) {
 
 }
 
+func newBarStream(ctx context.Context, client *finam.Client, symbol string, tf market_service.TimeFrame) {
+	slog.Info("newBarStream", "symbol", symbol, "tf", tf.String())
+	stream := client.NewBarStream(ctx, symbol, tf, onBar)
+	_ = stream
+	// stream.Close()
+
+}
+
 // callback
-func onOrder(order *pb.OrderState) {
+func onOrder(order *order_service.OrderState) {
 	slog.Info("OnOrder", slog.Any("AccountOrder", order))
 	//fmt.Printf("onOrder: %v\n", order)
 }
@@ -72,4 +97,25 @@ func onOrder(order *pb.OrderState) {
 // callback
 func onTrade(trade *v1.AccountTrade) {
 	slog.Info("onTrade", slog.Any("AccountTrade", trade))
+}
+
+// callback
+func onBar(bar *finam.Bar) {
+	slog.Info("onBar", slog.Any("bar", bar.String()))
+}
+
+func InitLogger(fileName string) *slog.Logger {
+	fw := &slogw.FileWriter{
+		Filename:     fileName,
+		EnsureFolder: false,
+		MaxBackups:   1,
+		MaxSize:      1024,
+		FileMode:     0644,
+		TimeFormat:   slogw.TimeFormatUnix,
+		LocalTime:    true,
+		ProcessID:    false,
+	}
+	writer := io.MultiWriter(os.Stdout, fw)
+	logger := slog.New(slog.NewJSONHandler(writer, &slog.HandlerOptions{Level: slog.LevelDebug}))
+	return logger
 }

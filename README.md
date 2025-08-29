@@ -135,8 +135,12 @@ NewSellLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Ord
 
 // Потоки данных (stream)
 // Подписка на собственные заявки и сделки
-NewOrderTradeStream
+NewOrderTradeStream(parent context.Context, accountId string, callbackOrder func(*orders_service.OrderState),callbackTrade func(*v1.AccountTrade),) *OrderTradeStream
+// создание стрима на стакан
+NewOrderBookStream(parent context.Context, symbol string, callback func(book []*pb.StreamOrderBook)) *OrderBookStream
+// создание стрима на агрегированные свечи
+NewBarStream(parent context.Context, symbol string, timeframe marketdata_service.TimeFrame, callback func(bar *Bar)) *BarStream
 ```
 
 ## TODO
-* [ ] streams
+* [ ] SubscribeQuote

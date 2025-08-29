@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.0] - 2025-08-29
+### New
+- TokenAgent (соответсвует интерфейсу PerRPCCredentials) (Спасибо Артему)
+- при создание grpc.NewClient добавил WithPerRPCCredentials(tokenAgent)
+- clientOptions: WithJwtRefreshInterval(value time.Duration) WithKeepaliveTime(value time.Duration) WithKeepaliveTimeout
+- BarStream = подписка на свечи
+- OrderTradeStream = Подписка на собственные заявки и сделки
+- OrderBookStream = подписка на стакан
+
+### Update
+- убрал client.WithAuthToken
+
+
+## [0.3.0] - 2025-08-28
+### Update
+- переместил proto-файлы в каталог \proto\grpc\tradeapi\v1\...
+- обновление proto файлов до 2.7.0
+
 
 ## [0.2.0] - 2025-06-23
 ### Update
