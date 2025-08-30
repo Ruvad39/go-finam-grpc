@@ -12,8 +12,8 @@ import (
 	auth_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/auth"
 )
 
-const authKey = "Authorization"            //
-const jwtRefreshInterval = 9 * time.Minute // Интервал обновления токена (в минутах)
+const authKey = "Authorization"             //
+const jwtRefreshInterval = 12 * time.Minute // Интервал обновления токена (в минутах)
 
 // TokenAgent
 // соответствует интерфейсу PerRPCCredentials

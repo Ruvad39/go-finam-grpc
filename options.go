@@ -1,6 +1,9 @@
 package finam
 
-import "time"
+import (
+	"log/slog"
+	"time"
+)
 
 // clientOptions - параметры клиента
 type clientOptions struct {
@@ -45,5 +48,13 @@ func WithKeepaliveTime(value time.Duration) ClientOption {
 func WithKeepaliveTimeout(value time.Duration) ClientOption {
 	return func(o *clientOptions) {
 		o.keepaliveTimeout = value
+	}
+}
+
+// WithLogger установить logger
+func WithLogger(logger *slog.Logger) ClientOption {
+	log = logger
+	return func(o *clientOptions) {
+
 	}
 }

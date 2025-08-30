@@ -7,10 +7,8 @@ import (
 	market_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
 	order_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 	"github.com/joho/godotenv"
-	"io"
-	"time"
-
 	slogw "github.com/yougg/slog-writer"
+	"io"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -39,12 +37,10 @@ func main() {
 
 	// init logger
 	log_system := InitLogger("logs/stream_test.log")
-	finam.SetLogger(log_system)
-	log_order := InitLogger("logs/order.log")
-	slog.SetDefault(log_order)
+	//finam.SetLogger(log_system)
 
 	// создаем клиент
-	client, err := finam.NewClient(ctx, token, finam.WithJwtRefreshInterval(3*time.Minute))
+	client, err := finam.NewClient(ctx, token, finam.WithLogger(log_system))
 	if err != nil {
 		slog.Error("NewClient", "err", err.Error())
 		return
@@ -52,6 +48,8 @@ func main() {
 	defer client.Close()
 
 	// создадим поток ордеров и сделок
+	log_order := InitLogger("logs/order.log")
+	slog.SetDefault(log_order)
 	newOrderTradeStream(ctx, client)
 
 	symbol := "SBER@MISX"
@@ -59,6 +57,8 @@ func main() {
 	tf := market_service.TimeFrame_TIME_FRAME_D
 	_ = symbol
 	_ = tf
+	//log_order := InitLogger("logs/bar.log")
+	//slog.SetDefault(log_order)
 	//newBarStream(ctx, client, symbol, tf)
 
 	// Graceful shutdown
@@ -107,9 +107,9 @@ func onBar(bar *finam.Bar) {
 func InitLogger(fileName string) *slog.Logger {
 	fw := &slogw.FileWriter{
 		Filename:     fileName,
-		EnsureFolder: false,
+		EnsureFolder: true,
 		MaxBackups:   1,
-		MaxSize:      1024,
+		MaxSize:      1 * 1024 * 1024,
 		FileMode:     0644,
 		TimeFormat:   slogw.TimeFormatUnix,
 		LocalTime:    true,
