@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Auth_FullMethodName         = "/grpc.tradeapi.v1.auth.AuthService/Auth"
-	AuthService_TokenDetails_FullMethodName = "/grpc.tradeapi.v1.auth.AuthService/TokenDetails"
+	AuthService_Auth_FullMethodName                = "/grpc.tradeapi.v1.auth.AuthService/Auth"
+	AuthService_TokenDetails_FullMethodName        = "/grpc.tradeapi.v1.auth.AuthService/TokenDetails"
+	AuthService_SubscribeJwtRenewal_FullMethodName = "/grpc.tradeapi.v1.auth.AuthService/SubscribeJwtRenewal"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -52,6 +53,8 @@ type AuthServiceClient interface {
 	// Токен передается в теле запроса для безопасности
 	// Получение информации о токене. Также включает список доступных счетов.
 	TokenDetails(ctx context.Context, in *TokenDetailsRequest, opts ...grpc.CallOption) (*TokenDetailsResponse, error)
+	// Подписка на обновление JWT токена. Стрим метод
+	SubscribeJwtRenewal(ctx context.Context, in *SubscribeJwtRenewalRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeJwtRenewalResponse], error)
 }
 
 type authServiceClient struct {
@@ -82,6 +85,25 @@ func (c *authServiceClient) TokenDetails(ctx context.Context, in *TokenDetailsRe
 	return out, nil
 }
 
+func (c *authServiceClient) SubscribeJwtRenewal(ctx context.Context, in *SubscribeJwtRenewalRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeJwtRenewalResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &AuthService_ServiceDesc.Streams[0], AuthService_SubscribeJwtRenewal_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[SubscribeJwtRenewalRequest, SubscribeJwtRenewalResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type AuthService_SubscribeJwtRenewalClient = grpc.ServerStreamingClient[SubscribeJwtRenewalResponse]
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -111,6 +133,8 @@ type AuthServiceServer interface {
 	// Токен передается в теле запроса для безопасности
 	// Получение информации о токене. Также включает список доступных счетов.
 	TokenDetails(context.Context, *TokenDetailsRequest) (*TokenDetailsResponse, error)
+	// Подписка на обновление JWT токена. Стрим метод
+	SubscribeJwtRenewal(*SubscribeJwtRenewalRequest, grpc.ServerStreamingServer[SubscribeJwtRenewalResponse]) error
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -126,6 +150,9 @@ func (UnimplementedAuthServiceServer) Auth(context.Context, *AuthRequest) (*Auth
 }
 func (UnimplementedAuthServiceServer) TokenDetails(context.Context, *TokenDetailsRequest) (*TokenDetailsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TokenDetails not implemented")
+}
+func (UnimplementedAuthServiceServer) SubscribeJwtRenewal(*SubscribeJwtRenewalRequest, grpc.ServerStreamingServer[SubscribeJwtRenewalResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method SubscribeJwtRenewal not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -184,6 +211,17 @@ func _AuthService_TokenDetails_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_SubscribeJwtRenewal_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeJwtRenewalRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(AuthServiceServer).SubscribeJwtRenewal(m, &grpc.GenericServerStream[SubscribeJwtRenewalRequest, SubscribeJwtRenewalResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type AuthService_SubscribeJwtRenewalServer = grpc.ServerStreamingServer[SubscribeJwtRenewalResponse]
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -200,6 +238,12 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_TokenDetails_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SubscribeJwtRenewal",
+			Handler:       _AuthService_SubscribeJwtRenewal_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "grpc/tradeapi/v1/auth/auth_service.proto",
 }

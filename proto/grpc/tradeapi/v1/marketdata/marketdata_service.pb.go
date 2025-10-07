@@ -7,6 +7,7 @@
 package marketdata_service
 
 import (
+	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	decimal "google.golang.org/genproto/googleapis/type/decimal"
 	interval "google.golang.org/genproto/googleapis/type/interval"
@@ -15,7 +16,6 @@ import (
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
-	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
 	unsafe "unsafe"
 )
 

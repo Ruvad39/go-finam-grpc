@@ -146,7 +146,7 @@ const file_grpc_tradeapi_v1_trade_proto_rawDesc = "" +
 	"\ttimestamp\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x19\n" +
 	"\border_id\x18\a \x01(\tR\aorderId\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\b \x01(\tR\taccountIdB\x10P\x01Z\ftrade_api/v1b\x06proto3"
+	"account_id\x18\b \x01(\tR\taccountIdB;P\x01Z7github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1b\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_trade_proto_rawDescOnce sync.Once

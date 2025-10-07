@@ -82,7 +82,7 @@ const file_grpc_tradeapi_v1_side_proto_rawDesc = "" +
 	"\x04Side\x12\x14\n" +
 	"\x10SIDE_UNSPECIFIED\x10\x00\x12\f\n" +
 	"\bSIDE_BUY\x10\x01\x12\r\n" +
-	"\tSIDE_SELL\x10\x02B\x10P\x01Z\ftrade_api/v1b\x06proto3"
+	"\tSIDE_SELL\x10\x02B;P\x01Z7github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1b\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_side_proto_rawDescOnce sync.Once

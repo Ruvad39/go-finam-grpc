@@ -236,7 +236,9 @@ type TokenDetailsResponse struct {
 	// Информация о доступе к рыночным данным
 	MdPermissions []*MDPermission `protobuf:"bytes,3,rep,name=md_permissions,json=mdPermissions,proto3" json:"md_permissions,omitempty"`
 	// Идентификаторы аккаунтов
-	AccountIds    []string `protobuf:"bytes,4,rep,name=account_ids,json=accountIds,proto3" json:"account_ids,omitempty"`
+	AccountIds []string `protobuf:"bytes,4,rep,name=account_ids,json=accountIds,proto3" json:"account_ids,omitempty"`
+	// Сессия и торговые счета в токене будут помечены readonly
+	Readonly      bool `protobuf:"varint,5,opt,name=readonly,proto3" json:"readonly,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -297,6 +299,13 @@ func (x *TokenDetailsResponse) GetAccountIds() []string {
 		return x.AccountIds
 	}
 	return nil
+}
+
+func (x *TokenDetailsResponse) GetReadonly() bool {
+	if x != nil {
+		return x.Readonly
+	}
+	return false
 }
 
 // Информация о доступе к рыночным данным
@@ -436,6 +445,98 @@ func (*MDPermission_Continent) isMDPermission_Condition() {}
 
 func (*MDPermission_Worldwide) isMDPermission_Condition() {}
 
+// Запрос подписки на обновление JWT токена
+type SubscribeJwtRenewalRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// API токен (secret key)
+	Secret        string `protobuf:"bytes,1,opt,name=secret,proto3" json:"secret,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubscribeJwtRenewalRequest) Reset() {
+	*x = SubscribeJwtRenewalRequest{}
+	mi := &file_grpc_tradeapi_v1_auth_auth_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubscribeJwtRenewalRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubscribeJwtRenewalRequest) ProtoMessage() {}
+
+func (x *SubscribeJwtRenewalRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_auth_auth_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubscribeJwtRenewalRequest.ProtoReflect.Descriptor instead.
+func (*SubscribeJwtRenewalRequest) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_auth_auth_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *SubscribeJwtRenewalRequest) GetSecret() string {
+	if x != nil {
+		return x.Secret
+	}
+	return ""
+}
+
+// Обновленный токен. Стрим
+type SubscribeJwtRenewalResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Полученный JWT-токен
+	Token         string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubscribeJwtRenewalResponse) Reset() {
+	*x = SubscribeJwtRenewalResponse{}
+	mi := &file_grpc_tradeapi_v1_auth_auth_service_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubscribeJwtRenewalResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubscribeJwtRenewalResponse) ProtoMessage() {}
+
+func (x *SubscribeJwtRenewalResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_auth_auth_service_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubscribeJwtRenewalResponse.ProtoReflect.Descriptor instead.
+func (*SubscribeJwtRenewalResponse) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_auth_auth_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SubscribeJwtRenewalResponse) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
 var File_grpc_tradeapi_v1_auth_auth_service_proto protoreflect.FileDescriptor
 
 const file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc = "" +
@@ -446,7 +547,7 @@ const file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc = "" +
 	"\fAuthResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"+\n" +
 	"\x13TokenDetailsRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"\xf9\x01\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"\x95\x02\n" +
 	"\x14TokenDetailsResponse\x129\n" +
 	"\n" +
 	"created_at\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
@@ -454,7 +555,8 @@ const file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc = "" +
 	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12J\n" +
 	"\x0emd_permissions\x18\x03 \x03(\v2#.grpc.tradeapi.v1.auth.MDPermissionR\rmdPermissions\x12\x1f\n" +
 	"\vaccount_ids\x18\x04 \x03(\tR\n" +
-	"accountIds\"\xcb\x03\n" +
+	"accountIds\x12\x1a\n" +
+	"\breadonly\x18\x05 \x01(\bR\breadonly\"\xcb\x03\n" +
 	"\fMDPermission\x12O\n" +
 	"\vquote_level\x18\x01 \x01(\x0e2..grpc.tradeapi.v1.auth.MDPermission.QuoteLevelR\n" +
 	"quoteLevel\x12#\n" +
@@ -471,10 +573,15 @@ const file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc = "" +
 	"\x1bQUOTE_LEVEL_DEPTH_OF_MARKET\x10\x03\x12\x1d\n" +
 	"\x19QUOTE_LEVEL_DEPTH_OF_BOOK\x10\x04\x12 \n" +
 	"\x1cQUOTE_LEVEL_ACCESS_FORBIDDEN\x10\x05B\v\n" +
-	"\tcondition2\x82\x02\n" +
+	"\tcondition\"4\n" +
+	"\x1aSubscribeJwtRenewalRequest\x12\x16\n" +
+	"\x06secret\x18\x01 \x01(\tR\x06secret\"3\n" +
+	"\x1bSubscribeJwtRenewalResponse\x12\x14\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token2\x82\x03\n" +
 	"\vAuthService\x12h\n" +
 	"\x04Auth\x12\".grpc.tradeapi.v1.auth.AuthRequest\x1a#.grpc.tradeapi.v1.auth.AuthResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/sessions\x12\x88\x01\n" +
-	"\fTokenDetails\x12*.grpc.tradeapi.v1.auth.TokenDetailsRequest\x1a+.grpc.tradeapi.v1.auth.TokenDetailsResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/v1/sessions/detailsB\"P\x01Z\x1etrade_api/v1/auth/auth_serviceb\x06proto3"
+	"\fTokenDetails\x12*.grpc.tradeapi.v1.auth.TokenDetailsRequest\x1a+.grpc.tradeapi.v1.auth.TokenDetailsResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/v1/sessions/details\x12~\n" +
+	"\x13SubscribeJwtRenewal\x121.grpc.tradeapi.v1.auth.SubscribeJwtRenewalRequest\x1a2.grpc.tradeapi.v1.auth.SubscribeJwtRenewalResponse0\x01B\"P\x01Z\x1etrade_api/v1/auth/auth_serviceb\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_auth_auth_service_proto_rawDescOnce sync.Once
@@ -489,27 +596,31 @@ func file_grpc_tradeapi_v1_auth_auth_service_proto_rawDescGZIP() []byte {
 }
 
 var file_grpc_tradeapi_v1_auth_auth_service_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_grpc_tradeapi_v1_auth_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_grpc_tradeapi_v1_auth_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_grpc_tradeapi_v1_auth_auth_service_proto_goTypes = []any{
-	(MDPermission_QuoteLevel)(0),  // 0: grpc.tradeapi.v1.auth.MDPermission.QuoteLevel
-	(*AuthRequest)(nil),           // 1: grpc.tradeapi.v1.auth.AuthRequest
-	(*AuthResponse)(nil),          // 2: grpc.tradeapi.v1.auth.AuthResponse
-	(*TokenDetailsRequest)(nil),   // 3: grpc.tradeapi.v1.auth.TokenDetailsRequest
-	(*TokenDetailsResponse)(nil),  // 4: grpc.tradeapi.v1.auth.TokenDetailsResponse
-	(*MDPermission)(nil),          // 5: grpc.tradeapi.v1.auth.MDPermission
-	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
+	(MDPermission_QuoteLevel)(0),        // 0: grpc.tradeapi.v1.auth.MDPermission.QuoteLevel
+	(*AuthRequest)(nil),                 // 1: grpc.tradeapi.v1.auth.AuthRequest
+	(*AuthResponse)(nil),                // 2: grpc.tradeapi.v1.auth.AuthResponse
+	(*TokenDetailsRequest)(nil),         // 3: grpc.tradeapi.v1.auth.TokenDetailsRequest
+	(*TokenDetailsResponse)(nil),        // 4: grpc.tradeapi.v1.auth.TokenDetailsResponse
+	(*MDPermission)(nil),                // 5: grpc.tradeapi.v1.auth.MDPermission
+	(*SubscribeJwtRenewalRequest)(nil),  // 6: grpc.tradeapi.v1.auth.SubscribeJwtRenewalRequest
+	(*SubscribeJwtRenewalResponse)(nil), // 7: grpc.tradeapi.v1.auth.SubscribeJwtRenewalResponse
+	(*timestamppb.Timestamp)(nil),       // 8: google.protobuf.Timestamp
 }
 var file_grpc_tradeapi_v1_auth_auth_service_proto_depIdxs = []int32{
-	6, // 0: grpc.tradeapi.v1.auth.TokenDetailsResponse.created_at:type_name -> google.protobuf.Timestamp
-	6, // 1: grpc.tradeapi.v1.auth.TokenDetailsResponse.expires_at:type_name -> google.protobuf.Timestamp
+	8, // 0: grpc.tradeapi.v1.auth.TokenDetailsResponse.created_at:type_name -> google.protobuf.Timestamp
+	8, // 1: grpc.tradeapi.v1.auth.TokenDetailsResponse.expires_at:type_name -> google.protobuf.Timestamp
 	5, // 2: grpc.tradeapi.v1.auth.TokenDetailsResponse.md_permissions:type_name -> grpc.tradeapi.v1.auth.MDPermission
 	0, // 3: grpc.tradeapi.v1.auth.MDPermission.quote_level:type_name -> grpc.tradeapi.v1.auth.MDPermission.QuoteLevel
 	1, // 4: grpc.tradeapi.v1.auth.AuthService.Auth:input_type -> grpc.tradeapi.v1.auth.AuthRequest
 	3, // 5: grpc.tradeapi.v1.auth.AuthService.TokenDetails:input_type -> grpc.tradeapi.v1.auth.TokenDetailsRequest
-	2, // 6: grpc.tradeapi.v1.auth.AuthService.Auth:output_type -> grpc.tradeapi.v1.auth.AuthResponse
-	4, // 7: grpc.tradeapi.v1.auth.AuthService.TokenDetails:output_type -> grpc.tradeapi.v1.auth.TokenDetailsResponse
-	6, // [6:8] is the sub-list for method output_type
-	4, // [4:6] is the sub-list for method input_type
+	6, // 6: grpc.tradeapi.v1.auth.AuthService.SubscribeJwtRenewal:input_type -> grpc.tradeapi.v1.auth.SubscribeJwtRenewalRequest
+	2, // 7: grpc.tradeapi.v1.auth.AuthService.Auth:output_type -> grpc.tradeapi.v1.auth.AuthResponse
+	4, // 8: grpc.tradeapi.v1.auth.AuthService.TokenDetails:output_type -> grpc.tradeapi.v1.auth.TokenDetailsResponse
+	7, // 9: grpc.tradeapi.v1.auth.AuthService.SubscribeJwtRenewal:output_type -> grpc.tradeapi.v1.auth.SubscribeJwtRenewalResponse
+	7, // [7:10] is the sub-list for method output_type
+	4, // [4:7] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name
@@ -532,7 +643,7 @@ func file_grpc_tradeapi_v1_auth_auth_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc), len(file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -18,7 +18,7 @@ type OrderBookStream struct {
 	MarketDataService pb.MarketDataServiceClient
 	symbol            string // На какой инструмент подписка
 	// Колбэки для обработки данных
-	onBook func(book []*pb.StreamOrderBook) // todo пока весь ответ. потом срез стакана???
+	onUpdate func(book []*pb.StreamOrderBook) // todo пока весь ответ. потом срез стакана???
 }
 
 // NewOrderBookStream
@@ -32,7 +32,7 @@ func (c *Client) NewOrderBookStream(parent context.Context, symbol string, callb
 		client:            c,
 		MarketDataService: pb.NewMarketDataServiceClient(c.conn),
 		symbol:            symbol,
-		onBook:            callback,
+		onUpdate:          callback,
 		done:              make(chan struct{}),
 		retryDelay:        initialDelay,
 	}
@@ -113,21 +113,9 @@ func (s *OrderBookStream) listen(ctx context.Context, stream grpc.ServerStreamin
 
 // handleMessage обработка сообщения
 func (s *OrderBookStream) handleMessage(msg []*pb.StreamOrderBook) {
-	// log.Info("OrderBookStream.handleMessage", "msg", msg)
-	// DEBUG
-	//log.Info("------------------")
-	//log.Info("OrderBookStream.handleMessag = пришел пакет")
-	////log.Info("OrderTradeStream.handleMessage", "len", len(msg.Rows))
-	//for _, o := range msg {
-	//	log.Info("OrderTradeStream.handleMessage", "len(o.Rows)", len(o.Rows))
-	//	for n, row := range o.Rows {
-	//		log.Info("OrderBookStream.handleMessage", "n", n, "row", row)
-	//	}
-	//
-	//}
-	//log.Info("------------------")
-	if s.onBook != nil {
-		s.onBook(msg)
+	if s.onUpdate != nil {
+		s.onUpdate(msg)
 	}
+	// TODO OrderBookBuilder
 
 }

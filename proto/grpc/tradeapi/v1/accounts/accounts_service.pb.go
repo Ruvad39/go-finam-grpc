@@ -7,6 +7,7 @@
 package accounts_service
 
 import (
+	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	decimal "google.golang.org/genproto/googleapis/type/decimal"
 	interval "google.golang.org/genproto/googleapis/type/interval"
@@ -16,7 +17,6 @@ import (
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
-	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
 	unsafe "unsafe"
 )
 
@@ -31,18 +31,30 @@ const (
 type Transaction_TransactionCategory int32
 
 const (
-	Transaction_OTHERS               Transaction_TransactionCategory = 0  // Прочее
-	Transaction_DEPOSIT              Transaction_TransactionCategory = 1  // Ввод ДС
-	Transaction_WITHDRAW             Transaction_TransactionCategory = 2  //Вывод ДС
-	Transaction_INCOME               Transaction_TransactionCategory = 5  // Доход
-	Transaction_COMMISSION           Transaction_TransactionCategory = 7  // Комиссии
-	Transaction_TAX                  Transaction_TransactionCategory = 8  // Налог
-	Transaction_INHERITANCE          Transaction_TransactionCategory = 9  // Наследство
-	Transaction_TRANSFER             Transaction_TransactionCategory = 11 // Перевод ДС
-	Transaction_CONTRACT_TERMINATION Transaction_TransactionCategory = 12 // Расторжение договора
-	Transaction_OUTCOMES             Transaction_TransactionCategory = 13 // Расходы
-	Transaction_FINE                 Transaction_TransactionCategory = 15 // Штраф
-	Transaction_LOAN                 Transaction_TransactionCategory = 19 // Займ
+	// Прочее
+	Transaction_OTHERS Transaction_TransactionCategory = 0
+	// Ввод ДС
+	Transaction_DEPOSIT Transaction_TransactionCategory = 1
+	// Вывод ДС
+	Transaction_WITHDRAW Transaction_TransactionCategory = 2
+	// Доход
+	Transaction_INCOME Transaction_TransactionCategory = 5
+	// Комиссия
+	Transaction_COMMISSION Transaction_TransactionCategory = 7
+	// Налог
+	Transaction_TAX Transaction_TransactionCategory = 8
+	// Наследство
+	Transaction_INHERITANCE Transaction_TransactionCategory = 9
+	// Перевод ДС
+	Transaction_TRANSFER Transaction_TransactionCategory = 11
+	// Расторжение договора
+	Transaction_CONTRACT_TERMINATION Transaction_TransactionCategory = 12
+	// Расходы
+	Transaction_OUTCOMES Transaction_TransactionCategory = 13
+	// Штраф
+	Transaction_FINE Transaction_TransactionCategory = 15
+	// Займ
+	Transaction_LOAN Transaction_TransactionCategory = 19
 )
 
 // Enum value maps for Transaction_TransactionCategory.
@@ -295,14 +307,17 @@ type isGetAccountResponse_Portfolio interface {
 }
 
 type GetAccountResponse_PortfolioMc struct {
+	// Общий тип для счетов Московской Биржи. Включает в себя как единые, так и моно счета.
 	PortfolioMc *MC `protobuf:"bytes,8,opt,name=portfolio_mc,json=portfolioMc,proto3,oneof"`
 }
 
 type GetAccountResponse_PortfolioMct struct {
+	// Тип портфеля для счетов на американских рынках.
 	PortfolioMct *MCT `protobuf:"bytes,9,opt,name=portfolio_mct,json=portfolioMct,proto3,oneof"`
 }
 
 type GetAccountResponse_PortfolioForts struct {
+	// Тип портфеля для торговли на срочном рынке Московской Биржи.
 	PortfolioForts *FORTS `protobuf:"bytes,10,opt,name=portfolio_forts,json=portfolioForts,proto3,oneof"`
 }
 
@@ -313,14 +328,16 @@ func (*GetAccountResponse_PortfolioMct) isGetAccountResponse_Portfolio() {}
 func (*GetAccountResponse_PortfolioForts) isGetAccountResponse_Portfolio() {}
 
 // Общий тип для счетов Московской Биржи. Включает в себя как единые, так и специализированные (моно) счета для разных секций биржи.
-// - Единый торговый счет (ЕТС): Позволяет торговать на нескольких рынках (фондовый, валютный. срочный, spb, иностранные бумаги, иностранные фьючерсы) с единой денежной позиции.
-// - Моно-счет фондового рынка MOEX: Изолированный счет для торговли акциями, облигациями и паями.
-// - Моно-счет валютного рынка MOEX: Изолированный счет для операций с валютными парами (например, CNYRUB_TOM).
+// Единый торговый счет (ЕТС): Позволяет торговать на нескольких рынках (фондовый, валютный. срочный, spb, иностранные бумаги, иностранные фьючерсы) с единой денежной позиции.
+// Моно-счет фондового рынка MOEX: Изолированный счет для торговли акциями, облигациями и паями.
+// Моно-счет валютного рынка MOEX: Изолированный счет для операций с валютными парами (например, CNYRUB_TOM).
 type MC struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Сумма собственных денежных средств на счете, доступная для торговли. Включает маржинальные средства.
-	AvailableCash     *decimal.Decimal `protobuf:"bytes,1,opt,name=available_cash,json=availableCash,proto3" json:"available_cash,omitempty"`
-	InitialMargin     *decimal.Decimal `protobuf:"bytes,2,opt,name=initial_margin,json=initialMargin,proto3" json:"initial_margin,omitempty"`
+	AvailableCash *decimal.Decimal `protobuf:"bytes,1,opt,name=available_cash,json=availableCash,proto3" json:"available_cash,omitempty"`
+	// Начальная маржа
+	InitialMargin *decimal.Decimal `protobuf:"bytes,2,opt,name=initial_margin,json=initialMargin,proto3" json:"initial_margin,omitempty"`
+	// Минимальная маржа
 	MaintenanceMargin *decimal.Decimal `protobuf:"bytes,3,opt,name=maintenance_margin,json=maintenanceMargin,proto3" json:"maintenance_margin,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
@@ -421,6 +438,7 @@ type FORTS struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Сумма собственных денежных средств на счете, доступная для торговли. Включает маржинальные средства.
 	AvailableCash *decimal.Decimal `protobuf:"bytes,1,opt,name=available_cash,json=availableCash,proto3" json:"available_cash,omitempty"`
+	// Минимальная маржа (необходимая сумма обеспечения под открытые позици)
 	MoneyReserved *decimal.Decimal `protobuf:"bytes,2,opt,name=money_reserved,json=moneyReserved,proto3" json:"money_reserved,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -703,9 +721,9 @@ type Position struct {
 	CurrentPrice *decimal.Decimal `protobuf:"bytes,4,opt,name=current_price,json=currentPrice,proto3" json:"current_price,omitempty"`
 	// Поддерживающее гарантийное обеспечение. Заполняется только для FORTS позиций
 	MaintenanceMargin *decimal.Decimal `protobuf:"bytes,5,opt,name=maintenance_margin,json=maintenanceMargin,proto3" json:"maintenance_margin,omitempty"`
-	// Прибыль за текущий день. Не заполняется для FORTS позиций
+	// Прибыль или убыток за текущий день (PnL). Не заполняется для FORTS позиций
 	DailyPnl *decimal.Decimal `protobuf:"bytes,6,opt,name=daily_pnl,json=dailyPnl,proto3" json:"daily_pnl,omitempty"`
-	// Нереализованная прибыль текущей позиции
+	// Суммарная нереализованная прибыль или убыток (PnL) текущей позиции
 	UnrealizedPnl *decimal.Decimal `protobuf:"bytes,7,opt,name=unrealized_pnl,json=unrealizedPnl,proto3" json:"unrealized_pnl,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

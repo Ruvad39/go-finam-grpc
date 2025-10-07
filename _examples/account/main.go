@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Ruvad39/go-finam-grpc"
-	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
 	"time"
+
+	"github.com/Ruvad39/go-finam-grpc"
+	"github.com/joho/godotenv"
 )
 
 // предполагаем что есть файл .env
@@ -68,6 +69,7 @@ func getAccount(ctx context.Context, client *finam.AccountServiceClient, account
 		"Status", res.Status,
 		"Equity", fmt.Sprintf("%.2f", finam.DecimalToFloat64(res.Equity)),
 		"UnrealizedProfit", fmt.Sprintf("%.2f", finam.DecimalToFloat64(res.UnrealizedProfit)),
+		"Porfolio", res.GetPortfolio(),
 		"Cash", res.Cash,
 	)
 	// список позиций

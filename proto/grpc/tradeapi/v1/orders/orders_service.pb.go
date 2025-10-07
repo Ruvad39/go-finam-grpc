@@ -7,6 +7,7 @@
 package orders_service
 
 import (
+	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	decimal "google.golang.org/genproto/googleapis/type/decimal"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -14,7 +15,6 @@ import (
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
-	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
 	unsafe "unsafe"
 )
 
@@ -377,6 +377,63 @@ func (OrderStatus) EnumDescriptor() ([]byte, []int) {
 	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{3}
 }
 
+// Срок действия условной заявки
+type ValidBefore int32
+
+const (
+	// Значение не указано
+	ValidBefore_VALID_BEFORE_UNSPECIFIED ValidBefore = 0
+	// До конца торгового дня
+	ValidBefore_VALID_BEFORE_END_OF_DAY ValidBefore = 1
+	// До отмены
+	ValidBefore_VALID_BEFORE_GOOD_TILL_CANCEL ValidBefore = 2
+	// До указанной даты-времени. Данный тип на текущий момент не поддерживается при выставлении заявки
+	ValidBefore_VALID_BEFORE_GOOD_TILL_DATE ValidBefore = 3
+)
+
+// Enum value maps for ValidBefore.
+var (
+	ValidBefore_name = map[int32]string{
+		0: "VALID_BEFORE_UNSPECIFIED",
+		1: "VALID_BEFORE_END_OF_DAY",
+		2: "VALID_BEFORE_GOOD_TILL_CANCEL",
+		3: "VALID_BEFORE_GOOD_TILL_DATE",
+	}
+	ValidBefore_value = map[string]int32{
+		"VALID_BEFORE_UNSPECIFIED":      0,
+		"VALID_BEFORE_END_OF_DAY":       1,
+		"VALID_BEFORE_GOOD_TILL_CANCEL": 2,
+		"VALID_BEFORE_GOOD_TILL_DATE":   3,
+	}
+)
+
+func (x ValidBefore) Enum() *ValidBefore {
+	p := new(ValidBefore)
+	*p = x
+	return p
+}
+
+func (x ValidBefore) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ValidBefore) Descriptor() protoreflect.EnumDescriptor {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[4].Descriptor()
+}
+
+func (ValidBefore) Type() protoreflect.EnumType {
+	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[4]
+}
+
+func (x ValidBefore) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ValidBefore.Descriptor instead.
+func (ValidBefore) EnumDescriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{4}
+}
+
 // Доступные действия
 type OrderTradeRequest_Action int32
 
@@ -410,11 +467,11 @@ func (x OrderTradeRequest_Action) String() string {
 }
 
 func (OrderTradeRequest_Action) Descriptor() protoreflect.EnumDescriptor {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[4].Descriptor()
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5].Descriptor()
 }
 
 func (OrderTradeRequest_Action) Type() protoreflect.EnumType {
-	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[4]
+	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5]
 }
 
 func (x OrderTradeRequest_Action) Number() protoreflect.EnumNumber {
@@ -463,11 +520,11 @@ func (x OrderTradeRequest_DataType) String() string {
 }
 
 func (OrderTradeRequest_DataType) Descriptor() protoreflect.EnumDescriptor {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5].Descriptor()
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[6].Descriptor()
 }
 
 func (OrderTradeRequest_DataType) Type() protoreflect.EnumType {
-	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5]
+	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[6]
 }
 
 func (x OrderTradeRequest_DataType) Number() protoreflect.EnumNumber {
@@ -678,6 +735,8 @@ type Order struct {
 	Legs []*Leg `protobuf:"bytes,10,rep,name=legs,proto3" json:"legs,omitempty"`
 	// Уникальный идентификатор заявки. Автоматически генерируется, если не отправлен. (максимум 20 символов)
 	ClientOrderId string `protobuf:"bytes,11,opt,name=client_order_id,json=clientOrderId,proto3" json:"client_order_id,omitempty"`
+	// Срок действия условной заявки. Заполняется для заявок с типом ORDER_TYPE_STOP, ORDER_TYPE_STOP_LIMIT
+	ValidBefore   ValidBefore `protobuf:"varint,12,opt,name=valid_before,json=validBefore,proto3,enum=grpc.tradeapi.v1.orders.ValidBefore" json:"valid_before,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -787,6 +846,13 @@ func (x *Order) GetClientOrderId() string {
 		return x.ClientOrderId
 	}
 	return ""
+}
+
+func (x *Order) GetValidBefore() ValidBefore {
+	if x != nil {
+		return x.ValidBefore
+	}
+	return ValidBefore_VALID_BEFORE_UNSPECIFIED
 }
 
 // Лег
@@ -1123,7 +1189,7 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x0fGetOrderRequest\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\x12\x19\n" +
-	"\border_id\x18\x02 \x01(\tR\aorderId\"\xb3\x04\n" +
+	"\border_id\x18\x02 \x01(\tR\aorderId\"\xfc\x04\n" +
 	"\x05Order\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\x12\x16\n" +
@@ -1139,7 +1205,8 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x0estop_condition\x18\t \x01(\x0e2&.grpc.tradeapi.v1.orders.StopConditionR\rstopCondition\x120\n" +
 	"\x04legs\x18\n" +
 	" \x03(\v2\x1c.grpc.tradeapi.v1.orders.LegR\x04legs\x12&\n" +
-	"\x0fclient_order_id\x18\v \x01(\tR\rclientOrderId\"{\n" +
+	"\x0fclient_order_id\x18\v \x01(\tR\rclientOrderId\x12G\n" +
+	"\fvalid_before\x18\f \x01(\x0e2$.grpc.tradeapi.v1.orders.ValidBeforeR\vvalidBefore\"{\n" +
 	"\x03Leg\x12\x16\n" +
 	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x120\n" +
 	"\bquantity\x18\x02 \x01(\v2\x14.google.type.DecimalR\bquantity\x12*\n" +
@@ -1215,7 +1282,12 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x18ORDER_STATUS_TP_EXECUTED\x10\x1f\x12\x1e\n" +
 	"\x1aORDER_STATUS_TP_CORRECTION\x10 \x12\x1e\n" +
 	"\x1aORDER_STATUS_TP_FORWARDING\x10!\x12#\n" +
-	"\x1fORDER_STATUS_TP_CORR_GUARD_TIME\x10\"2\xb4\x05\n" +
+	"\x1fORDER_STATUS_TP_CORR_GUARD_TIME\x10\"*\x8c\x01\n" +
+	"\vValidBefore\x12\x1c\n" +
+	"\x18VALID_BEFORE_UNSPECIFIED\x10\x00\x12\x1b\n" +
+	"\x17VALID_BEFORE_END_OF_DAY\x10\x01\x12!\n" +
+	"\x1dVALID_BEFORE_GOOD_TILL_CANCEL\x10\x02\x12\x1f\n" +
+	"\x1bVALID_BEFORE_GOOD_TILL_DATE\x10\x032\xb4\x05\n" +
 	"\rOrdersService\x12~\n" +
 	"\n" +
 	"PlaceOrder\x12\x1e.grpc.tradeapi.v1.orders.Order\x1a#.grpc.tradeapi.v1.orders.OrderState\"+\x82\xd3\xe4\x93\x02%:\x01*\" /v1/accounts/{account_id}/orders\x12\x94\x01\n" +
@@ -1236,65 +1308,67 @@ func file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP() []byte {
 	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescData
 }
 
-var file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
+var file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
 var file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_grpc_tradeapi_v1_orders_orders_service_proto_goTypes = []any{
 	(OrderType)(0),                  // 0: grpc.tradeapi.v1.orders.OrderType
 	(TimeInForce)(0),                // 1: grpc.tradeapi.v1.orders.TimeInForce
 	(StopCondition)(0),              // 2: grpc.tradeapi.v1.orders.StopCondition
 	(OrderStatus)(0),                // 3: grpc.tradeapi.v1.orders.OrderStatus
-	(OrderTradeRequest_Action)(0),   // 4: grpc.tradeapi.v1.orders.OrderTradeRequest.Action
-	(OrderTradeRequest_DataType)(0), // 5: grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
-	(*OrderTradeRequest)(nil),       // 6: grpc.tradeapi.v1.orders.OrderTradeRequest
-	(*OrderTradeResponse)(nil),      // 7: grpc.tradeapi.v1.orders.OrderTradeResponse
-	(*GetOrderRequest)(nil),         // 8: grpc.tradeapi.v1.orders.GetOrderRequest
-	(*Order)(nil),                   // 9: grpc.tradeapi.v1.orders.Order
-	(*Leg)(nil),                     // 10: grpc.tradeapi.v1.orders.Leg
-	(*OrderState)(nil),              // 11: grpc.tradeapi.v1.orders.OrderState
-	(*OrdersRequest)(nil),           // 12: grpc.tradeapi.v1.orders.OrdersRequest
-	(*OrdersResponse)(nil),          // 13: grpc.tradeapi.v1.orders.OrdersResponse
-	(*CancelOrderRequest)(nil),      // 14: grpc.tradeapi.v1.orders.CancelOrderRequest
-	(*v1.AccountTrade)(nil),         // 15: grpc.tradeapi.v1.AccountTrade
-	(*decimal.Decimal)(nil),         // 16: google.type.Decimal
-	(v1.Side)(0),                    // 17: grpc.tradeapi.v1.Side
-	(*timestamppb.Timestamp)(nil),   // 18: google.protobuf.Timestamp
+	(ValidBefore)(0),                // 4: grpc.tradeapi.v1.orders.ValidBefore
+	(OrderTradeRequest_Action)(0),   // 5: grpc.tradeapi.v1.orders.OrderTradeRequest.Action
+	(OrderTradeRequest_DataType)(0), // 6: grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
+	(*OrderTradeRequest)(nil),       // 7: grpc.tradeapi.v1.orders.OrderTradeRequest
+	(*OrderTradeResponse)(nil),      // 8: grpc.tradeapi.v1.orders.OrderTradeResponse
+	(*GetOrderRequest)(nil),         // 9: grpc.tradeapi.v1.orders.GetOrderRequest
+	(*Order)(nil),                   // 10: grpc.tradeapi.v1.orders.Order
+	(*Leg)(nil),                     // 11: grpc.tradeapi.v1.orders.Leg
+	(*OrderState)(nil),              // 12: grpc.tradeapi.v1.orders.OrderState
+	(*OrdersRequest)(nil),           // 13: grpc.tradeapi.v1.orders.OrdersRequest
+	(*OrdersResponse)(nil),          // 14: grpc.tradeapi.v1.orders.OrdersResponse
+	(*CancelOrderRequest)(nil),      // 15: grpc.tradeapi.v1.orders.CancelOrderRequest
+	(*v1.AccountTrade)(nil),         // 16: grpc.tradeapi.v1.AccountTrade
+	(*decimal.Decimal)(nil),         // 17: google.type.Decimal
+	(v1.Side)(0),                    // 18: grpc.tradeapi.v1.Side
+	(*timestamppb.Timestamp)(nil),   // 19: google.protobuf.Timestamp
 }
 var file_grpc_tradeapi_v1_orders_orders_service_proto_depIdxs = []int32{
-	4,  // 0: grpc.tradeapi.v1.orders.OrderTradeRequest.action:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.Action
-	5,  // 1: grpc.tradeapi.v1.orders.OrderTradeRequest.data_type:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
-	11, // 2: grpc.tradeapi.v1.orders.OrderTradeResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
-	15, // 3: grpc.tradeapi.v1.orders.OrderTradeResponse.trades:type_name -> grpc.tradeapi.v1.AccountTrade
-	16, // 4: grpc.tradeapi.v1.orders.Order.quantity:type_name -> google.type.Decimal
-	17, // 5: grpc.tradeapi.v1.orders.Order.side:type_name -> grpc.tradeapi.v1.Side
+	5,  // 0: grpc.tradeapi.v1.orders.OrderTradeRequest.action:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.Action
+	6,  // 1: grpc.tradeapi.v1.orders.OrderTradeRequest.data_type:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
+	12, // 2: grpc.tradeapi.v1.orders.OrderTradeResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
+	16, // 3: grpc.tradeapi.v1.orders.OrderTradeResponse.trades:type_name -> grpc.tradeapi.v1.AccountTrade
+	17, // 4: grpc.tradeapi.v1.orders.Order.quantity:type_name -> google.type.Decimal
+	18, // 5: grpc.tradeapi.v1.orders.Order.side:type_name -> grpc.tradeapi.v1.Side
 	0,  // 6: grpc.tradeapi.v1.orders.Order.type:type_name -> grpc.tradeapi.v1.orders.OrderType
 	1,  // 7: grpc.tradeapi.v1.orders.Order.time_in_force:type_name -> grpc.tradeapi.v1.orders.TimeInForce
-	16, // 8: grpc.tradeapi.v1.orders.Order.limit_price:type_name -> google.type.Decimal
-	16, // 9: grpc.tradeapi.v1.orders.Order.stop_price:type_name -> google.type.Decimal
+	17, // 8: grpc.tradeapi.v1.orders.Order.limit_price:type_name -> google.type.Decimal
+	17, // 9: grpc.tradeapi.v1.orders.Order.stop_price:type_name -> google.type.Decimal
 	2,  // 10: grpc.tradeapi.v1.orders.Order.stop_condition:type_name -> grpc.tradeapi.v1.orders.StopCondition
-	10, // 11: grpc.tradeapi.v1.orders.Order.legs:type_name -> grpc.tradeapi.v1.orders.Leg
-	16, // 12: grpc.tradeapi.v1.orders.Leg.quantity:type_name -> google.type.Decimal
-	17, // 13: grpc.tradeapi.v1.orders.Leg.side:type_name -> grpc.tradeapi.v1.Side
-	3,  // 14: grpc.tradeapi.v1.orders.OrderState.status:type_name -> grpc.tradeapi.v1.orders.OrderStatus
-	9,  // 15: grpc.tradeapi.v1.orders.OrderState.order:type_name -> grpc.tradeapi.v1.orders.Order
-	18, // 16: grpc.tradeapi.v1.orders.OrderState.transact_at:type_name -> google.protobuf.Timestamp
-	18, // 17: grpc.tradeapi.v1.orders.OrderState.accept_at:type_name -> google.protobuf.Timestamp
-	18, // 18: grpc.tradeapi.v1.orders.OrderState.withdraw_at:type_name -> google.protobuf.Timestamp
-	11, // 19: grpc.tradeapi.v1.orders.OrdersResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
-	9,  // 20: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:input_type -> grpc.tradeapi.v1.orders.Order
-	14, // 21: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:input_type -> grpc.tradeapi.v1.orders.CancelOrderRequest
-	12, // 22: grpc.tradeapi.v1.orders.OrdersService.GetOrders:input_type -> grpc.tradeapi.v1.orders.OrdersRequest
-	8,  // 23: grpc.tradeapi.v1.orders.OrdersService.GetOrder:input_type -> grpc.tradeapi.v1.orders.GetOrderRequest
-	6,  // 24: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:input_type -> grpc.tradeapi.v1.orders.OrderTradeRequest
-	11, // 25: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	11, // 26: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	13, // 27: grpc.tradeapi.v1.orders.OrdersService.GetOrders:output_type -> grpc.tradeapi.v1.orders.OrdersResponse
-	11, // 28: grpc.tradeapi.v1.orders.OrdersService.GetOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	7,  // 29: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:output_type -> grpc.tradeapi.v1.orders.OrderTradeResponse
-	25, // [25:30] is the sub-list for method output_type
-	20, // [20:25] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	11, // 11: grpc.tradeapi.v1.orders.Order.legs:type_name -> grpc.tradeapi.v1.orders.Leg
+	4,  // 12: grpc.tradeapi.v1.orders.Order.valid_before:type_name -> grpc.tradeapi.v1.orders.ValidBefore
+	17, // 13: grpc.tradeapi.v1.orders.Leg.quantity:type_name -> google.type.Decimal
+	18, // 14: grpc.tradeapi.v1.orders.Leg.side:type_name -> grpc.tradeapi.v1.Side
+	3,  // 15: grpc.tradeapi.v1.orders.OrderState.status:type_name -> grpc.tradeapi.v1.orders.OrderStatus
+	10, // 16: grpc.tradeapi.v1.orders.OrderState.order:type_name -> grpc.tradeapi.v1.orders.Order
+	19, // 17: grpc.tradeapi.v1.orders.OrderState.transact_at:type_name -> google.protobuf.Timestamp
+	19, // 18: grpc.tradeapi.v1.orders.OrderState.accept_at:type_name -> google.protobuf.Timestamp
+	19, // 19: grpc.tradeapi.v1.orders.OrderState.withdraw_at:type_name -> google.protobuf.Timestamp
+	12, // 20: grpc.tradeapi.v1.orders.OrdersResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
+	10, // 21: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:input_type -> grpc.tradeapi.v1.orders.Order
+	15, // 22: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:input_type -> grpc.tradeapi.v1.orders.CancelOrderRequest
+	13, // 23: grpc.tradeapi.v1.orders.OrdersService.GetOrders:input_type -> grpc.tradeapi.v1.orders.OrdersRequest
+	9,  // 24: grpc.tradeapi.v1.orders.OrdersService.GetOrder:input_type -> grpc.tradeapi.v1.orders.GetOrderRequest
+	7,  // 25: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:input_type -> grpc.tradeapi.v1.orders.OrderTradeRequest
+	12, // 26: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	12, // 27: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	14, // 28: grpc.tradeapi.v1.orders.OrdersService.GetOrders:output_type -> grpc.tradeapi.v1.orders.OrdersResponse
+	12, // 29: grpc.tradeapi.v1.orders.OrdersService.GetOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	8,  // 30: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:output_type -> grpc.tradeapi.v1.orders.OrderTradeResponse
+	26, // [26:31] is the sub-list for method output_type
+	21, // [21:26] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_grpc_tradeapi_v1_orders_orders_service_proto_init() }
@@ -1307,7 +1381,7 @@ func file_grpc_tradeapi_v1_orders_orders_service_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc), len(file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc)),
-			NumEnums:      6,
+			NumEnums:      7,
 			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
