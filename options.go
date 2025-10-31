@@ -11,6 +11,7 @@ type clientOptions struct {
 	jwtRefreshInterval time.Duration // С какой периодичностью обновлять JWT
 	keepaliveTime      time.Duration // С какой периодичностью отправлять ping
 	keepaliveTimeout   time.Duration // Сколько ждать ответа
+	callTimeout        time.Duration // Timeout при вызове методов grpc
 }
 
 // ClientOption - тип функции для настройки
@@ -22,6 +23,7 @@ func ClientOptionsDefault() *clientOptions {
 		jwtRefreshInterval: jwtRefreshInterval,
 		keepaliveTime:      keepaliveTime,
 		keepaliveTimeout:   keepaliveTimeout,
+		callTimeout:        callTimeout,
 	}
 }
 
@@ -42,6 +44,14 @@ func WithJwtRefreshInterval(value time.Duration) ClientOption {
 func WithKeepaliveTime(value time.Duration) ClientOption {
 	return func(o *clientOptions) {
 		o.keepaliveTime = value
+	}
+}
+
+// WithCallTimeout
+// установить Timeout для вызова методов
+func WithCallTimeout(value time.Duration) ClientOption {
+	return func(o *clientOptions) {
+		o.callTimeout = value
 	}
 }
 

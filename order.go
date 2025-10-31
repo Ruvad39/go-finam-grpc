@@ -33,6 +33,7 @@ package finam
 
 import (
 	"context"
+
 	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
 	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 )
@@ -52,16 +53,22 @@ func NewOrderServiceClient(c *Client) *OrderServiceClient {
 
 // GetOrders Получение списка заявок по заданному счету
 func (s *OrderServiceClient) GetOrders(ctx context.Context, accountId string) (*pb.OrdersResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.OrderService.GetOrders(ctx, &pb.OrdersRequest{AccountId: accountId})
 }
 
 // GetOrder Получение информации о конкретном ордере
 func (s *OrderServiceClient) GetOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.OrderService.GetOrder(ctx, &pb.GetOrderRequest{AccountId: accountId, OrderId: orderId})
 }
 
 // CancelOrder Отмена биржевой заявки
 func (s *OrderServiceClient) CancelOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.OrderService.CancelOrder(ctx, &pb.CancelOrderRequest{AccountId: accountId, OrderId: orderId})
 }
 
@@ -70,6 +77,9 @@ func (s *OrderServiceClient) CancelOrder(ctx context.Context, accountId, orderId
 // на входе
 // order *pb.Order = заполненный ордер
 func (s *OrderServiceClient) PlaceOrder(ctx context.Context, order *pb.Order) (*pb.OrderState, error) {
+	// TODO рассмотреть возможность использования своего callTimeout
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.OrderService.PlaceOrder(ctx, order)
 
 }

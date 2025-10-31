@@ -17,10 +17,11 @@ package finam
 
 import (
 	"context"
+	"time"
+
 	accounts_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/accounts"
 	"google.golang.org/genproto/googleapis/type/interval"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 // AccountServiceClient клиент для работы с AccountsService
@@ -37,6 +38,8 @@ func NewAccountServiceClient(c *Client) *AccountServiceClient {
 
 // GetAccount Получение информации по конкретному аккаунту
 func (s *AccountServiceClient) GetAccount(ctx context.Context, accountId string) (*accounts_service.GetAccountResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.AccountsService.GetAccount(ctx, &accounts_service.GetAccountRequest{AccountId: accountId})
 }
 
@@ -46,6 +49,8 @@ func (s *AccountServiceClient) GetTrades(ctx context.Context, accountId string, 
 		StartTime: timestamppb.New(start),
 		EndTime:   timestamppb.New(end),
 	}
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.AccountsService.Trades(ctx, &accounts_service.TradesRequest{AccountId: accountId, Interval: i, Limit: limit})
 }
 
@@ -55,5 +60,7 @@ func (s *AccountServiceClient) GetTransactions(ctx context.Context, accountId st
 		StartTime: timestamppb.New(start),
 		EndTime:   timestamppb.New(end),
 	}
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.AccountsService.Transactions(ctx, &accounts_service.TransactionsRequest{AccountId: accountId, Interval: i, Limit: limit})
 }

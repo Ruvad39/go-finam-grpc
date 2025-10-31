@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/Ruvad39/go-finam-grpc"
-	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
+	"time"
+
+	"github.com/Ruvad39/go-finam-grpc"
+	"github.com/joho/godotenv"
 )
 
 // предполагаем что есть файл .env в котором записан secret-Token в переменной FINAM_TOKEN
@@ -23,7 +25,7 @@ func main() {
 	slog.Info("start connect")
 	finam.SetLogLevel(slog.LevelDebug)
 
-	client, err := finam.NewClient(ctx, token)
+	client, err := finam.NewClient(ctx, token, finam.WithCallTimeout(5*time.Second))
 	if err != nil {
 		slog.Error("NewClient", "err", err.Error())
 		return

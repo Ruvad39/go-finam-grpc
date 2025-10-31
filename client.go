@@ -31,6 +31,7 @@ const (
 	maxDelay         = 50 * time.Second
 	keepaliveTime    = 4 * time.Minute  // Отправлять ping каждые 4 минут
 	keepaliveTimeout = 30 * time.Second // Ждать ответа не дольше 30 сек
+	callTimeout      = 10 * time.Second //
 )
 
 // Client

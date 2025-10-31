@@ -26,7 +26,6 @@ func main() {
 	// получаем переменные из .env
 	token, _ := os.LookupEnv("FINAM_TOKEN")
 
-	//finam.SetLogLevel(slog.LevelDebug)
 	// создаем клиент
 	client, err := finam.NewClient(ctx, token)
 	if err != nil {
@@ -72,6 +71,9 @@ func getAccount(ctx context.Context, client *finam.AccountServiceClient, account
 		"Porfolio", res.GetPortfolio(),
 		"Cash", res.Cash,
 	)
+	//
+	slog.Info("AccountsService.GetAccount", "res", res)
+
 	// список позиций
 	for row, pos := range res.Positions {
 		slog.Info("AccountsService.GetAccount.Positions",
@@ -80,6 +82,7 @@ func getAccount(ctx context.Context, client *finam.AccountServiceClient, account
 			"Quantity", finam.DecimalToFloat64(pos.Quantity),
 			"AveragePrice", finam.DecimalToFloat64(pos.AveragePrice),
 			"CurrentPrice", finam.DecimalToFloat64(pos.CurrentPrice),
+			"UnrealizedPnl", finam.DecimalToFloat64(pos.UnrealizedPnl),
 		)
 
 	}

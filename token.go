@@ -59,6 +59,12 @@ func (c *Client) GetJWT(ctx context.Context) (string, error) {
 		c.TokenAgent.setJwt("")
 		return "", nil
 	}
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	//ctx, cancel := context.WithTimeout(ctx, c.opts.callTimeout)
+	//defer cancel()
+
 	req := &auth_service.AuthRequest{Secret: c.token}
 	log.Debug("GetJWT start AuthService.Auth")
 	t := time.Now()
@@ -108,5 +114,7 @@ func (c *Client) runJwtRefresher(ctx context.Context) {
 //
 // идет вызов AuthService.TokenDetails
 func (c *Client) GetTokenDetails(ctx context.Context) (*auth_service.TokenDetailsResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, c.opts.callTimeout)
+	defer cancel()
 	return c.AuthService.TokenDetails(ctx, &auth_service.TokenDetailsRequest{Token: c.TokenAgent.GetJwt()})
 }

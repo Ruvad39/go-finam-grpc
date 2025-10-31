@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Ruvad39/go-finam-grpc"
-	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
-	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
 	"time"
+
+	"github.com/Ruvad39/go-finam-grpc"
+	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
+	"github.com/joho/godotenv"
 )
 
 // предполагаем что есть файл .env
@@ -39,7 +40,7 @@ func main() {
 	marketDataService := client.NewMarketDataServiceClient()
 
 	//
-	symbol := "SBER@MISX" //"ROSN@MISX"  //"SIU5@RTSX"
+	symbol := "CNYRUBF@RTSX" // "SBER@MISX" //"ROSN@MISX"  //"SIZ5@RTSX"
 	// Получение последней котировки по инструменту
 	getQuote(ctx, marketDataService, symbol)
 
@@ -47,7 +48,7 @@ func main() {
 	getBars(ctx, marketDataService, symbol)
 
 	// Получение текущего стакана по инструменту
-	//getOrderBook(ctx, marketDataService, symbol)
+	getOrderBook(ctx, marketDataService, symbol)
 
 	// Получение списка последних сделок по инструменту
 	//getLatestTrades(ctx, marketDataService, symbol)
@@ -76,7 +77,7 @@ func getQuote(ctx context.Context, client *finam.MarketDataServiceClient, symbol
 // Получение исторических данных по инструменту (агрегированные свечи)
 func getBars(ctx context.Context, client *finam.MarketDataServiceClient, symbol string) {
 	tf := pb.TimeFrame_TIME_FRAME_D
-	start, _ := time.Parse("2006-01-02", "2025-08-01")
+	start, _ := time.Parse("2006-01-02", "2025-10-01")
 	end := time.Now()
 	// запрос
 	bars, err := client.GetBars(ctx, symbol, tf, start, end)

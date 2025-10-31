@@ -21,11 +21,12 @@ package finam
 import (
 	"context"
 	"fmt"
+	"time"
+
 	marketdata_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
 	"google.golang.org/genproto/googleapis/type/decimal"
 	"google.golang.org/genproto/googleapis/type/interval"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 // Bar аналог marketdata_service.Bar
@@ -90,6 +91,8 @@ func NewMarketDataServiceClient(c *Client) *MarketDataServiceClient {
 
 // GetLastQuote Получение последней котировки по инструменту
 func (s *MarketDataServiceClient) GetLastQuote(ctx context.Context, symbol string) (*marketdata_service.QuoteResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.MarketDataService.LastQuote(ctx, &marketdata_service.QuoteRequest{Symbol: symbol})
 }
 
@@ -102,15 +105,21 @@ func (s *MarketDataServiceClient) GetBars(ctx context.Context, symbol string, tf
 		StartTime: timestamppb.New(start),
 		EndTime:   timestamppb.New(end),
 	}
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.MarketDataService.Bars(ctx, &marketdata_service.BarsRequest{Symbol: symbol, Timeframe: tf, Interval: i})
 }
 
 // GetOrderBook Получение текущего стакана по инструменту
 func (s *MarketDataServiceClient) GetOrderBook(ctx context.Context, symbol string) (*marketdata_service.OrderBookResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.MarketDataService.OrderBook(ctx, &marketdata_service.OrderBookRequest{Symbol: symbol})
 }
 
 // GetLatestTradesПолучение списка последних сделок по инструменту
 func (s *MarketDataServiceClient) GetLatestTrades(ctx context.Context, symbol string) (*marketdata_service.LatestTradesResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, s.client.opts.callTimeout)
+	defer cancel()
 	return s.MarketDataService.LatestTrades(ctx, &marketdata_service.LatestTradesRequest{Symbol: symbol})
 }

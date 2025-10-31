@@ -1,8 +1,13 @@
 # Changelog
 
-## [0.5.0] - 2025-10-07
+
+## [0.5.0] - 2025-10-31
+### New
+- clientOptions: WithCallTimeout(value time.Duration) WithLogger(logger *slog.Logger)
+
 ### Update
 - обновление proto файлов до 2.8.0
+- добавление в методы вызова grpc context.WithTimeout
 
 
 ## [0.4.0] - 2025-08-29
