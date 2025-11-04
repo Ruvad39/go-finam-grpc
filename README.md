@@ -98,17 +98,25 @@ GetSchedule(ctx context.Context, symbol string) (*pb.ScheduleResponse, error)
 GetAccount(ctx context.Context, accountId string) (*pb.GetAccountResponse, error)
 // Получение истории по сделкам заданного счета
 GetTrades(ctx context.Context, accountId string, start, end time.Time, limit int32) (*pb.TradesResponse, error)
+
 // Получение списка транзакций по счету
 GetTransactions(ctx context.Context, accountId string, start, end time.Time, limit int32) (*pb.TransactionsResponse, error)
 
 
 // MarketDataServiceClient 
-//Получение исторических данных по инструменту (агрегированные свечи)
+// Получение исторических данных по инструменту (агрегированные свечи)
 GetBars(ctx context.Context, symbol string, tf pb.TimeFrame, start, end time.Time)
+
+// Получение исторических данных по инструменту (агрегированные свечи)
+// разбиваем период на интервалы (от глубины рынка) и делаем несколько запросов к брокеру
+GetGetHistoryBars(ctx context.Context, symbol string, tf pb.TimeFrame, start, end time.Time, limit int)
+
 // Получение последней котировки по инструменту
 GetLastQuote(ctx context.Context, symbol string) (*pb.QuoteResponse, error)
+
 // получение списка последних сделок по инструменту
 GetLatestTrades(ctx context.Context, symbol string) (*pb.BarsResponse, error)
+
 // Получение текущего стакана по инструменту
 GetOrderBook(ctx context.Context, symbol string) (*pb.OrderBookResponse, error)
 
@@ -116,10 +124,13 @@ GetOrderBook(ctx context.Context, symbol string) (*pb.OrderBookResponse, error)
 // OrderServiceClient
 // Получение списка заявок по заданному счету
 GetOrders(ctx context.Context, accountId string) (*pb.OrdersResponse, error)
+
 // Получение информации о конкретном ордере
 GetOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error)
+
 // Отмена биржевой заявки
 CancelOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error)
+
 // Выставление биржевой заявки
 PlaceOrder(ctx context.Context, order *pb.Order) (*pb.OrderState, error)
 
@@ -136,8 +147,10 @@ NewSellLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Ord
 // Потоки данных (stream)
 // Подписка на собственные заявки и сделки
 NewOrderTradeStream(parent context.Context, accountId string, callbackOrder func(*orders_service.OrderState),callbackTrade func(*v1.AccountTrade),) *OrderTradeStream
+
 // создание стрима на стакан
 NewOrderBookStream(parent context.Context, symbol string, callback func(book []*pb.StreamOrderBook)) *OrderBookStream
+
 // создание стрима на агрегированные свечи
 NewBarStream(parent context.Context, symbol string, timeframe marketdata_service.TimeFrame, callback func(bar *Bar)) *BarStream
 ```

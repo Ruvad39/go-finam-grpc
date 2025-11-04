@@ -40,15 +40,19 @@ func main() {
 	marketDataService := client.NewMarketDataServiceClient()
 
 	//
-	symbol := "CNYRUBF@RTSX" // "SBER@MISX" //"ROSN@MISX"  //"SIZ5@RTSX"
+	symbol := "CNYRUBF@RTSX" // "CNYRUBF@RTSX" // "SBER@MISX" //"ROSN@MISX"  //"SIZ5@RTSX"
+	_ = symbol
 	// Получение последней котировки по инструменту
-	getQuote(ctx, marketDataService, symbol)
+	// getQuote(ctx, marketDataService, symbol)
 
 	// Получение исторических данных по инструменту (агрегированные свечи)
-	getBars(ctx, marketDataService, symbol)
+	//getBars(ctx, marketDataService, symbol)
+
+	// Получение исторических данных по инструменту (агрегированные свечи)
+	getHistoryBars(ctx, marketDataService)
 
 	// Получение текущего стакана по инструменту
-	getOrderBook(ctx, marketDataService, symbol)
+	//getOrderBook(ctx, marketDataService, symbol)
 
 	// Получение списка последних сделок по инструменту
 	//getLatestTrades(ctx, marketDataService, symbol)
@@ -96,6 +100,28 @@ func getBars(ctx context.Context, client *finam.MarketDataServiceClient, symbol 
 			"Volume_int", finam.DecimalToInt(bar.Volume),
 		)
 	}
+
+}
+
+// Получение исторических данных по инструменту (агрегированные свечи)
+// + запишем в файл
+func getHistoryBars(ctx context.Context, client *finam.MarketDataServiceClient) {
+	symbol := "CNYRUBF@RTSX" // "CNYRUBF@RTSX" // "SBER@MISX" //"ROSN@MISX"  //"SIZ5@RTSX"
+	tf := pb.TimeFrame_TIME_FRAME_M1
+	start, _ := time.Parse("2006-01-02", "2025-10-01")
+	end := time.Now()
+	// запрос
+	bars, err := client.GetHistoryBars(ctx, symbol, tf, start, end, 0)
+	if err != nil {
+		slog.Error("MarketDataService.Bars", "err", err.Error())
+		return
+	}
+	slog.Info("MarketDataService.Bars", "Bars.len", len(bars.Bars))
+
+	// запишем в файл
+	symbol_ := finam.CleanSymbolFromMic(bars.GetSymbol())
+	file := symbol_ + "_" + finam.TimeFrameToString(tf) + "_" + start.Format("20060102") + "_" + end.Format("20060102") + ".csv"
+	finam.WriteBarsToFile(bars, tf, file)
 
 }
 

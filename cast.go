@@ -40,6 +40,10 @@ func Float64ToDecimal(f float64) *decimal.Decimal {
 	}
 }
 
+func DecimalToString(d *decimal.Decimal) string {
+	return d.GetValue()
+}
+
 // DecimalToFloat64E конвертируем google.Decimal в float64
 // с обработкой ошибки
 func DecimalToFloat64E(d *decimal.Decimal) (float64, error) {
@@ -116,7 +120,7 @@ func IsWithinInterval(t time.Time, iv *interval.Interval) bool {
 }
 
 // ???
-func cleanSymbolFromMic(symbol string) string {
+func CleanSymbolFromMic(symbol string) string {
 	if idx := strings.Index(symbol, "@"); idx != -1 {
 		return symbol[:idx]
 	}
@@ -166,4 +170,33 @@ func DateToTimeWithLocation(d *date.Date, loc *time.Location) time.Time {
 		0, 0, 0, 0,
 		loc,
 	)
+}
+
+// Float64ToString
+func Float64ToString(in float64, inPrec ...int) string {
+	prec := -1
+	if len(inPrec) != 0 {
+		prec = inPrec[0]
+	}
+	return strconv.FormatFloat(in, 'f', prec, 64) // 'f' - формат, prec - точность
+}
+
+func Float32ToString(in float32, inPrec ...int) string {
+	prec := -1
+	if len(inPrec) != 0 {
+		prec = inPrec[0]
+	}
+	return strconv.FormatFloat(float64(in), 'f', prec, 32) // 'f' - формат, prec - точность
+}
+
+func Int64ToString(in int64) string {
+	return strconv.FormatInt(in, 10)
+}
+
+func Int32ToString(in int32) string {
+	return strconv.FormatInt(int64(in), 10)
+}
+
+func IntToString(in int) string {
+	return strconv.FormatInt(int64(in), 10)
 }
