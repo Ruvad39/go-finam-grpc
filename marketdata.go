@@ -2,8 +2,12 @@
 MarketDataServiceClient = клиент для работы с MarketDataService
 методы:
 
-//Получение исторических данных по инструменту (агрегированные свечи)
+// Получение исторических данных по инструменту (агрегированные свечи)
 GetBars(ctx context.Context, symbol string, tf pb.TimeFrame, start, end time.Time)
+
+// Получение исторических данных по инструменту (агрегированные свечи)
+// разбиваем период на интервалы (от глубины рынка) и делаем несколько запросов к брокеру
+GetHistoryBars(ctx context.Context,	symbol string,	tf marketdata_service.TimeFrame,	start, end time.Time,	limit int,)
 
 // Получение последней котировки по инструменту
 GetLastQuote(ctx context.Context, symbol string)
@@ -49,7 +53,7 @@ type Bar struct {
 	// Цена закрытия свечи
 	Close *decimal.Decimal
 	// Объём торгов за свечу в шт.
-	Volume *decimal.Decimal `protobuf:"bytes,6,opt,name=volume,proto3" json:"volume,omitempty"`
+	Volume *decimal.Decimal
 }
 
 func (b *Bar) GetOpen() float64 {

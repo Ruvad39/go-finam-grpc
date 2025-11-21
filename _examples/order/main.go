@@ -40,7 +40,7 @@ func main() {
 	orderService := client.NewOrderServiceClient()
 
 	// получим список всех ордеров по заданному счету
-	getOrders(ctx, orderService, accountId)
+	//getOrders(ctx, orderService, accountId)
 
 	// получим информацию по заданному ордеру
 	//getOrder(ctx, orderService, accountId, "69970064220")
@@ -49,7 +49,7 @@ func main() {
 	//cancelOrder(ctx, orderService, accountId, "69970064220")
 
 	// Выставление биржевой заявки
-	//placeOrder(ctx, orderService, accountId)
+	placeOrder(ctx, orderService, accountId)
 
 }
 
@@ -90,17 +90,17 @@ func cancelOrder(ctx context.Context, client *finam.OrderServiceClient, accountI
 
 // Выставление биржевой заявки
 func placeOrder(ctx context.Context, client *finam.OrderServiceClient, accountId string) {
-	symbol := "SBER@MISX"                      // инструмент
-	quantity := 1                              // кол-во в штуках
-	price := 312.44                            // по какой цене выставить лимитку
-	orderType := pb.OrderType_ORDER_TYPE_LIMIT // лимитная
-	side := v1.Side_SIDE_BUY                   // покупка
+	symbol := "GLDRUBF@RTSX" // инструмент SPBFUT.GLDRUBF
+	quantity := 1            // кол-во в штуках
+	//price := 0                                  // по какой цене выставить лимитку
+	orderType := pb.OrderType_ORDER_TYPE_MARKET //pb.OrderType_ORDER_TYPE_LIMIT // лимитная
+	side := v1.Side_SIDE_BUY                    // покупка
 
 	newOrder := &pb.Order{
-		AccountId:   accountId,
-		Symbol:      symbol,
-		Quantity:    finam.IntToDecimal(quantity),
-		LimitPrice:  finam.Float64ToDecimal(price),
+		AccountId: accountId,
+		Symbol:    symbol,
+		Quantity:  finam.IntToDecimal(quantity),
+		//LimitPrice:  finam.Float64ToDecimal(price),
 		Type:        orderType,
 		Side:        side,
 		TimeInForce: pb.TimeInForce_TIME_IN_FORCE_DAY,

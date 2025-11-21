@@ -1,3 +1,9 @@
+/*
+создать отдельные методы
+NewBarStreamWithCallback =
+NewBarStreamWithChannel
+*/
+
 package finam
 
 import (
@@ -18,9 +24,9 @@ type BarStream struct {
 	MarketDataService marketdata_service.MarketDataServiceClient
 	symbol            string                       // На какой инструмент подписка
 	timeframe         marketdata_service.TimeFrame // На какой тайм-фрейм подписка
-	// Колбэки для обработки данных
-	//onBar func(bars *marketdata_service.SubscribeBarsResponse) // пока весь ответ, потом одну свечу???
-	onBar BarFunc
+	onBar             BarFunc                      // callback функция для обработки данных
+	barChannel        chan *Bar                    // канал для данных (альтернатива callback функции)
+	running           bool                         // признак что уже запустили в работу
 }
 
 // NewOrderBookStream
@@ -40,15 +46,74 @@ func (c *Client) NewBarStream(parent context.Context, symbol string, timeframe m
 		retryDelay:        initialDelay,
 	}
 
+	s.running = true
 	go s.run()
 	return s
 }
 
+// NewBarStreamWithCallback
+// создадим стрим по заданному символу и тайм-фрейму
+// на входе callback функция для обработки данных
+// стрим НЕ запускам по умолчанию => Нужно выполнить метод  Start()
+func (c *Client) NewBarStreamWithCallback(parent context.Context, symbol string, timeframe marketdata_service.TimeFrame, callback func(bar *Bar)) *BarStream {
+	ctx, cancel := context.WithCancel(parent)
+	s := &BarStream{
+		ctx:               ctx,
+		cancel:            cancel,
+		client:            c,
+		MarketDataService: marketdata_service.NewMarketDataServiceClient(c.conn),
+		symbol:            symbol,
+		timeframe:         timeframe,
+		onBar:             callback,
+		done:              make(chan struct{}),
+		retryDelay:        initialDelay,
+	}
+
+	return s
+}
+
+// NewBarStreamWithChannel
+// создадим стрим по заданному символу и тайм-фрейму
+// возвращаем канал с данными
+// стрим НЕ запускам по умолчанию => Нужно выполнить метод  Start()
+func (c *Client) NewBarStreamWithChannel(parent context.Context, symbol string, timeframe marketdata_service.TimeFrame) (*BarStream, chan *Bar) {
+	ctx, cancel := context.WithCancel(parent)
+	s := &BarStream{
+		ctx:               ctx,
+		cancel:            cancel,
+		client:            c,
+		MarketDataService: marketdata_service.NewMarketDataServiceClient(c.conn),
+		symbol:            symbol,
+		timeframe:         timeframe,
+		done:              make(chan struct{}),
+		retryDelay:        initialDelay,
+		barChannel:        make(chan *Bar, 100),
+	}
+
+	return s, s.barChannel
+}
+
+// Start
+func (s *BarStream) Start() {
+	if s.running {
+		return
+	}
+	s.running = true
+	go s.run()
+}
+
+// Close
 func (s *BarStream) Close() {
+	log.Debug("[BarStream] Close()", "symbol", s.symbol, "timeframe", s.timeframe)
 	s.cancel()
+	// закроем канал
+	if s.barChannel != nil {
+		close(s.barChannel)
+	}
 	<-s.done // дождаться завершения run()
 }
 
+// run
 func (s *BarStream) run() {
 	defer func() {
 		log.Debug("[BarStream] exit run()", "symbol", s.symbol, "timeframe", s.timeframe)
@@ -87,7 +152,7 @@ func (s *BarStream) subscribeAndListen() error {
 	stream, err := s.MarketDataService.SubscribeBars(s.ctx, &marketdata_service.SubscribeBarsRequest{Symbol: s.symbol, Timeframe: s.timeframe})
 	if err != nil {
 		// критичная ошибка = должен быть полный выход
-		s.cancel()
+		s.Close() //s.cancel()
 		return err
 	}
 	// успешный коннект = обнулим время
@@ -116,15 +181,12 @@ func (s *BarStream) listen(ctx context.Context, stream grpc.ServerStreamingClien
 
 // handleMessage обработка сообщения
 func (s *BarStream) handleMessage(msg *marketdata_service.SubscribeBarsResponse) {
-	if s.onBar == nil {
-		return
-	}
-	// GetSymbol()
-	// GetBars() []*Bar
-
-	//log.Info("BarStream", "len(o.Rows)", len(msg.GetBars()))
+	// if s.onBar == nil {
+	// 	return
+	// }
+	// log.Info("BarStream", "len(o.Rows)", len(msg.GetBars()))
 	for _, bar := range msg.GetBars() {
-		//log.Info("OrderBookStream.handleMessage", "n", n, "bar", bar)
+		//log.Info("BarStream.handleMessage", "i", i, "bar", bar)
 		newBar := &Bar{
 			Symbol:    s.symbol,
 			Timeframe: s.timeframe,
@@ -135,8 +197,15 @@ func (s *BarStream) handleMessage(msg *marketdata_service.SubscribeBarsResponse)
 			Close:     bar.Close,
 			Volume:    bar.Volume,
 		}
+		// отправим в канал
+		if s.barChannel != nil {
+			s.barChannel <- newBar
+		}
+		// отправим в callback функцию
+		if s.onBar != nil {
+			s.onBar(newBar)
+		}
 
-		s.onBar(newBar)
 	}
 
 }
