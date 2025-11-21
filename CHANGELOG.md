@@ -1,5 +1,19 @@
 # Changelog
 
+## [0..0] - 2025-11-21
+### New
+- BarStream: отдельный метод для запуска Start
+- BarStream: создание стрима с указанием callback функции NewBarStreamWithCallback
+- BarStream: создание стрима с возвратом канала NewBarStreamWithChannel
+- QuoteStream: стрим котировок
+- QuoteStream: создание стрима с указанием callback функции NewBarStreamWithCallback
+- QuoteStream: создание стрима с возвратом канала NewBarStreamWithChannel
+
+
+### Update
+- обновление proto файлов до ...
+
+
 
 ## [0.5.0] - 2025-10-31
 ### New

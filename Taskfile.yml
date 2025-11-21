@@ -1,0 +1,17 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  account:
+    cmds:
+      - go run _examples/account/main.go
+  marketdata:
+    cmds:
+      - go run _examples/marketdata/main.go
+  stream:
+    cmds:
+      - go run _examples/stream/main.go

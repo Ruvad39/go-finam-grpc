@@ -62,9 +62,19 @@ func main() {
 
 	// пример создание стрима с callback функций
 	// NewBarStreamWithCallback(ctx, client)
-
 	// пример создание стрима с возвратом канала
-	NewBarStreamWithChannel(ctx, client)
+	//NewBarStreamWithChannel(ctx, client)
+
+	// QuoteStream
+	// логер
+	quote_log := InitLogger("logs/quote.log")
+	slog.SetDefault(quote_log)
+
+	// пример создание стрима котировок с с возвратом канала
+	// NewQuoteStreamWithChannel(ctx, client)
+
+	// пример создание стрима котировок с callback функций
+	NewQuoteStreamWithCallback(ctx, client)
 
 	//--------------------------------------------
 	// Graceful shutdown
@@ -118,6 +128,37 @@ func NewBarStreamWithChannel(ctx context.Context, client *finam.Client) {
 
 }
 
+// NewQuoteStreamWithCallback пример создание стрима с callback функцией
+func NewQuoteStreamWithCallback(ctx context.Context, client *finam.Client) {
+	//symbols := []string{"SBER@MISX", "IMOEXF@RTSX"}
+	symbols := []string{"SBER@MISX"}
+	slog.Info("NewQuoteStreamWithCallback", "symbols", symbols)
+
+	stream := client.NewQuoteStreamWithCallback(ctx, symbols, onQuote)
+	// запуск стрима
+	stream.Start()
+
+}
+
+// NewQuoteStreamWithChannel пример создание стрима с возвратом канала
+func NewQuoteStreamWithChannel(ctx context.Context, client *finam.Client) {
+	symbols := []string{"SBER@MISX", "IMOEXF@RTSX"}
+	slog.Info("NewQuoteStreamWithChannel", "symbols", symbols)
+
+	stream, quoteChan := client.NewQuoteStreamWithChannel(ctx, symbols)
+	// запустим чтение канала
+	go func() {
+		for q := range quoteChan {
+			// обработка
+			onQuote(q)
+		}
+	}()
+
+	// запуск стрима
+	stream.Start()
+
+}
+
 // callback метод для обработки ордеров
 func onOrder(order *order_service.OrderState) {
 	slog.Info("OnOrder", slog.Any("AccountOrder", order))
@@ -132,6 +173,11 @@ func onTrade(trade *v1.AccountTrade) {
 // callback метод для обработки баров
 func onBar(bar *finam.Bar) {
 	slog.Info("onBar", slog.Any("bar", bar.String()))
+}
+
+// callback метод для обработки баров
+func onQuote(quote *market_service.Quote) {
+	slog.Info("onQuote", slog.Any("quote", quote.String()))
 }
 
 // создать файл логгера
