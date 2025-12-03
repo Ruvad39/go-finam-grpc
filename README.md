@@ -92,45 +92,34 @@ GetAssetParams(ctx context.Context, accountId, symbol string) (*pb.GetAssetParam
 GetSchedule(ctx context.Context, symbol string) (*pb.ScheduleResponse, error)
 // TODO OptionsChain
 
-
 // AccountServiceClient 
 // Получение информации по конкретному счету
 GetAccount(ctx context.Context, accountId string) (*pb.GetAccountResponse, error)
 // Получение истории по сделкам заданного счета
 GetTrades(ctx context.Context, accountId string, start, end time.Time, limit int32) (*pb.TradesResponse, error)
-
 // Получение списка транзакций по счету
 GetTransactions(ctx context.Context, accountId string, start, end time.Time, limit int32) (*pb.TransactionsResponse, error)
-
 
 // MarketDataServiceClient 
 // Получение исторических данных по инструменту (агрегированные свечи)
 GetBars(ctx context.Context, symbol string, tf pb.TimeFrame, start, end time.Time)
-
 // Получение исторических данных по инструменту (агрегированные свечи)
 // разбиваем период на интервалы (от глубины рынка) и делаем несколько запросов к брокеру
 GetGetHistoryBars(ctx context.Context, symbol string, tf pb.TimeFrame, start, end time.Time, limit int)
-
 // Получение последней котировки по инструменту
 GetLastQuote(ctx context.Context, symbol string) (*pb.QuoteResponse, error)
-
 // получение списка последних сделок по инструменту
 GetLatestTrades(ctx context.Context, symbol string) (*pb.BarsResponse, error)
-
 // Получение текущего стакана по инструменту
 GetOrderBook(ctx context.Context, symbol string) (*pb.OrderBookResponse, error)
-
 
 // OrderServiceClient
 // Получение списка заявок по заданному счету
 GetOrders(ctx context.Context, accountId string) (*pb.OrdersResponse, error)
-
 // Получение информации о конкретном ордере
 GetOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error)
-
 // Отмена биржевой заявки
 CancelOrder(ctx context.Context, accountId, orderId string) (*pb.OrderState, error)
-
 // Выставление биржевой заявки
 PlaceOrder(ctx context.Context, order *pb.Order) (*pb.OrderState, error)
 
@@ -145,22 +134,23 @@ NewBuyLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Orde
 NewSellLimitOrder(accountId, symbol string, quantity int, price float64) *pb.Order
 
 // Потоки данных (stream)
-// Подписка на собственные заявки и сделки
-NewOrderTradeStream(parent context.Context, accountId string, callbackOrder func(*orders_service.OrderState),callbackTrade func(*v1.AccountTrade),) 
-
-// создание стрима на стакан
+// Подписка на ордера по заданному счету
+NewOrderStream(parent context.Context, accountId string, callbackOrder func(*orders_service.OrderState))
+// Подписка на ордера на по заданному счету (стрим НЕ запускается по умолчанию => Нужно выполнить метод  Start())
+NewOrderStreamWithCallback(parent context.Context, accountId string, callbackOrder func(*orders_service.OrderState))
+// Подписка на сделки по заданному счету
+NewTradeStream(parent context.Context, accountId string, callback func(*v1.AccountTrade))
+// Подписка на сделки по заданному счету (стрим НЕ запускается по умолчанию => Нужно выполнить метод  Start())
+NewTradeStreamWithCallback(parent context.Context, accountId string, callback func(*v1.AccountTrade))
+// Подписка на стакан по заданному инструменту
 NewOrderBookStream(parent context.Context, symbol string, callback func(book []*pb.StreamOrderBook))
-
-// создание стрима на агрегированные свечи с возрвтом канала
+// создание стрима на агрегированные свечи с возрвтом канала (стрим НЕ запускается по умолчанию => Нужно выполнить метод  Start())
 NewBarStreamWithChannel(parent context.Context, symbol string, timeframe marketdata_service.TimeFrame) (*BarStream, chan *Bar)
-// создание стрима на агрегированные свечи с указанием callback функции
+// создание стрима на агрегированные свечи с указанием callback функции (стрим НЕ запускается по умолчанию => Нужно выполнить метод  Start())
 NewBarStreamWithCallback(parent context.Context, symbol string, timeframe marketdata_service.TimeFrame, callback func(bar *Bar))
-
-// создание стрима котировок с возвратом канала
+// создание стрима котировок с возвратом канала (стрим НЕ запускается по умолчанию => Нужно выполнить метод  Start())
 NewQuoteStreamWithChannel(parent context.Context, symbols []string)
-
-// создание стрима котировок с указанием callback функции
+// создание стрима котировок с указанием callback функции (стрим НЕ запускается по умолчанию => Нужно выполнить метод  Start())
 NewQuoteStreamWithCallback(parent context.Context, symbols []string, callback func(q *marketdata_service.Quote))
 
 ```
-

@@ -50,15 +50,18 @@ func main() {
 
 	//------------------------------------------
 	// создадим поток ордеров и сделок
-	// order_log := InitLogger("logs/order.log")
-	// slog.SetDefault(order_log)
-	// newOrderTradeStream(ctx, client)
+	order_log := InitLogger("logs/order.log")
+	slog.SetDefault(order_log)
+	// поток ордеров
+	//newOrderStream(ctx, client)
+	// поток сделок
+	newTradeStream(ctx, client)
 
 	//------------------------------------------
 	// bar stream
 	// логер
-	bar_log := InitLogger("logs/bar.log")
-	slog.SetDefault(bar_log)
+	//	bar_log := InitLogger("logs/bar.log")
+	//slog.SetDefault(bar_log)
 
 	// пример создание стрима с callback функций
 	// NewBarStreamWithCallback(ctx, client)
@@ -67,14 +70,14 @@ func main() {
 
 	// QuoteStream
 	// логер
-	quote_log := InitLogger("logs/quote.log")
-	slog.SetDefault(quote_log)
+	//quote_log := InitLogger("logs/quote.log")
+	//slog.SetDefault(quote_log)
 
 	// пример создание стрима котировок с с возвратом канала
 	// NewQuoteStreamWithChannel(ctx, client)
 
 	// пример создание стрима котировок с callback функций
-	NewQuoteStreamWithCallback(ctx, client)
+	//NewQuoteStreamWithCallback(ctx, client)
 
 	//--------------------------------------------
 	// Graceful shutdown
@@ -87,14 +90,34 @@ func main() {
 
 }
 
-// создадим поток ордеров и сделок
-func newOrderTradeStream(ctx context.Context, client *finam.Client) {
-	slog.Info("newOrderTradeStream", "accountID", accountID)
-	stream := client.NewOrderTradeStream(ctx, accountID, onOrder, onTrade)
-	_ = stream
+// создадим поток ордеров
+func newOrderStream(ctx context.Context, client *finam.Client) {
+	slog.Info("newOrderStream", "accountID", accountID)
+	//stream := client.NewOrderStream(ctx, accountID, onOrder)
+	stream := client.NewOrderStreamWithCallback(ctx, accountID, onOrder)
+	stream.Start()
 	// stream.Close()
 
 }
+
+// создадим поток сделок
+func newTradeStream(ctx context.Context, client *finam.Client) {
+	slog.Info("newTradeStream", "accountID", accountID)
+	stream := client.NewTradeStream(ctx, accountID, onTrade)
+	//stream := client.NewTradeStreamWithCallback(ctx, accountID, onTrade)
+	stream.Start()
+	// stream.Close()
+
+}
+
+// "устарело" создадим поток ордеров и сделок
+// func newOrderTradeStream(ctx context.Context, client *finam.Client) {
+// 	slog.Info("newOrderTradeStream", "accountID", accountID)
+// 	stream := client.NewOrderTradeStream(ctx, accountID, onOrder, onTrade)
+// 	_ = stream
+// 	// stream.Close()
+
+// }
 
 // NewBarStreamWithCallback пример создание стрима с callback функцией
 func NewBarStreamWithCallback(ctx context.Context, client *finam.Client) {
