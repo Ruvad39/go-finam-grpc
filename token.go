@@ -72,7 +72,7 @@ func (c *Client) GetJWT(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	log.Debug("GetJWT end AuthService.Auth", "duration", time.Since(t))
+	log.Debug("GetJWT end AuthService.Auth", "duration", time.Since(t).String())
 	return res.Token, nil
 }
 
