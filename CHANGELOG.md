@@ -1,17 +1,19 @@
 # Changelog
 
-## [0..0] - 2025-11-21
+## [0.6.0] - 2025-12-04
 ### New
 - BarStream: отдельный метод для запуска Start
 - BarStream: создание стрима с указанием callback функции NewBarStreamWithCallback
 - BarStream: создание стрима с возвратом канала NewBarStreamWithChannel
 - QuoteStream: стрим котировок
-- QuoteStream: создание стрима с указанием callback функции NewBarStreamWithCallback
-- QuoteStream: создание стрима с возвратом канала NewBarStreamWithChannel
+- QuoteStream: создание стрима с указанием callback функции NewQuoteStreamWithCallback
+- QuoteStream: создание стрима с возвратом канала NewQuoteStreamWithChannel
+- OrderStream: стрим получение ордеров NewOrderStream (NewOrderStreamWithCallback)
+- TradeStream: стрим получение сделок NewTradeStream (NewTradeStreamWithCallback)
 
 
 ### Update
-- обновление proto файлов до ...
+- обновление proto файлов до 2.9.0
 
 
 
