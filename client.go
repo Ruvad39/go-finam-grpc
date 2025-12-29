@@ -17,8 +17,8 @@ import (
 
 const (
 	Name        = "FINAM-API-gRPC"
-	Version     = "0.4.0"
-	VersionDate = "2025-08-29"
+	Version     = "0.6.1"
+	VersionDate = "2025-12-29"
 )
 
 // Endpoints
