@@ -95,14 +95,27 @@ func (c *Client) runJwtRefresher(ctx context.Context) {
 		log.Warn("JWT refresher token пустой. Выход из метода")
 		return
 	}
-	ticker := time.NewTicker(c.opts.jwtRefreshInterval)
+	refreshInterval := c.opts.jwtRefreshInterval
+	const retryInterval = 5 * time.Second // интервал для повторных попыток
+
+	ticker := time.NewTicker(refreshInterval)
 	defer ticker.Stop()
 
 	for {
 		select {
 		case <-ticker.C:
 			log.Debug("start JwtRefresh")
-			_ = c.JwtRefresh(ctx)
+			//_ = c.JwtRefresh(ctx)
+			if err := c.JwtRefresh(ctx); err != nil {
+				log.Error("failed to refresh JW", "err", err.Error())
+				// Меняем тикер на ретрай интервал
+				ticker.Stop()
+				ticker = time.NewTicker(retryInterval)
+			} else {
+				// Возвращаем обычный интервал при успехе
+				ticker.Stop()
+				ticker = time.NewTicker(refreshInterval)
+			}
 		case <-ctx.Done():
 			log.Debug("JWT refresher stopped")
 			return

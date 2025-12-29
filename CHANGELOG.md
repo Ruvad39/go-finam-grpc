@@ -11,7 +11,6 @@
 - OrderStream: стрим получение ордеров NewOrderStream (NewOrderStreamWithCallback)
 - TradeStream: стрим получение сделок NewTradeStream (NewTradeStreamWithCallback)
 
-
 ### Update
 - обновление proto файлов до 2.9.0
 

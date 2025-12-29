@@ -48,7 +48,8 @@ func main() {
 	//getExchanges(ctx, assetService)
 
 	// Получение списка доступных инструментов, их описание
-	//getAssets(ctx, assetService)
+	getAssets(ctx, assetService)
+	return
 
 	// возьмем номер счета из .env
 	accountId, _ := os.LookupEnv("FINAM_ACCOUNT")

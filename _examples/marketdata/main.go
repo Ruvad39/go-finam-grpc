@@ -43,19 +43,19 @@ func main() {
 	symbol := "CNYRUBF@RTSX" // "CNYRUBF@RTSX" // "SBER@MISX" //"ROSN@MISX"  //"SIZ5@RTSX"
 	_ = symbol
 	// Получение последней котировки по инструменту
-	// getQuote(ctx, marketDataService, symbol)
+	getQuote(ctx, marketDataService, symbol)
 
 	// Получение исторических данных по инструменту (агрегированные свечи)
-	//getBars(ctx, marketDataService, symbol)
+	getBars(ctx, marketDataService, symbol)
 
 	// Получение исторических данных по инструменту (агрегированные свечи)
 	getHistoryBars(ctx, marketDataService)
 
 	// Получение текущего стакана по инструменту
-	//getOrderBook(ctx, marketDataService, symbol)
+	getOrderBook(ctx, marketDataService, symbol)
 
 	// Получение списка последних сделок по инструменту
-	//getLatestTrades(ctx, marketDataService, symbol)
+	getLatestTrades(ctx, marketDataService, symbol)
 }
 
 // Получение последней котировки по инструменту

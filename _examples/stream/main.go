@@ -53,9 +53,9 @@ func main() {
 	order_log := InitLogger("logs/order.log")
 	slog.SetDefault(order_log)
 	// поток ордеров
-	//newOrderStream(ctx, client)
+	newOrderStream(ctx, client)
 	// поток сделок
-	newTradeStream(ctx, client)
+	//newTradeStream(ctx, client)
 
 	//------------------------------------------
 	// bar stream
@@ -64,7 +64,7 @@ func main() {
 	//slog.SetDefault(bar_log)
 
 	// пример создание стрима с callback функций
-	// NewBarStreamWithCallback(ctx, client)
+	//NewBarStreamWithCallback(ctx, client)
 	// пример создание стрима с возвратом канала
 	//NewBarStreamWithChannel(ctx, client)
 
@@ -184,13 +184,13 @@ func NewQuoteStreamWithChannel(ctx context.Context, client *finam.Client) {
 
 // callback метод для обработки ордеров
 func onOrder(order *order_service.OrderState) {
-	slog.Info("OnOrder", slog.Any("AccountOrder", order))
+	slog.Info("OnOrder", slog.Any("AccountOrder", order.String()))
 	//fmt.Printf("onOrder: %v\n", order)
 }
 
 // callback  метод для обработки сделок
 func onTrade(trade *v1.AccountTrade) {
-	slog.Info("onTrade", slog.Any("AccountTrade", trade))
+	slog.Info("onTrade", slog.Any("AccountTrade", trade.String()))
 }
 
 // callback метод для обработки баров
