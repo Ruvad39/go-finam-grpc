@@ -4,10 +4,11 @@
 // 	protoc        v6.30.1
 // source: grpc/tradeapi/v1/accounts/accounts_service.proto
 
-package accounts_service
+package accounts
 
 import (
 	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	decimal "google.golang.org/genproto/googleapis/type/decimal"
 	interval "google.golang.org/genproto/googleapis/type/interval"
@@ -1024,7 +1025,7 @@ var File_grpc_tradeapi_v1_accounts_accounts_service_proto protoreflect.FileDescr
 
 const file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDesc = "" +
 	"\n" +
-	"0grpc/tradeapi/v1/accounts/accounts_service.proto\x12\x19grpc.tradeapi.v1.accounts\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\x1a\x17google/type/money.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\x1a\x1cgrpc/tradeapi/v1/trade.proto\"2\n" +
+	"0grpc/tradeapi/v1/accounts/accounts_service.proto\x12\x19grpc.tradeapi.v1.accounts\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\x1a\x17google/type/money.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\x1a\x1cgrpc/tradeapi/v1/trade.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"2\n" +
 	"\x11GetAccountRequest\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\"\xfb\x05\n" +
@@ -1106,12 +1107,31 @@ const file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDesc = "" +
 	"\x14CONTRACT_TERMINATION\x10\f\x12\f\n" +
 	"\bOUTCOMES\x10\r\x12\b\n" +
 	"\x04FINE\x10\x0f\x12\b\n" +
-	"\x04LOAN\x10\x132\xcc\x03\n" +
+	"\x04LOAN\x10\x132\xbd\x05\n" +
 	"\x0fAccountsService\x12\x8c\x01\n" +
 	"\n" +
-	"GetAccount\x12,.grpc.tradeapi.v1.accounts.GetAccountRequest\x1a-.grpc.tradeapi.v1.accounts.GetAccountResponse\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/v1/accounts/{account_id}\x12\x87\x01\n" +
-	"\x06Trades\x12(.grpc.tradeapi.v1.accounts.TradesRequest\x1a).grpc.tradeapi.v1.accounts.TradesResponse\"(\x82\xd3\xe4\x93\x02\"\x12 /v1/accounts/{account_id}/trades\x12\x9f\x01\n" +
-	"\fTransactions\x12..grpc.tradeapi.v1.accounts.TransactionsRequest\x1a/.grpc.tradeapi.v1.accounts.TransactionsResponse\".\x82\xd3\xe4\x93\x02(\x12&/v1/accounts/{account_id}/transactionsB*P\x01Z&trade_api/v1/accounts/accounts_serviceb\x06proto3"
+	"GetAccount\x12,.grpc.tradeapi.v1.accounts.GetAccountRequest\x1a-.grpc.tradeapi.v1.accounts.GetAccountResponse\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/v1/accounts/{account_id}\x12\xc6\x01\n" +
+	"\x06Trades\x12(.grpc.tradeapi.v1.accounts.TradesRequest\x1a).grpc.tradeapi.v1.accounts.TradesResponse\"g\x92A<J7\n" +
+	"\x03400\x120\n" +
+	".Неверно передан интервалR\x01\x01\x82\xd3\xe4\x93\x02\"\x12 /v1/accounts/{account_id}/trades\x12\xde\x01\n" +
+	"\fTransactions\x12..grpc.tradeapi.v1.accounts.TransactionsRequest\x1a/.grpc.tradeapi.v1.accounts.TransactionsResponse\"m\x92A<J7\n" +
+	"\x03400\x120\n" +
+	".Неверно передан интервалR\x01\x01\x82\xd3\xe4\x93\x02(\x12&/v1/accounts/{account_id}/transactions\x12q\n" +
+	"\x10SubscribeAccount\x12,.grpc.tradeapi.v1.accounts.GetAccountRequest\x1a-.grpc.tradeapi.v1.accounts.GetAccountResponse0\x01B\x85\x05\x92A\xe9\x04*\x01\x01Ri\n" +
+	"\x03401\x12b\n" +
+	"`Срок действия токена истек или токен недействителенR:\n" +
+	"\x03404\x123\n" +
+	"1Счёт не был найден в токенеRy\n" +
+	"\x03429\x12r\n" +
+	"pСлишком много запросов. Доступный лимит - 200 запросов в минутуRZ\n" +
+	"\x03500\x12S\n" +
+	"QВнутренняя ошибка сервиса. Попробуйте позжеRk\n" +
+	"\x03503\x12d\n" +
+	"bСервис на данный момент не доступен. Попробуйте позжеRV\n" +
+	"\x03504\x12O\n" +
+	"MКрайний срок истек до завершения операцииR!\n" +
+	"\adefault\x12\x16\x12\x14\n" +
+	"\x12\x1a\x10googletypeStatusP\x01Z\x14tradeapi/v1/accountsb\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_accounts_accounts_service_proto_rawDescOnce sync.Once
@@ -1184,11 +1204,13 @@ var file_grpc_tradeapi_v1_accounts_accounts_service_proto_depIdxs = []int32{
 	1,  // 33: grpc.tradeapi.v1.accounts.AccountsService.GetAccount:input_type -> grpc.tradeapi.v1.accounts.GetAccountRequest
 	6,  // 34: grpc.tradeapi.v1.accounts.AccountsService.Trades:input_type -> grpc.tradeapi.v1.accounts.TradesRequest
 	8,  // 35: grpc.tradeapi.v1.accounts.AccountsService.Transactions:input_type -> grpc.tradeapi.v1.accounts.TransactionsRequest
-	2,  // 36: grpc.tradeapi.v1.accounts.AccountsService.GetAccount:output_type -> grpc.tradeapi.v1.accounts.GetAccountResponse
-	7,  // 37: grpc.tradeapi.v1.accounts.AccountsService.Trades:output_type -> grpc.tradeapi.v1.accounts.TradesResponse
-	9,  // 38: grpc.tradeapi.v1.accounts.AccountsService.Transactions:output_type -> grpc.tradeapi.v1.accounts.TransactionsResponse
-	36, // [36:39] is the sub-list for method output_type
-	33, // [33:36] is the sub-list for method input_type
+	1,  // 36: grpc.tradeapi.v1.accounts.AccountsService.SubscribeAccount:input_type -> grpc.tradeapi.v1.accounts.GetAccountRequest
+	2,  // 37: grpc.tradeapi.v1.accounts.AccountsService.GetAccount:output_type -> grpc.tradeapi.v1.accounts.GetAccountResponse
+	7,  // 38: grpc.tradeapi.v1.accounts.AccountsService.Trades:output_type -> grpc.tradeapi.v1.accounts.TradesResponse
+	9,  // 39: grpc.tradeapi.v1.accounts.AccountsService.Transactions:output_type -> grpc.tradeapi.v1.accounts.TransactionsResponse
+	2,  // 40: grpc.tradeapi.v1.accounts.AccountsService.SubscribeAccount:output_type -> grpc.tradeapi.v1.accounts.GetAccountResponse
+	37, // [37:41] is the sub-list for method output_type
+	33, // [33:37] is the sub-list for method input_type
 	33, // [33:33] is the sub-list for extension type_name
 	33, // [33:33] is the sub-list for extension extendee
 	0,  // [0:33] is the sub-list for field type_name

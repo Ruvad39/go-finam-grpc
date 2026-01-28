@@ -4,10 +4,11 @@
 // 	protoc        v6.30.1
 // source: grpc/tradeapi/v1/marketdata/marketdata_service.proto
 
-package marketdata_service
+package marketdata
 
 import (
 	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	decimal "google.golang.org/genproto/googleapis/type/decimal"
 	interval "google.golang.org/genproto/googleapis/type/interval"
@@ -1955,7 +1956,7 @@ var File_grpc_tradeapi_v1_marketdata_marketdata_service_proto protoreflect.FileD
 
 const file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc = "" +
 	"\n" +
-	"4grpc/tradeapi/v1/marketdata/marketdata_service.proto\x12\x1bgrpc.tradeapi.v1.marketdata\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\"\x9e\x01\n" +
+	"4grpc/tradeapi/v1/marketdata/marketdata_service.proto\x12\x1bgrpc.tradeapi.v1.marketdata\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1agoogle/type/interval.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x9e\x01\n" +
 	"\vBarsRequest\x12\x16\n" +
 	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x12D\n" +
 	"\ttimeframe\x18\x02 \x01(\x0e2&.grpc.tradeapi.v1.marketdata.TimeFrameR\ttimeframe\x121\n" +
@@ -2090,16 +2091,35 @@ const file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDesc = "" +
 	"\fTIME_FRAME_D\x10\x13\x12\x10\n" +
 	"\fTIME_FRAME_W\x10\x14\x12\x11\n" +
 	"\rTIME_FRAME_MN\x10\x15\x12\x11\n" +
-	"\rTIME_FRAME_QR\x10\x162\x80\t\n" +
-	"\x11MarketDataService\x12\x82\x01\n" +
-	"\x04Bars\x12(.grpc.tradeapi.v1.marketdata.BarsRequest\x1a).grpc.tradeapi.v1.marketdata.BarsResponse\"%\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/instruments/{symbol}/bars\x12\x92\x01\n" +
+	"\rTIME_FRAME_QR\x10\x162\xe3\n" +
+	"\n" +
+	"\x11MarketDataService\x12\xe5\x02\n" +
+	"\x04Bars\x12(.grpc.tradeapi.v1.marketdata.BarsRequest\x1a).grpc.tradeapi.v1.marketdata.BarsResponse\"\x87\x02\x92A\xde\x01J\xd8\x01\n" +
+	"\x03400\x12\xd0\x01\n" +
+	"\xcd\x01Неверно передан символ или интервал. Символ должен быть в виде ticker@mic. Где ticker - это, например, SBER. А mic, например, MISXR\x01\x01\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/instruments/{symbol}/bars\x12\x92\x01\n" +
 	"\tLastQuote\x12).grpc.tradeapi.v1.marketdata.QuoteRequest\x1a*.grpc.tradeapi.v1.marketdata.QuoteResponse\".\x82\xd3\xe4\x93\x02(\x12&/v1/instruments/{symbol}/quotes/latest\x12\x96\x01\n" +
 	"\tOrderBook\x12-.grpc.tradeapi.v1.marketdata.OrderBookRequest\x1a..grpc.tradeapi.v1.marketdata.OrderBookResponse\"*\x82\xd3\xe4\x93\x02$\x12\"/v1/instruments/{symbol}/orderbook\x12\xa3\x01\n" +
 	"\fLatestTrades\x120.grpc.tradeapi.v1.marketdata.LatestTradesRequest\x1a1.grpc.tradeapi.v1.marketdata.LatestTradesResponse\".\x82\xd3\xe4\x93\x02(\x12&/v1/instruments/{symbol}/trades/latest\x12{\n" +
 	"\x0eSubscribeQuote\x122.grpc.tradeapi.v1.marketdata.SubscribeQuoteRequest\x1a3.grpc.tradeapi.v1.marketdata.SubscribeQuoteResponse0\x01\x12\x87\x01\n" +
 	"\x12SubscribeOrderBook\x126.grpc.tradeapi.v1.marketdata.SubscribeOrderBookRequest\x1a7.grpc.tradeapi.v1.marketdata.SubscribeOrderBookResponse0\x01\x12\x90\x01\n" +
 	"\x15SubscribeLatestTrades\x129.grpc.tradeapi.v1.marketdata.SubscribeLatestTradesRequest\x1a:.grpc.tradeapi.v1.marketdata.SubscribeLatestTradesResponse0\x01\x12x\n" +
-	"\rSubscribeBars\x121.grpc.tradeapi.v1.marketdata.SubscribeBarsRequest\x1a2.grpc.tradeapi.v1.marketdata.SubscribeBarsResponse0\x01B.P\x01Z*trade_api/v1/marketdata/marketdata_serviceb\x06proto3"
+	"\rSubscribeBars\x121.grpc.tradeapi.v1.marketdata.SubscribeBarsRequest\x1a2.grpc.tradeapi.v1.marketdata.SubscribeBarsResponse0\x01B\xbf\x06\x92A\xa1\x06*\x01\x01R\xc0\x01\n" +
+	"\x03400\x12\xb8\x01\n" +
+	"\xb5\x01Неверно передан символ. Символ должен быть в виде ticker@mic. Где ticker - это, например, SBER. А mic, например, MISXRi\n" +
+	"\x03401\x12b\n" +
+	"`Срок действия токена истек или токен недействителенR/\n" +
+	"\x03404\x12(\n" +
+	"&Инструмент не найденRy\n" +
+	"\x03429\x12r\n" +
+	"pСлишком много запросов. Доступный лимит - 200 запросов в минутуRZ\n" +
+	"\x03500\x12S\n" +
+	"QВнутренняя ошибка сервиса. Попробуйте позжеRk\n" +
+	"\x03503\x12d\n" +
+	"bСервис на данный момент не доступен. Попробуйте позжеRV\n" +
+	"\x03504\x12O\n" +
+	"MКрайний срок истек до завершения операцииR!\n" +
+	"\adefault\x12\x16\x12\x14\n" +
+	"\x12\x1a\x10googletypeStatusP\x01Z\x16tradeapi/v1/marketdatab\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_marketdata_marketdata_service_proto_rawDescOnce sync.Once

@@ -4,7 +4,7 @@
 // - protoc             v6.30.1
 // source: grpc/tradeapi/v1/orders/orders_service.proto
 
-package orders_service
+package orders
 
 import (
 	context "context"

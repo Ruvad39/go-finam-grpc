@@ -4,7 +4,7 @@
 // - protoc             v6.30.1
 // source: grpc/tradeapi/v1/marketdata/marketdata_service.proto
 
-package marketdata_service
+package marketdata
 
 import (
 	context "context"
