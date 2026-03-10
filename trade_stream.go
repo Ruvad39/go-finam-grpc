@@ -112,7 +112,7 @@ func (s *TradeStream) run() {
 // делаем подписку (stream.Send)
 // запускаем в отдельном потоке метод для прослушивания стрима (listen)
 func (s *TradeStream) subscribeAndListen() error {
-	log.Debug("[OrderStream].subscribeAndListen", "accountId", s.accountId)
+	log.Debug("[TradeStream].subscribeAndListen", "accountId", s.accountId)
 
 	// создаем стрим
 	stream, err := s.OrderService.SubscribeTrades(s.ctx, &orders_service.SubscribeTradesRequest{AccountId: s.accountId})

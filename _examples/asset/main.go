@@ -45,11 +45,11 @@ func main() {
 	slog.Info("main", "current time server", currTime)
 
 	// Получение списка доступных бирж, названия и mic коды
-	//getExchanges(ctx, assetService)
+	getExchanges(ctx, assetService)
 
 	// Получение списка доступных инструментов, их описание
 	getAssets(ctx, assetService)
-	return
+	//return
 
 	// возьмем номер счета из .env
 	accountId, _ := os.LookupEnv("FINAM_ACCOUNT")
@@ -60,10 +60,10 @@ func main() {
 	getAsset(ctx, assetService, accountId, symbol)
 
 	// Получение торговых параметров по инструменту
-	//getAssetParams(ctx, assetService, accountId, symbol)
+	getAssetParams(ctx, assetService, accountId, symbol)
 
 	// Получение расписания торгов для инструмента
-	//getSchedule(ctx, assetService, symbol)
+	getSchedule(ctx, assetService, symbol)
 }
 
 // Получение списка доступных бирж, названия и mic коды

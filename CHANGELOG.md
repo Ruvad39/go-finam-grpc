@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0] - 2026-03-10
+### New AccountStream
+
+### Update
+- обновление proto файлов до 2.13.0
+
+
 ## [0.6.0] - 2025-12-04
 ### New
 - BarStream: отдельный метод для запуска Start
