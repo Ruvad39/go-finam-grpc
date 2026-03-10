@@ -388,7 +388,7 @@ const (
 	ValidBefore_VALID_BEFORE_END_OF_DAY ValidBefore = 1
 	// До отмены
 	ValidBefore_VALID_BEFORE_GOOD_TILL_CANCEL ValidBefore = 2
-	// До указанной даты-времени. Данный тип на текущий момент не поддерживается при выставлении заявки
+	// До указанной даты-времени. Данный тип поддерживается только при выставлении SL/TP заявок
 	ValidBefore_VALID_BEFORE_GOOD_TILL_DATE ValidBefore = 3
 )
 
@@ -435,6 +435,59 @@ func (ValidBefore) EnumDescriptor() ([]byte, []int) {
 	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{4}
 }
 
+// Единица измерения величины защитного спреда для цены исполнения TP
+type TPSpreadMeasure int32
+
+const (
+	// Значение не указано
+	TPSpreadMeasure_TP_SPREAD_MEASURE_UNDEFINED TPSpreadMeasure = 0
+	// в единицах цены
+	TPSpreadMeasure_TP_SPREAD_MEASURE_VALUE TPSpreadMeasure = 1
+	// в процентах, с максимальной точностью до сотых процента
+	TPSpreadMeasure_TP_SPREAD_MEASURE_PERCENT TPSpreadMeasure = 2
+)
+
+// Enum value maps for TPSpreadMeasure.
+var (
+	TPSpreadMeasure_name = map[int32]string{
+		0: "TP_SPREAD_MEASURE_UNDEFINED",
+		1: "TP_SPREAD_MEASURE_VALUE",
+		2: "TP_SPREAD_MEASURE_PERCENT",
+	}
+	TPSpreadMeasure_value = map[string]int32{
+		"TP_SPREAD_MEASURE_UNDEFINED": 0,
+		"TP_SPREAD_MEASURE_VALUE":     1,
+		"TP_SPREAD_MEASURE_PERCENT":   2,
+	}
+)
+
+func (x TPSpreadMeasure) Enum() *TPSpreadMeasure {
+	p := new(TPSpreadMeasure)
+	*p = x
+	return p
+}
+
+func (x TPSpreadMeasure) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (TPSpreadMeasure) Descriptor() protoreflect.EnumDescriptor {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5].Descriptor()
+}
+
+func (TPSpreadMeasure) Type() protoreflect.EnumType {
+	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5]
+}
+
+func (x TPSpreadMeasure) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use TPSpreadMeasure.Descriptor instead.
+func (TPSpreadMeasure) EnumDescriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{5}
+}
+
 // Доступные действия
 type OrderTradeRequest_Action int32
 
@@ -468,11 +521,11 @@ func (x OrderTradeRequest_Action) String() string {
 }
 
 func (OrderTradeRequest_Action) Descriptor() protoreflect.EnumDescriptor {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5].Descriptor()
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[6].Descriptor()
 }
 
 func (OrderTradeRequest_Action) Type() protoreflect.EnumType {
-	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[5]
+	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[6]
 }
 
 func (x OrderTradeRequest_Action) Number() protoreflect.EnumNumber {
@@ -521,11 +574,11 @@ func (x OrderTradeRequest_DataType) String() string {
 }
 
 func (OrderTradeRequest_DataType) Descriptor() protoreflect.EnumDescriptor {
-	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[6].Descriptor()
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[7].Descriptor()
 }
 
 func (OrderTradeRequest_DataType) Type() protoreflect.EnumType {
-	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[6]
+	return &file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes[7]
 }
 
 func (x OrderTradeRequest_DataType) Number() protoreflect.EnumNumber {
@@ -1134,14 +1187,16 @@ type OrderState struct {
 	AcceptAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=accept_at,json=acceptAt,proto3" json:"accept_at,omitempty"`
 	// Дата и время  отмены заявки
 	WithdrawAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=withdraw_at,json=withdrawAt,proto3" json:"withdraw_at,omitempty"`
-	// Начальный объем
+	// Начальный объем (заполняется только для биржевой заявки)
 	InitialQuantity *decimal.Decimal `protobuf:"bytes,8,opt,name=initial_quantity,json=initialQuantity,proto3" json:"initial_quantity,omitempty"`
-	// Исполненный объем
+	// Исполненный объем (заполняется только для биржевой заявки)
 	ExecutedQuantity *decimal.Decimal `protobuf:"bytes,9,opt,name=executed_quantity,json=executedQuantity,proto3" json:"executed_quantity,omitempty"`
-	// Оставшийся объем
+	// Оставшийся объем (заполняется только для биржевой заявки)
 	RemainingQuantity *decimal.Decimal `protobuf:"bytes,10,opt,name=remaining_quantity,json=remainingQuantity,proto3" json:"remaining_quantity,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// Информация о SL/TP заявке
+	SltpOrder     *SLTPOrder `protobuf:"bytes,11,opt,name=sltp_order,json=sltpOrder,proto3" json:"sltp_order,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *OrderState) Reset() {
@@ -1240,6 +1295,13 @@ func (x *OrderState) GetExecutedQuantity() *decimal.Decimal {
 func (x *OrderState) GetRemainingQuantity() *decimal.Decimal {
 	if x != nil {
 		return x.RemainingQuantity
+	}
+	return nil
+}
+
+func (x *OrderState) GetSltpOrder() *SLTPOrder {
+	if x != nil {
+		return x.SltpOrder
 	}
 	return nil
 }
@@ -1391,11 +1453,174 @@ func (x *CancelOrderRequest) GetOrderId() string {
 	return ""
 }
 
+// Информация о SL/TP заявке
+type SLTPOrder struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Идентификатор аккаунта
+	AccountId string `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	// Символ инструмента
+	Symbol string `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	// Сторона для обеих заявок
+	Side v1.Side `protobuf:"varint,3,opt,name=side,proto3,enum=grpc.tradeapi.v1.Side" json:"side,omitempty"`
+	// Количество в шт для SL
+	QuantitySl *decimal.Decimal `protobuf:"bytes,4,opt,name=quantity_sl,json=quantitySl,proto3" json:"quantity_sl,omitempty"`
+	// Параметр условия цены для SL части
+	SlPrice *decimal.Decimal `protobuf:"bytes,5,opt,name=sl_price,json=slPrice,proto3" json:"sl_price,omitempty"`
+	// Если указано, после активации SL будет выставлена лимитная заявка с этой ценой
+	LimitPrice *decimal.Decimal `protobuf:"bytes,6,opt,name=limit_price,json=limitPrice,proto3" json:"limit_price,omitempty"`
+	// Количество в шт для TP
+	QuantityTp *decimal.Decimal `protobuf:"bytes,10,opt,name=quantity_tp,json=quantityTp,proto3" json:"quantity_tp,omitempty"`
+	// Параметр условия цены для TP части
+	TpPrice *decimal.Decimal `protobuf:"bytes,11,opt,name=tp_price,json=tpPrice,proto3" json:"tp_price,omitempty"`
+	// Если указано, после активации TP будет выставлена лимитная заявка с учетом защитного спрэда
+	TpGuardSpread *decimal.Decimal `protobuf:"bytes,12,opt,name=tp_guard_spread,json=tpGuardSpread,proto3" json:"tp_guard_spread,omitempty"`
+	// Единица измерения величины защитного спреда
+	TpSpreadMeasure TPSpreadMeasure `protobuf:"varint,13,opt,name=tp_spread_measure,json=tpSpreadMeasure,proto3,enum=grpc.tradeapi.v1.orders.TPSpreadMeasure" json:"tp_spread_measure,omitempty"`
+	// Уникальный идентификатор заявки. Автоматически генерируется, если не отправлен. (максимум 20 символов)
+	ClientOrderId string `protobuf:"bytes,20,opt,name=client_order_id,json=clientOrderId,proto3" json:"client_order_id,omitempty"`
+	// Срок действия условной заявки. Если не заполнено, то по умолчанию выставляется VALID_BEFORE_GOOD_TILL_CANCEL
+	ValidBefore ValidBefore `protobuf:"varint,21,opt,name=valid_before,json=validBefore,proto3,enum=grpc.tradeapi.v1.orders.ValidBefore" json:"valid_before,omitempty"`
+	// Временная метка прекращения действия SL/TP заявки
+	ValidExpiryTime *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=valid_expiry_time,json=validExpiryTime,proto3" json:"valid_expiry_time,omitempty"`
+	// Метка заявки. (максимум 128 символов)
+	Comment       string `protobuf:"bytes,23,opt,name=comment,proto3" json:"comment,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SLTPOrder) Reset() {
+	*x = SLTPOrder{}
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SLTPOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SLTPOrder) ProtoMessage() {}
+
+func (x *SLTPOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SLTPOrder.ProtoReflect.Descriptor instead.
+func (*SLTPOrder) Descriptor() ([]byte, []int) {
+	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *SLTPOrder) GetAccountId() string {
+	if x != nil {
+		return x.AccountId
+	}
+	return ""
+}
+
+func (x *SLTPOrder) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+func (x *SLTPOrder) GetSide() v1.Side {
+	if x != nil {
+		return x.Side
+	}
+	return v1.Side(0)
+}
+
+func (x *SLTPOrder) GetQuantitySl() *decimal.Decimal {
+	if x != nil {
+		return x.QuantitySl
+	}
+	return nil
+}
+
+func (x *SLTPOrder) GetSlPrice() *decimal.Decimal {
+	if x != nil {
+		return x.SlPrice
+	}
+	return nil
+}
+
+func (x *SLTPOrder) GetLimitPrice() *decimal.Decimal {
+	if x != nil {
+		return x.LimitPrice
+	}
+	return nil
+}
+
+func (x *SLTPOrder) GetQuantityTp() *decimal.Decimal {
+	if x != nil {
+		return x.QuantityTp
+	}
+	return nil
+}
+
+func (x *SLTPOrder) GetTpPrice() *decimal.Decimal {
+	if x != nil {
+		return x.TpPrice
+	}
+	return nil
+}
+
+func (x *SLTPOrder) GetTpGuardSpread() *decimal.Decimal {
+	if x != nil {
+		return x.TpGuardSpread
+	}
+	return nil
+}
+
+func (x *SLTPOrder) GetTpSpreadMeasure() TPSpreadMeasure {
+	if x != nil {
+		return x.TpSpreadMeasure
+	}
+	return TPSpreadMeasure_TP_SPREAD_MEASURE_UNDEFINED
+}
+
+func (x *SLTPOrder) GetClientOrderId() string {
+	if x != nil {
+		return x.ClientOrderId
+	}
+	return ""
+}
+
+func (x *SLTPOrder) GetValidBefore() ValidBefore {
+	if x != nil {
+		return x.ValidBefore
+	}
+	return ValidBefore_VALID_BEFORE_UNSPECIFIED
+}
+
+func (x *SLTPOrder) GetValidExpiryTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ValidExpiryTime
+	}
+	return nil
+}
+
+func (x *SLTPOrder) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
+}
+
 var File_grpc_tradeapi_v1_orders_orders_service_proto protoreflect.FileDescriptor
 
 const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\n" +
-	",grpc/tradeapi/v1/orders/orders_service.proto\x12\x17grpc.tradeapi.v1.orders\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\x1a\x1cgrpc/tradeapi/v1/trade.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xd6\x02\n" +
+	",grpc/tradeapi/v1/orders/orders_service.proto\x12\x17grpc.tradeapi.v1.orders\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/type/decimal.proto\x1a\x1bgrpc/tradeapi/v1/side.proto\x1a\x1cgrpc/tradeapi/v1/trade.proto\x1a;grpc/gateway/protoc_gen_openapiv2/options/annotations.proto\"\xd6\x02\n" +
 	"\x11OrderTradeRequest\x12I\n" +
 	"\x06action\x18\x01 \x01(\x0e21.grpc.tradeapi.v1.orders.OrderTradeRequest.ActionR\x06action\x12P\n" +
 	"\tdata_type\x18\x02 \x01(\x0e23.grpc.tradeapi.v1.orders.OrderTradeRequest.DataTypeR\bdataType\x12\x1d\n" +
@@ -1446,7 +1671,7 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x03Leg\x12\x16\n" +
 	"\x06symbol\x18\x01 \x01(\tR\x06symbol\x120\n" +
 	"\bquantity\x18\x02 \x01(\v2\x14.google.type.DecimalR\bquantity\x12*\n" +
-	"\x04side\x18\x03 \x01(\x0e2\x16.grpc.tradeapi.v1.SideR\x04side\"\xb0\x04\n" +
+	"\x04side\x18\x03 \x01(\x0e2\x16.grpc.tradeapi.v1.SideR\x04side\"\xf3\x04\n" +
 	"\n" +
 	"OrderState\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\tR\aorderId\x12\x17\n" +
@@ -1461,7 +1686,9 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x10initial_quantity\x18\b \x01(\v2\x14.google.type.DecimalR\x0finitialQuantity\x12A\n" +
 	"\x11executed_quantity\x18\t \x01(\v2\x14.google.type.DecimalR\x10executedQuantity\x12C\n" +
 	"\x12remaining_quantity\x18\n" +
-	" \x01(\v2\x14.google.type.DecimalR\x11remainingQuantity\".\n" +
+	" \x01(\v2\x14.google.type.DecimalR\x11remainingQuantity\x12A\n" +
+	"\n" +
+	"sltp_order\x18\v \x01(\v2\".grpc.tradeapi.v1.orders.SLTPOrderR\tsltpOrder\".\n" +
 	"\rOrdersRequest\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\"M\n" +
@@ -1470,7 +1697,27 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x12CancelOrderRequest\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\tR\taccountId\x12\x19\n" +
-	"\border_id\x18\x02 \x01(\tR\aorderId*\x9e\x01\n" +
+	"\border_id\x18\x02 \x01(\tR\aorderId\"\xdc\x05\n" +
+	"\tSLTPOrder\x12\x1d\n" +
+	"\n" +
+	"account_id\x18\x01 \x01(\tR\taccountId\x12\x16\n" +
+	"\x06symbol\x18\x02 \x01(\tR\x06symbol\x12*\n" +
+	"\x04side\x18\x03 \x01(\x0e2\x16.grpc.tradeapi.v1.SideR\x04side\x125\n" +
+	"\vquantity_sl\x18\x04 \x01(\v2\x14.google.type.DecimalR\n" +
+	"quantitySl\x12/\n" +
+	"\bsl_price\x18\x05 \x01(\v2\x14.google.type.DecimalR\aslPrice\x125\n" +
+	"\vlimit_price\x18\x06 \x01(\v2\x14.google.type.DecimalR\n" +
+	"limitPrice\x125\n" +
+	"\vquantity_tp\x18\n" +
+	" \x01(\v2\x14.google.type.DecimalR\n" +
+	"quantityTp\x12/\n" +
+	"\btp_price\x18\v \x01(\v2\x14.google.type.DecimalR\atpPrice\x12<\n" +
+	"\x0ftp_guard_spread\x18\f \x01(\v2\x14.google.type.DecimalR\rtpGuardSpread\x12T\n" +
+	"\x11tp_spread_measure\x18\r \x01(\x0e2(.grpc.tradeapi.v1.orders.TPSpreadMeasureR\x0ftpSpreadMeasure\x12&\n" +
+	"\x0fclient_order_id\x18\x14 \x01(\tR\rclientOrderId\x12G\n" +
+	"\fvalid_before\x18\x15 \x01(\x0e2$.grpc.tradeapi.v1.orders.ValidBeforeR\vvalidBefore\x12F\n" +
+	"\x11valid_expiry_time\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampR\x0fvalidExpiryTime\x12\x18\n" +
+	"\acomment\x18\x17 \x01(\tR\acomment*\x9e\x01\n" +
 	"\tOrderType\x12\x1a\n" +
 	"\x16ORDER_TYPE_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11ORDER_TYPE_MARKET\x10\x01\x12\x14\n" +
@@ -1527,28 +1774,48 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x18VALID_BEFORE_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17VALID_BEFORE_END_OF_DAY\x10\x01\x12!\n" +
 	"\x1dVALID_BEFORE_GOOD_TILL_CANCEL\x10\x02\x12\x1f\n" +
-	"\x1bVALID_BEFORE_GOOD_TILL_DATE\x10\x032\x85\v\n" +
-	"\rOrdersService\x12\xa1\x02\n" +
+	"\x1bVALID_BEFORE_GOOD_TILL_DATE\x10\x03*n\n" +
+	"\x0fTPSpreadMeasure\x12\x1f\n" +
+	"\x1bTP_SPREAD_MEASURE_UNDEFINED\x10\x00\x12\x1b\n" +
+	"\x17TP_SPREAD_MEASURE_VALUE\x10\x01\x12\x1d\n" +
+	"\x19TP_SPREAD_MEASURE_PERCENT\x10\x022\x8f\x0e\n" +
+	"\rOrdersService\x12\xb2\x02\n" +
 	"\n" +
-	"PlaceOrder\x12\x1e.grpc.tradeapi.v1.orders.Order\x1a#.grpc.tradeapi.v1.orders.OrderState\"\xcd\x01\x92A\x9e\x01JM\n" +
-	"\x03400\x12F\n" +
-	"DНе верно переданы торговые параметрыJJ\n" +
+	"PlaceOrder\x12\x1e.grpc.tradeapi.v1.orders.Order\x1a#.grpc.tradeapi.v1.orders.OrderState\"\xde\x01\x92A\xaf\x01JL\n" +
+	"\x03400\x12E\n" +
+	"CНеверно переданы торговые параметрыJJ\n" +
 	"\x03404\x12C\n" +
-	"AСчёт или инструмент не были найденыR\x01\x01\x82\xd3\xe4\x93\x02%:\x01*\" /v1/accounts/{account_id}/orders\x12\xd0\x02\n" +
-	"\vCancelOrder\x12+.grpc.tradeapi.v1.orders.CancelOrderRequest\x1a#.grpc.tradeapi.v1.orders.OrderState\"\xee\x01\x92A\xb7\x01Jn\n" +
+	"AСчёт или инструмент не были найденыb\x13\n" +
+	"\x11\n" +
+	"\rAuthorization\x12\x00\x82\xd3\xe4\x93\x02%:\x01*\" /v1/accounts/{account_id}/orders\x12\xe2\x02\n" +
+	"\vCancelOrder\x12+.grpc.tradeapi.v1.orders.CancelOrderRequest\x1a#.grpc.tradeapi.v1.orders.OrderState\"\x80\x02\x92A\xc9\x01Jn\n" +
 	"\x03400\x12g\n" +
 	"eЗаявка не может быть отменена так как она уже исполненаJB\n" +
 	"\x03404\x12;\n" +
-	"9Счёт или заявка не были найденыR\x01\x01\x82\xd3\xe4\x93\x02-*+/v1/accounts/{account_id}/orders/{order_id}\x12\xb8\x01\n" +
-	"\tGetOrders\x12&.grpc.tradeapi.v1.orders.OrdersRequest\x1a'.grpc.tradeapi.v1.orders.OrdersResponse\"Z\x92A/J*\n" +
+	"9Счёт или заявка не были найденыb\x13\n" +
+	"\x11\n" +
+	"\rAuthorization\x12\x00\x82\xd3\xe4\x93\x02-*+/v1/accounts/{account_id}/orders/{order_id}\x12\xca\x01\n" +
+	"\tGetOrders\x12&.grpc.tradeapi.v1.orders.OrdersRequest\x1a'.grpc.tradeapi.v1.orders.OrdersResponse\"l\x92AAJ*\n" +
 	"\x03404\x12#\n" +
-	"!Счёт не был найденR\x01\x01\x82\xd3\xe4\x93\x02\"\x12 /v1/accounts/{account_id}/orders\x12\xd8\x01\n" +
-	"\bGetOrder\x12(.grpc.tradeapi.v1.orders.GetOrderRequest\x1a#.grpc.tradeapi.v1.orders.OrderState\"}\x92AGJB\n" +
+	"!Счёт не был найденb\x13\n" +
+	"\x11\n" +
+	"\rAuthorization\x12\x00\x82\xd3\xe4\x93\x02\"\x12 /v1/accounts/{account_id}/orders\x12\xeb\x01\n" +
+	"\bGetOrder\x12(.grpc.tradeapi.v1.orders.GetOrderRequest\x1a#.grpc.tradeapi.v1.orders.OrderState\"\x8f\x01\x92AYJB\n" +
 	"\x03404\x12;\n" +
-	"9Счёт или заявка не были найденыR\x01\x01\x82\xd3\xe4\x93\x02-\x12+/v1/accounts/{account_id}/orders/{order_id}\x12w\n" +
+	"9Счёт или заявка не были найденыb\x13\n" +
+	"\x11\n" +
+	"\rAuthorization\x12\x00\x82\xd3\xe4\x93\x02-\x12+/v1/accounts/{account_id}/orders/{order_id}\x12w\n" +
 	"\x13SubscribeOrderTrade\x12*.grpc.tradeapi.v1.orders.OrderTradeRequest\x1a+.grpc.tradeapi.v1.orders.OrderTradeResponse\"\x03\x88\x02\x01(\x010\x01\x12v\n" +
 	"\x0fSubscribeOrders\x12/.grpc.tradeapi.v1.orders.SubscribeOrdersRequest\x1a0.grpc.tradeapi.v1.orders.SubscribeOrdersResponse0\x01\x12v\n" +
-	"\x0fSubscribeTrades\x12/.grpc.tradeapi.v1.orders.SubscribeTradesRequest\x1a0.grpc.tradeapi.v1.orders.SubscribeTradesResponse0\x01B\xc7\x04\x92A\xad\x04*\x01\x01Ri\n" +
+	"\x0fSubscribeTrades\x12/.grpc.tradeapi.v1.orders.SubscribeTradesRequest\x1a0.grpc.tradeapi.v1.orders.SubscribeTradesResponse0\x01\x12\xbf\x02\n" +
+	"\x0ePlaceSLTPOrder\x12\".grpc.tradeapi.v1.orders.SLTPOrder\x1a#.grpc.tradeapi.v1.orders.OrderState\"\xe3\x01\x92A\xaf\x01JL\n" +
+	"\x03400\x12E\n" +
+	"CНеверно переданы торговые параметрыJJ\n" +
+	"\x03404\x12C\n" +
+	"AСчёт или инструмент не были найденыb\x13\n" +
+	"\x11\n" +
+	"\rAuthorization\x12\x00\x82\xd3\xe4\x93\x02*:\x01*\"%/v1/accounts/{account_id}/sltp-ordersB\x84\x06\x92A\xbe\x05\x12?\n" +
+	"\x0fFinam Trade-API\x12,API для торговых операций*\x02\x01\x02Ri\n" +
 	"\x03401\x12b\n" +
 	"`Срок действия токена истек или токен недействителенRy\n" +
 	"\x03429\x12r\n" +
@@ -1560,7 +1827,9 @@ const file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc = "" +
 	"\x03504\x12O\n" +
 	"MКрайний срок истек до завершения операцииR!\n" +
 	"\adefault\x12\x16\x12\x14\n" +
-	"\x12\x1a\x10googletypeStatusP\x01Z\x12tradeapi/v1/ordersb\x06proto3"
+	"\x12\x1a\x10googletypeStatusZM\n" +
+	"K\n" +
+	"\rAuthorization\x12:\b\x02\x12%JWT токен авторизации\x1a\rAuthorization \x02P\x01Z>github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/ordersb\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescOnce sync.Once
@@ -1574,80 +1843,95 @@ func file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescGZIP() []byte {
 	return file_grpc_tradeapi_v1_orders_orders_service_proto_rawDescData
 }
 
-var file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes = make([]protoimpl.EnumInfo, 7)
-var file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_grpc_tradeapi_v1_orders_orders_service_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
+var file_grpc_tradeapi_v1_orders_orders_service_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_grpc_tradeapi_v1_orders_orders_service_proto_goTypes = []any{
 	(OrderType)(0),                  // 0: grpc.tradeapi.v1.orders.OrderType
 	(TimeInForce)(0),                // 1: grpc.tradeapi.v1.orders.TimeInForce
 	(StopCondition)(0),              // 2: grpc.tradeapi.v1.orders.StopCondition
 	(OrderStatus)(0),                // 3: grpc.tradeapi.v1.orders.OrderStatus
 	(ValidBefore)(0),                // 4: grpc.tradeapi.v1.orders.ValidBefore
-	(OrderTradeRequest_Action)(0),   // 5: grpc.tradeapi.v1.orders.OrderTradeRequest.Action
-	(OrderTradeRequest_DataType)(0), // 6: grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
-	(*OrderTradeRequest)(nil),       // 7: grpc.tradeapi.v1.orders.OrderTradeRequest
-	(*OrderTradeResponse)(nil),      // 8: grpc.tradeapi.v1.orders.OrderTradeResponse
-	(*SubscribeOrdersRequest)(nil),  // 9: grpc.tradeapi.v1.orders.SubscribeOrdersRequest
-	(*SubscribeOrdersResponse)(nil), // 10: grpc.tradeapi.v1.orders.SubscribeOrdersResponse
-	(*SubscribeTradesRequest)(nil),  // 11: grpc.tradeapi.v1.orders.SubscribeTradesRequest
-	(*SubscribeTradesResponse)(nil), // 12: grpc.tradeapi.v1.orders.SubscribeTradesResponse
-	(*GetOrderRequest)(nil),         // 13: grpc.tradeapi.v1.orders.GetOrderRequest
-	(*Order)(nil),                   // 14: grpc.tradeapi.v1.orders.Order
-	(*Leg)(nil),                     // 15: grpc.tradeapi.v1.orders.Leg
-	(*OrderState)(nil),              // 16: grpc.tradeapi.v1.orders.OrderState
-	(*OrdersRequest)(nil),           // 17: grpc.tradeapi.v1.orders.OrdersRequest
-	(*OrdersResponse)(nil),          // 18: grpc.tradeapi.v1.orders.OrdersResponse
-	(*CancelOrderRequest)(nil),      // 19: grpc.tradeapi.v1.orders.CancelOrderRequest
-	(*v1.AccountTrade)(nil),         // 20: grpc.tradeapi.v1.AccountTrade
-	(*decimal.Decimal)(nil),         // 21: google.type.Decimal
-	(v1.Side)(0),                    // 22: grpc.tradeapi.v1.Side
-	(*timestamppb.Timestamp)(nil),   // 23: google.protobuf.Timestamp
+	(TPSpreadMeasure)(0),            // 5: grpc.tradeapi.v1.orders.TPSpreadMeasure
+	(OrderTradeRequest_Action)(0),   // 6: grpc.tradeapi.v1.orders.OrderTradeRequest.Action
+	(OrderTradeRequest_DataType)(0), // 7: grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
+	(*OrderTradeRequest)(nil),       // 8: grpc.tradeapi.v1.orders.OrderTradeRequest
+	(*OrderTradeResponse)(nil),      // 9: grpc.tradeapi.v1.orders.OrderTradeResponse
+	(*SubscribeOrdersRequest)(nil),  // 10: grpc.tradeapi.v1.orders.SubscribeOrdersRequest
+	(*SubscribeOrdersResponse)(nil), // 11: grpc.tradeapi.v1.orders.SubscribeOrdersResponse
+	(*SubscribeTradesRequest)(nil),  // 12: grpc.tradeapi.v1.orders.SubscribeTradesRequest
+	(*SubscribeTradesResponse)(nil), // 13: grpc.tradeapi.v1.orders.SubscribeTradesResponse
+	(*GetOrderRequest)(nil),         // 14: grpc.tradeapi.v1.orders.GetOrderRequest
+	(*Order)(nil),                   // 15: grpc.tradeapi.v1.orders.Order
+	(*Leg)(nil),                     // 16: grpc.tradeapi.v1.orders.Leg
+	(*OrderState)(nil),              // 17: grpc.tradeapi.v1.orders.OrderState
+	(*OrdersRequest)(nil),           // 18: grpc.tradeapi.v1.orders.OrdersRequest
+	(*OrdersResponse)(nil),          // 19: grpc.tradeapi.v1.orders.OrdersResponse
+	(*CancelOrderRequest)(nil),      // 20: grpc.tradeapi.v1.orders.CancelOrderRequest
+	(*SLTPOrder)(nil),               // 21: grpc.tradeapi.v1.orders.SLTPOrder
+	(*v1.AccountTrade)(nil),         // 22: grpc.tradeapi.v1.AccountTrade
+	(*decimal.Decimal)(nil),         // 23: google.type.Decimal
+	(v1.Side)(0),                    // 24: grpc.tradeapi.v1.Side
+	(*timestamppb.Timestamp)(nil),   // 25: google.protobuf.Timestamp
 }
 var file_grpc_tradeapi_v1_orders_orders_service_proto_depIdxs = []int32{
-	5,  // 0: grpc.tradeapi.v1.orders.OrderTradeRequest.action:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.Action
-	6,  // 1: grpc.tradeapi.v1.orders.OrderTradeRequest.data_type:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
-	16, // 2: grpc.tradeapi.v1.orders.OrderTradeResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
-	20, // 3: grpc.tradeapi.v1.orders.OrderTradeResponse.trades:type_name -> grpc.tradeapi.v1.AccountTrade
-	16, // 4: grpc.tradeapi.v1.orders.SubscribeOrdersResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
-	20, // 5: grpc.tradeapi.v1.orders.SubscribeTradesResponse.trades:type_name -> grpc.tradeapi.v1.AccountTrade
-	21, // 6: grpc.tradeapi.v1.orders.Order.quantity:type_name -> google.type.Decimal
-	22, // 7: grpc.tradeapi.v1.orders.Order.side:type_name -> grpc.tradeapi.v1.Side
+	6,  // 0: grpc.tradeapi.v1.orders.OrderTradeRequest.action:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.Action
+	7,  // 1: grpc.tradeapi.v1.orders.OrderTradeRequest.data_type:type_name -> grpc.tradeapi.v1.orders.OrderTradeRequest.DataType
+	17, // 2: grpc.tradeapi.v1.orders.OrderTradeResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
+	22, // 3: grpc.tradeapi.v1.orders.OrderTradeResponse.trades:type_name -> grpc.tradeapi.v1.AccountTrade
+	17, // 4: grpc.tradeapi.v1.orders.SubscribeOrdersResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
+	22, // 5: grpc.tradeapi.v1.orders.SubscribeTradesResponse.trades:type_name -> grpc.tradeapi.v1.AccountTrade
+	23, // 6: grpc.tradeapi.v1.orders.Order.quantity:type_name -> google.type.Decimal
+	24, // 7: grpc.tradeapi.v1.orders.Order.side:type_name -> grpc.tradeapi.v1.Side
 	0,  // 8: grpc.tradeapi.v1.orders.Order.type:type_name -> grpc.tradeapi.v1.orders.OrderType
 	1,  // 9: grpc.tradeapi.v1.orders.Order.time_in_force:type_name -> grpc.tradeapi.v1.orders.TimeInForce
-	21, // 10: grpc.tradeapi.v1.orders.Order.limit_price:type_name -> google.type.Decimal
-	21, // 11: grpc.tradeapi.v1.orders.Order.stop_price:type_name -> google.type.Decimal
+	23, // 10: grpc.tradeapi.v1.orders.Order.limit_price:type_name -> google.type.Decimal
+	23, // 11: grpc.tradeapi.v1.orders.Order.stop_price:type_name -> google.type.Decimal
 	2,  // 12: grpc.tradeapi.v1.orders.Order.stop_condition:type_name -> grpc.tradeapi.v1.orders.StopCondition
-	15, // 13: grpc.tradeapi.v1.orders.Order.legs:type_name -> grpc.tradeapi.v1.orders.Leg
+	16, // 13: grpc.tradeapi.v1.orders.Order.legs:type_name -> grpc.tradeapi.v1.orders.Leg
 	4,  // 14: grpc.tradeapi.v1.orders.Order.valid_before:type_name -> grpc.tradeapi.v1.orders.ValidBefore
-	21, // 15: grpc.tradeapi.v1.orders.Leg.quantity:type_name -> google.type.Decimal
-	22, // 16: grpc.tradeapi.v1.orders.Leg.side:type_name -> grpc.tradeapi.v1.Side
+	23, // 15: grpc.tradeapi.v1.orders.Leg.quantity:type_name -> google.type.Decimal
+	24, // 16: grpc.tradeapi.v1.orders.Leg.side:type_name -> grpc.tradeapi.v1.Side
 	3,  // 17: grpc.tradeapi.v1.orders.OrderState.status:type_name -> grpc.tradeapi.v1.orders.OrderStatus
-	14, // 18: grpc.tradeapi.v1.orders.OrderState.order:type_name -> grpc.tradeapi.v1.orders.Order
-	23, // 19: grpc.tradeapi.v1.orders.OrderState.transact_at:type_name -> google.protobuf.Timestamp
-	23, // 20: grpc.tradeapi.v1.orders.OrderState.accept_at:type_name -> google.protobuf.Timestamp
-	23, // 21: grpc.tradeapi.v1.orders.OrderState.withdraw_at:type_name -> google.protobuf.Timestamp
-	21, // 22: grpc.tradeapi.v1.orders.OrderState.initial_quantity:type_name -> google.type.Decimal
-	21, // 23: grpc.tradeapi.v1.orders.OrderState.executed_quantity:type_name -> google.type.Decimal
-	21, // 24: grpc.tradeapi.v1.orders.OrderState.remaining_quantity:type_name -> google.type.Decimal
-	16, // 25: grpc.tradeapi.v1.orders.OrdersResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
-	14, // 26: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:input_type -> grpc.tradeapi.v1.orders.Order
-	19, // 27: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:input_type -> grpc.tradeapi.v1.orders.CancelOrderRequest
-	17, // 28: grpc.tradeapi.v1.orders.OrdersService.GetOrders:input_type -> grpc.tradeapi.v1.orders.OrdersRequest
-	13, // 29: grpc.tradeapi.v1.orders.OrdersService.GetOrder:input_type -> grpc.tradeapi.v1.orders.GetOrderRequest
-	7,  // 30: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:input_type -> grpc.tradeapi.v1.orders.OrderTradeRequest
-	9,  // 31: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrders:input_type -> grpc.tradeapi.v1.orders.SubscribeOrdersRequest
-	11, // 32: grpc.tradeapi.v1.orders.OrdersService.SubscribeTrades:input_type -> grpc.tradeapi.v1.orders.SubscribeTradesRequest
-	16, // 33: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	16, // 34: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	18, // 35: grpc.tradeapi.v1.orders.OrdersService.GetOrders:output_type -> grpc.tradeapi.v1.orders.OrdersResponse
-	16, // 36: grpc.tradeapi.v1.orders.OrdersService.GetOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
-	8,  // 37: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:output_type -> grpc.tradeapi.v1.orders.OrderTradeResponse
-	10, // 38: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrders:output_type -> grpc.tradeapi.v1.orders.SubscribeOrdersResponse
-	12, // 39: grpc.tradeapi.v1.orders.OrdersService.SubscribeTrades:output_type -> grpc.tradeapi.v1.orders.SubscribeTradesResponse
-	33, // [33:40] is the sub-list for method output_type
-	26, // [26:33] is the sub-list for method input_type
-	26, // [26:26] is the sub-list for extension type_name
-	26, // [26:26] is the sub-list for extension extendee
-	0,  // [0:26] is the sub-list for field type_name
+	15, // 18: grpc.tradeapi.v1.orders.OrderState.order:type_name -> grpc.tradeapi.v1.orders.Order
+	25, // 19: grpc.tradeapi.v1.orders.OrderState.transact_at:type_name -> google.protobuf.Timestamp
+	25, // 20: grpc.tradeapi.v1.orders.OrderState.accept_at:type_name -> google.protobuf.Timestamp
+	25, // 21: grpc.tradeapi.v1.orders.OrderState.withdraw_at:type_name -> google.protobuf.Timestamp
+	23, // 22: grpc.tradeapi.v1.orders.OrderState.initial_quantity:type_name -> google.type.Decimal
+	23, // 23: grpc.tradeapi.v1.orders.OrderState.executed_quantity:type_name -> google.type.Decimal
+	23, // 24: grpc.tradeapi.v1.orders.OrderState.remaining_quantity:type_name -> google.type.Decimal
+	21, // 25: grpc.tradeapi.v1.orders.OrderState.sltp_order:type_name -> grpc.tradeapi.v1.orders.SLTPOrder
+	17, // 26: grpc.tradeapi.v1.orders.OrdersResponse.orders:type_name -> grpc.tradeapi.v1.orders.OrderState
+	24, // 27: grpc.tradeapi.v1.orders.SLTPOrder.side:type_name -> grpc.tradeapi.v1.Side
+	23, // 28: grpc.tradeapi.v1.orders.SLTPOrder.quantity_sl:type_name -> google.type.Decimal
+	23, // 29: grpc.tradeapi.v1.orders.SLTPOrder.sl_price:type_name -> google.type.Decimal
+	23, // 30: grpc.tradeapi.v1.orders.SLTPOrder.limit_price:type_name -> google.type.Decimal
+	23, // 31: grpc.tradeapi.v1.orders.SLTPOrder.quantity_tp:type_name -> google.type.Decimal
+	23, // 32: grpc.tradeapi.v1.orders.SLTPOrder.tp_price:type_name -> google.type.Decimal
+	23, // 33: grpc.tradeapi.v1.orders.SLTPOrder.tp_guard_spread:type_name -> google.type.Decimal
+	5,  // 34: grpc.tradeapi.v1.orders.SLTPOrder.tp_spread_measure:type_name -> grpc.tradeapi.v1.orders.TPSpreadMeasure
+	4,  // 35: grpc.tradeapi.v1.orders.SLTPOrder.valid_before:type_name -> grpc.tradeapi.v1.orders.ValidBefore
+	25, // 36: grpc.tradeapi.v1.orders.SLTPOrder.valid_expiry_time:type_name -> google.protobuf.Timestamp
+	15, // 37: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:input_type -> grpc.tradeapi.v1.orders.Order
+	20, // 38: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:input_type -> grpc.tradeapi.v1.orders.CancelOrderRequest
+	18, // 39: grpc.tradeapi.v1.orders.OrdersService.GetOrders:input_type -> grpc.tradeapi.v1.orders.OrdersRequest
+	14, // 40: grpc.tradeapi.v1.orders.OrdersService.GetOrder:input_type -> grpc.tradeapi.v1.orders.GetOrderRequest
+	8,  // 41: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:input_type -> grpc.tradeapi.v1.orders.OrderTradeRequest
+	10, // 42: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrders:input_type -> grpc.tradeapi.v1.orders.SubscribeOrdersRequest
+	12, // 43: grpc.tradeapi.v1.orders.OrdersService.SubscribeTrades:input_type -> grpc.tradeapi.v1.orders.SubscribeTradesRequest
+	21, // 44: grpc.tradeapi.v1.orders.OrdersService.PlaceSLTPOrder:input_type -> grpc.tradeapi.v1.orders.SLTPOrder
+	17, // 45: grpc.tradeapi.v1.orders.OrdersService.PlaceOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	17, // 46: grpc.tradeapi.v1.orders.OrdersService.CancelOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	19, // 47: grpc.tradeapi.v1.orders.OrdersService.GetOrders:output_type -> grpc.tradeapi.v1.orders.OrdersResponse
+	17, // 48: grpc.tradeapi.v1.orders.OrdersService.GetOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	9,  // 49: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrderTrade:output_type -> grpc.tradeapi.v1.orders.OrderTradeResponse
+	11, // 50: grpc.tradeapi.v1.orders.OrdersService.SubscribeOrders:output_type -> grpc.tradeapi.v1.orders.SubscribeOrdersResponse
+	13, // 51: grpc.tradeapi.v1.orders.OrdersService.SubscribeTrades:output_type -> grpc.tradeapi.v1.orders.SubscribeTradesResponse
+	17, // 52: grpc.tradeapi.v1.orders.OrdersService.PlaceSLTPOrder:output_type -> grpc.tradeapi.v1.orders.OrderState
+	45, // [45:53] is the sub-list for method output_type
+	37, // [37:45] is the sub-list for method input_type
+	37, // [37:37] is the sub-list for extension type_name
+	37, // [37:37] is the sub-list for extension extendee
+	0,  // [0:37] is the sub-list for field type_name
 }
 
 func init() { file_grpc_tradeapi_v1_orders_orders_service_proto_init() }
@@ -1660,8 +1944,8 @@ func file_grpc_tradeapi_v1_orders_orders_service_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc), len(file_grpc_tradeapi_v1_orders_orders_service_proto_rawDesc)),
-			NumEnums:      7,
-			NumMessages:   13,
+			NumEnums:      8,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

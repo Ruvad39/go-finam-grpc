@@ -542,7 +542,7 @@ var File_grpc_tradeapi_v1_auth_auth_service_proto protoreflect.FileDescriptor
 
 const file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc = "" +
 	"\n" +
-	"(grpc/tradeapi/v1/auth/auth_service.proto\x12\x15grpc.tradeapi.v1.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"%\n" +
+	"(grpc/tradeapi/v1/auth/auth_service.proto\x12\x15grpc.tradeapi.v1.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a;grpc/gateway/protoc_gen_openapiv2/options/annotations.proto\"%\n" +
 	"\vAuthRequest\x12\x16\n" +
 	"\x06secret\x18\x01 \x01(\tR\x06secret\"$\n" +
 	"\fAuthResponse\x12\x14\n" +
@@ -582,7 +582,8 @@ const file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc = "" +
 	"\vAuthService\x12h\n" +
 	"\x04Auth\x12\".grpc.tradeapi.v1.auth.AuthRequest\x1a#.grpc.tradeapi.v1.auth.AuthResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/sessions\x12\x88\x01\n" +
 	"\fTokenDetails\x12*.grpc.tradeapi.v1.auth.TokenDetailsRequest\x1a+.grpc.tradeapi.v1.auth.TokenDetailsResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/v1/sessions/details\x12~\n" +
-	"\x13SubscribeJwtRenewal\x121.grpc.tradeapi.v1.auth.SubscribeJwtRenewalRequest\x1a2.grpc.tradeapi.v1.auth.SubscribeJwtRenewalResponse0\x01B\xb0\x05\x92A\x98\x05*\x01\x01Ri\n" +
+	"\x13SubscribeJwtRenewal\x121.grpc.tradeapi.v1.auth.SubscribeJwtRenewalRequest\x1a2.grpc.tradeapi.v1.auth.SubscribeJwtRenewalResponse0\x01B\x9e\x06\x92A\xda\x05\x12?\n" +
+	"\x0fFinam Trade-API\x12,API для торговых операций*\x02\x01\x02Ri\n" +
 	"\x03400\x12b\n" +
 	"`Срок действия токена истек или токен недействителенRi\n" +
 	"\x03401\x12b\n" +
@@ -596,7 +597,7 @@ const file_grpc_tradeapi_v1_auth_auth_service_proto_rawDesc = "" +
 	"\x03504\x12O\n" +
 	"MКрайний срок истек до завершения операцииR!\n" +
 	"\adefault\x12\x16\x12\x14\n" +
-	"\x12\x1a\x10googletypeStatusP\x01Z\x10tradeapi/v1/authb\x06proto3"
+	"\x12\x1a\x10googletypeStatusP\x01Z<github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/authb\x06proto3"
 
 var (
 	file_grpc_tradeapi_v1_auth_auth_service_proto_rawDescOnce sync.Once

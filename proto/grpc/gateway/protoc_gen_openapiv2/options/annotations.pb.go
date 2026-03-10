@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.8
 // 	protoc        v6.30.1
-// source: protoc-gen-openapiv2/options/annotations.proto
+// source: grpc/gateway/protoc_gen_openapiv2/options/annotations.proto
 
 package options
 
@@ -21,14 +21,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-var file_protoc_gen_openapiv2_options_annotations_proto_extTypes = []protoimpl.ExtensionInfo{
+var file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*descriptorpb.FileOptions)(nil),
 		ExtensionType: (*Swagger)(nil),
 		Field:         1042,
 		Name:          "grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger",
 		Tag:           "bytes,1042,opt,name=openapiv2_swagger",
-		Filename:      "protoc-gen-openapiv2/options/annotations.proto",
+		Filename:      "grpc/gateway/protoc_gen_openapiv2/options/annotations.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.MethodOptions)(nil),
@@ -36,7 +36,7 @@ var file_protoc_gen_openapiv2_options_annotations_proto_extTypes = []protoimpl.E
 		Field:         1042,
 		Name:          "grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation",
 		Tag:           "bytes,1042,opt,name=openapiv2_operation",
-		Filename:      "protoc-gen-openapiv2/options/annotations.proto",
+		Filename:      "grpc/gateway/protoc_gen_openapiv2/options/annotations.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.MessageOptions)(nil),
@@ -44,7 +44,7 @@ var file_protoc_gen_openapiv2_options_annotations_proto_extTypes = []protoimpl.E
 		Field:         1042,
 		Name:          "grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema",
 		Tag:           "bytes,1042,opt,name=openapiv2_schema",
-		Filename:      "protoc-gen-openapiv2/options/annotations.proto",
+		Filename:      "grpc/gateway/protoc_gen_openapiv2/options/annotations.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.EnumOptions)(nil),
@@ -52,7 +52,7 @@ var file_protoc_gen_openapiv2_options_annotations_proto_extTypes = []protoimpl.E
 		Field:         1042,
 		Name:          "grpc.gateway.protoc_gen_openapiv2.options.openapiv2_enum",
 		Tag:           "bytes,1042,opt,name=openapiv2_enum",
-		Filename:      "protoc-gen-openapiv2/options/annotations.proto",
+		Filename:      "grpc/gateway/protoc_gen_openapiv2/options/annotations.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.ServiceOptions)(nil),
@@ -60,7 +60,7 @@ var file_protoc_gen_openapiv2_options_annotations_proto_extTypes = []protoimpl.E
 		Field:         1042,
 		Name:          "grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag",
 		Tag:           "bytes,1042,opt,name=openapiv2_tag",
-		Filename:      "protoc-gen-openapiv2/options/annotations.proto",
+		Filename:      "grpc/gateway/protoc_gen_openapiv2/options/annotations.proto",
 	},
 	{
 		ExtendedType:  (*descriptorpb.FieldOptions)(nil),
@@ -68,7 +68,7 @@ var file_protoc_gen_openapiv2_options_annotations_proto_extTypes = []protoimpl.E
 		Field:         1042,
 		Name:          "grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field",
 		Tag:           "bytes,1042,opt,name=openapiv2_field",
-		Filename:      "protoc-gen-openapiv2/options/annotations.proto",
+		Filename:      "grpc/gateway/protoc_gen_openapiv2/options/annotations.proto",
 	},
 }
 
@@ -80,7 +80,7 @@ var (
 	// different descriptor messages.
 	//
 	// optional grpc.gateway.protoc_gen_openapiv2.options.Swagger openapiv2_swagger = 1042;
-	E_Openapiv2Swagger = &file_protoc_gen_openapiv2_options_annotations_proto_extTypes[0]
+	E_Openapiv2Swagger = &file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_extTypes[0]
 )
 
 // Extension fields to descriptorpb.MethodOptions.
@@ -91,7 +91,7 @@ var (
 	// different descriptor messages.
 	//
 	// optional grpc.gateway.protoc_gen_openapiv2.options.Operation openapiv2_operation = 1042;
-	E_Openapiv2Operation = &file_protoc_gen_openapiv2_options_annotations_proto_extTypes[1]
+	E_Openapiv2Operation = &file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_extTypes[1]
 )
 
 // Extension fields to descriptorpb.MessageOptions.
@@ -102,7 +102,7 @@ var (
 	// different descriptor messages.
 	//
 	// optional grpc.gateway.protoc_gen_openapiv2.options.Schema openapiv2_schema = 1042;
-	E_Openapiv2Schema = &file_protoc_gen_openapiv2_options_annotations_proto_extTypes[2]
+	E_Openapiv2Schema = &file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_extTypes[2]
 )
 
 // Extension fields to descriptorpb.EnumOptions.
@@ -113,7 +113,7 @@ var (
 	// different descriptor messages.
 	//
 	// optional grpc.gateway.protoc_gen_openapiv2.options.EnumSchema openapiv2_enum = 1042;
-	E_Openapiv2Enum = &file_protoc_gen_openapiv2_options_annotations_proto_extTypes[3]
+	E_Openapiv2Enum = &file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_extTypes[3]
 )
 
 // Extension fields to descriptorpb.ServiceOptions.
@@ -124,7 +124,7 @@ var (
 	// different descriptor messages.
 	//
 	// optional grpc.gateway.protoc_gen_openapiv2.options.Tag openapiv2_tag = 1042;
-	E_Openapiv2Tag = &file_protoc_gen_openapiv2_options_annotations_proto_extTypes[4]
+	E_Openapiv2Tag = &file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_extTypes[4]
 )
 
 // Extension fields to descriptorpb.FieldOptions.
@@ -135,14 +135,14 @@ var (
 	// different descriptor messages.
 	//
 	// optional grpc.gateway.protoc_gen_openapiv2.options.JSONSchema openapiv2_field = 1042;
-	E_Openapiv2Field = &file_protoc_gen_openapiv2_options_annotations_proto_extTypes[5]
+	E_Openapiv2Field = &file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_extTypes[5]
 )
 
-var File_protoc_gen_openapiv2_options_annotations_proto protoreflect.FileDescriptor
+var File_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto protoreflect.FileDescriptor
 
-const file_protoc_gen_openapiv2_options_annotations_proto_rawDesc = "" +
+const file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_rawDesc = "" +
 	"\n" +
-	".protoc-gen-openapiv2/options/annotations.proto\x12)grpc.gateway.protoc_gen_openapiv2.options\x1a google/protobuf/descriptor.proto\x1a,protoc-gen-openapiv2/options/openapiv2.proto:~\n" +
+	";grpc/gateway/protoc_gen_openapiv2/options/annotations.proto\x12)grpc.gateway.protoc_gen_openapiv2.options\x1a google/protobuf/descriptor.proto\x1a9grpc/gateway/protoc_gen_openapiv2/options/openapiv2.proto:~\n" +
 	"\x11openapiv2_swagger\x12\x1c.google.protobuf.FileOptions\x18\x92\b \x01(\v22.grpc.gateway.protoc_gen_openapiv2.options.SwaggerR\x10openapiv2Swagger:\x86\x01\n" +
 	"\x13openapiv2_operation\x12\x1e.google.protobuf.MethodOptions\x18\x92\b \x01(\v24.grpc.gateway.protoc_gen_openapiv2.options.OperationR\x12openapiv2Operation:~\n" +
 	"\x10openapiv2_schema\x12\x1f.google.protobuf.MessageOptions\x18\x92\b \x01(\v21.grpc.gateway.protoc_gen_openapiv2.options.SchemaR\x0fopenapiv2Schema:{\n" +
@@ -150,7 +150,7 @@ const file_protoc_gen_openapiv2_options_annotations_proto_rawDesc = "" +
 	"\ropenapiv2_tag\x12\x1f.google.protobuf.ServiceOptions\x18\x92\b \x01(\v2..grpc.gateway.protoc_gen_openapiv2.options.TagR\fopenapiv2Tag:~\n" +
 	"\x0fopenapiv2_field\x12\x1d.google.protobuf.FieldOptions\x18\x92\b \x01(\v25.grpc.gateway.protoc_gen_openapiv2.options.JSONSchemaR\x0eopenapiv2FieldBHZFgithub.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/optionsb\x06proto3"
 
-var file_protoc_gen_openapiv2_options_annotations_proto_goTypes = []any{
+var file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_goTypes = []any{
 	(*descriptorpb.FileOptions)(nil),    // 0: google.protobuf.FileOptions
 	(*descriptorpb.MethodOptions)(nil),  // 1: google.protobuf.MethodOptions
 	(*descriptorpb.MessageOptions)(nil), // 2: google.protobuf.MessageOptions
@@ -164,7 +164,7 @@ var file_protoc_gen_openapiv2_options_annotations_proto_goTypes = []any{
 	(*Tag)(nil),                         // 10: grpc.gateway.protoc_gen_openapiv2.options.Tag
 	(*JSONSchema)(nil),                  // 11: grpc.gateway.protoc_gen_openapiv2.options.JSONSchema
 }
-var file_protoc_gen_openapiv2_options_annotations_proto_depIdxs = []int32{
+var file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_depIdxs = []int32{
 	0,  // 0: grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger:extendee -> google.protobuf.FileOptions
 	1,  // 1: grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation:extendee -> google.protobuf.MethodOptions
 	2,  // 2: grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema:extendee -> google.protobuf.MessageOptions
@@ -184,27 +184,27 @@ var file_protoc_gen_openapiv2_options_annotations_proto_depIdxs = []int32{
 	0,  // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_protoc_gen_openapiv2_options_annotations_proto_init() }
-func file_protoc_gen_openapiv2_options_annotations_proto_init() {
-	if File_protoc_gen_openapiv2_options_annotations_proto != nil {
+func init() { file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_init() }
+func file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_init() {
+	if File_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto != nil {
 		return
 	}
-	file_protoc_gen_openapiv2_options_openapiv2_proto_init()
+	file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protoc_gen_openapiv2_options_annotations_proto_rawDesc), len(file_protoc_gen_openapiv2_options_annotations_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_rawDesc), len(file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 6,
 			NumServices:   0,
 		},
-		GoTypes:           file_protoc_gen_openapiv2_options_annotations_proto_goTypes,
-		DependencyIndexes: file_protoc_gen_openapiv2_options_annotations_proto_depIdxs,
-		ExtensionInfos:    file_protoc_gen_openapiv2_options_annotations_proto_extTypes,
+		GoTypes:           file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_goTypes,
+		DependencyIndexes: file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_depIdxs,
+		ExtensionInfos:    file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_extTypes,
 	}.Build()
-	File_protoc_gen_openapiv2_options_annotations_proto = out.File
-	file_protoc_gen_openapiv2_options_annotations_proto_goTypes = nil
-	file_protoc_gen_openapiv2_options_annotations_proto_depIdxs = nil
+	File_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto = out.File
+	file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_goTypes = nil
+	file_grpc_gateway_protoc_gen_openapiv2_options_annotations_proto_depIdxs = nil
 }

@@ -26,6 +26,7 @@ const (
 	OrdersService_SubscribeOrderTrade_FullMethodName = "/grpc.tradeapi.v1.orders.OrdersService/SubscribeOrderTrade"
 	OrdersService_SubscribeOrders_FullMethodName     = "/grpc.tradeapi.v1.orders.OrdersService/SubscribeOrders"
 	OrdersService_SubscribeTrades_FullMethodName     = "/grpc.tradeapi.v1.orders.OrdersService/SubscribeTrades"
+	OrdersService_PlaceSLTPOrder_FullMethodName      = "/grpc.tradeapi.v1.orders.OrdersService/PlaceSLTPOrder"
 )
 
 // OrdersServiceClient is the client API for OrdersService service.
@@ -43,14 +44,14 @@ type OrdersServiceClient interface {
 	//	{
 	//	  "symbol": "SBER@MISX",
 	//	  "quantity": {
-	//				 "value": "10"
-	//			 },
+	//			 "value": "10"
+	//		 },
 	//	  "side": "SIDE_BUY",
 	//	  "type": "ORDER_TYPE_LIMIT",
 	//	  "time_in_force": "TIME_IN_FORCE_DAY",
 	//	  "limit_price": {
-	//				 "value": "150.50"
-	//			 }
+	//			 "value": "150.50"
+	//		 }
 	//	}
 	//
 	// Поле account_id берется из URL-пути, остальные поля передаются в теле запроса
@@ -77,6 +78,40 @@ type OrdersServiceClient interface {
 	SubscribeOrders(ctx context.Context, in *SubscribeOrdersRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeOrdersResponse], error)
 	// Подписка на собственные сделки. Стрим метод
 	SubscribeTrades(ctx context.Context, in *SubscribeTradesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeTradesResponse], error)
+	// Выставление SL/TP заявки
+	// Пример HTTP запроса:
+	// POST /v1/accounts/A12345/sltp-orders
+	// Content-Type: application/json
+	// Authorization: <token>
+	//
+	//	{
+	//	  "symbol": "SBER@MISX",
+	//	  "side": "SIDE_BUY",
+	//	  "quantity_sl": {
+	//	    "value": "10"
+	//	  },
+	//	  "sl_price": {
+	//	    "value": "270.00"
+	//	  },
+	//	  "limit_price": {
+	//	    "value": "269.50"
+	//	  },
+	//	  "quantity_tp": {
+	//	    "value": "10"
+	//	  },
+	//	  "tp_price": {
+	//	    "value": "295.50"
+	//	  },
+	//	  "tp_guard_spread": {
+	//	    "value": "0.5"  },
+	//	  "tp_spread_measure": "TP_SPREAD_MEASURE_VALUE",
+	//	  "valid_before": "VALID_BEFORE_GOOD_TILL_DATE",
+	//	  "valid_expiry_time": "2026-12-31T23:59:59Z",
+	//	  "comment": "my SL/TP order"
+	//	 }
+	//
+	//	 Поле account_id берется из URL-пути, остальные поля передаются в теле запроса
+	PlaceSLTPOrder(ctx context.Context, in *SLTPOrder, opts ...grpc.CallOption) (*OrderState, error)
 }
 
 type ordersServiceClient struct {
@@ -179,6 +214,16 @@ func (c *ordersServiceClient) SubscribeTrades(ctx context.Context, in *Subscribe
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type OrdersService_SubscribeTradesClient = grpc.ServerStreamingClient[SubscribeTradesResponse]
 
+func (c *ordersServiceClient) PlaceSLTPOrder(ctx context.Context, in *SLTPOrder, opts ...grpc.CallOption) (*OrderState, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderState)
+	err := c.cc.Invoke(ctx, OrdersService_PlaceSLTPOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrdersServiceServer is the server API for OrdersService service.
 // All implementations must embed UnimplementedOrdersServiceServer
 // for forward compatibility.
@@ -194,14 +239,14 @@ type OrdersServiceServer interface {
 	//	{
 	//	  "symbol": "SBER@MISX",
 	//	  "quantity": {
-	//				 "value": "10"
-	//			 },
+	//			 "value": "10"
+	//		 },
 	//	  "side": "SIDE_BUY",
 	//	  "type": "ORDER_TYPE_LIMIT",
 	//	  "time_in_force": "TIME_IN_FORCE_DAY",
 	//	  "limit_price": {
-	//				 "value": "150.50"
-	//			 }
+	//			 "value": "150.50"
+	//		 }
 	//	}
 	//
 	// Поле account_id берется из URL-пути, остальные поля передаются в теле запроса
@@ -228,6 +273,40 @@ type OrdersServiceServer interface {
 	SubscribeOrders(*SubscribeOrdersRequest, grpc.ServerStreamingServer[SubscribeOrdersResponse]) error
 	// Подписка на собственные сделки. Стрим метод
 	SubscribeTrades(*SubscribeTradesRequest, grpc.ServerStreamingServer[SubscribeTradesResponse]) error
+	// Выставление SL/TP заявки
+	// Пример HTTP запроса:
+	// POST /v1/accounts/A12345/sltp-orders
+	// Content-Type: application/json
+	// Authorization: <token>
+	//
+	//	{
+	//	  "symbol": "SBER@MISX",
+	//	  "side": "SIDE_BUY",
+	//	  "quantity_sl": {
+	//	    "value": "10"
+	//	  },
+	//	  "sl_price": {
+	//	    "value": "270.00"
+	//	  },
+	//	  "limit_price": {
+	//	    "value": "269.50"
+	//	  },
+	//	  "quantity_tp": {
+	//	    "value": "10"
+	//	  },
+	//	  "tp_price": {
+	//	    "value": "295.50"
+	//	  },
+	//	  "tp_guard_spread": {
+	//	    "value": "0.5"  },
+	//	  "tp_spread_measure": "TP_SPREAD_MEASURE_VALUE",
+	//	  "valid_before": "VALID_BEFORE_GOOD_TILL_DATE",
+	//	  "valid_expiry_time": "2026-12-31T23:59:59Z",
+	//	  "comment": "my SL/TP order"
+	//	 }
+	//
+	//	 Поле account_id берется из URL-пути, остальные поля передаются в теле запроса
+	PlaceSLTPOrder(context.Context, *SLTPOrder) (*OrderState, error)
 	mustEmbedUnimplementedOrdersServiceServer()
 }
 
@@ -258,6 +337,9 @@ func (UnimplementedOrdersServiceServer) SubscribeOrders(*SubscribeOrdersRequest,
 }
 func (UnimplementedOrdersServiceServer) SubscribeTrades(*SubscribeTradesRequest, grpc.ServerStreamingServer[SubscribeTradesResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method SubscribeTrades not implemented")
+}
+func (UnimplementedOrdersServiceServer) PlaceSLTPOrder(context.Context, *SLTPOrder) (*OrderState, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PlaceSLTPOrder not implemented")
 }
 func (UnimplementedOrdersServiceServer) mustEmbedUnimplementedOrdersServiceServer() {}
 func (UnimplementedOrdersServiceServer) testEmbeddedByValue()                       {}
@@ -381,6 +463,24 @@ func _OrdersService_SubscribeTrades_Handler(srv interface{}, stream grpc.ServerS
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type OrdersService_SubscribeTradesServer = grpc.ServerStreamingServer[SubscribeTradesResponse]
 
+func _OrdersService_PlaceSLTPOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SLTPOrder)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrdersServiceServer).PlaceSLTPOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrdersService_PlaceSLTPOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrdersServiceServer).PlaceSLTPOrder(ctx, req.(*SLTPOrder))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrdersService_ServiceDesc is the grpc.ServiceDesc for OrdersService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -403,6 +503,10 @@ var OrdersService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetOrder",
 			Handler:    _OrdersService_GetOrder_Handler,
+		},
+		{
+			MethodName: "PlaceSLTPOrder",
+			Handler:    _OrdersService_PlaceSLTPOrder_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

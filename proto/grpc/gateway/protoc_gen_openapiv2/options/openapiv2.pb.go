@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.8
 // 	protoc        v6.30.1
-// source: protoc-gen-openapiv2/options/openapiv2.proto
+// source: grpc/gateway/protoc_gen_openapiv2/options/openapiv2.proto
 
 package options
 
@@ -63,11 +63,11 @@ func (x Scheme) String() string {
 }
 
 func (Scheme) Descriptor() protoreflect.EnumDescriptor {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[0].Descriptor()
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[0].Descriptor()
 }
 
 func (Scheme) Type() protoreflect.EnumType {
-	return &file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[0]
+	return &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[0]
 }
 
 func (x Scheme) Number() protoreflect.EnumNumber {
@@ -76,7 +76,7 @@ func (x Scheme) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Scheme.Descriptor instead.
 func (Scheme) EnumDescriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{0}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{0}
 }
 
 // `Type` is a supported HTTP header type.
@@ -120,11 +120,11 @@ func (x HeaderParameter_Type) String() string {
 }
 
 func (HeaderParameter_Type) Descriptor() protoreflect.EnumDescriptor {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[1].Descriptor()
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[1].Descriptor()
 }
 
 func (HeaderParameter_Type) Type() protoreflect.EnumType {
-	return &file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[1]
+	return &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[1]
 }
 
 func (x HeaderParameter_Type) Number() protoreflect.EnumNumber {
@@ -133,7 +133,7 @@ func (x HeaderParameter_Type) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use HeaderParameter_Type.Descriptor instead.
 func (HeaderParameter_Type) EnumDescriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{3, 0}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{3, 0}
 }
 
 type JSONSchema_JSONSchemaSimpleTypes int32
@@ -184,11 +184,11 @@ func (x JSONSchema_JSONSchemaSimpleTypes) String() string {
 }
 
 func (JSONSchema_JSONSchemaSimpleTypes) Descriptor() protoreflect.EnumDescriptor {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[2].Descriptor()
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[2].Descriptor()
 }
 
 func (JSONSchema_JSONSchemaSimpleTypes) Type() protoreflect.EnumType {
-	return &file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[2]
+	return &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[2]
 }
 
 func (x JSONSchema_JSONSchemaSimpleTypes) Number() protoreflect.EnumNumber {
@@ -197,7 +197,7 @@ func (x JSONSchema_JSONSchemaSimpleTypes) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use JSONSchema_JSONSchemaSimpleTypes.Descriptor instead.
 func (JSONSchema_JSONSchemaSimpleTypes) EnumDescriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{12, 0}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{12, 0}
 }
 
 // The type of the security scheme. Valid values are "basic",
@@ -238,11 +238,11 @@ func (x SecurityScheme_Type) String() string {
 }
 
 func (SecurityScheme_Type) Descriptor() protoreflect.EnumDescriptor {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[3].Descriptor()
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[3].Descriptor()
 }
 
 func (SecurityScheme_Type) Type() protoreflect.EnumType {
-	return &file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[3]
+	return &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[3]
 }
 
 func (x SecurityScheme_Type) Number() protoreflect.EnumNumber {
@@ -251,7 +251,7 @@ func (x SecurityScheme_Type) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SecurityScheme_Type.Descriptor instead.
 func (SecurityScheme_Type) EnumDescriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{15, 0}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{15, 0}
 }
 
 // The location of the API key. Valid values are "query" or "header".
@@ -288,11 +288,11 @@ func (x SecurityScheme_In) String() string {
 }
 
 func (SecurityScheme_In) Descriptor() protoreflect.EnumDescriptor {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[4].Descriptor()
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[4].Descriptor()
 }
 
 func (SecurityScheme_In) Type() protoreflect.EnumType {
-	return &file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[4]
+	return &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[4]
 }
 
 func (x SecurityScheme_In) Number() protoreflect.EnumNumber {
@@ -301,7 +301,7 @@ func (x SecurityScheme_In) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SecurityScheme_In.Descriptor instead.
 func (SecurityScheme_In) EnumDescriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{15, 1}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{15, 1}
 }
 
 // The flow used by the OAuth2 security scheme. Valid values are
@@ -345,11 +345,11 @@ func (x SecurityScheme_Flow) String() string {
 }
 
 func (SecurityScheme_Flow) Descriptor() protoreflect.EnumDescriptor {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[5].Descriptor()
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[5].Descriptor()
 }
 
 func (SecurityScheme_Flow) Type() protoreflect.EnumType {
-	return &file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[5]
+	return &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes[5]
 }
 
 func (x SecurityScheme_Flow) Number() protoreflect.EnumNumber {
@@ -358,7 +358,7 @@ func (x SecurityScheme_Flow) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SecurityScheme_Flow.Descriptor instead.
 func (SecurityScheme_Flow) EnumDescriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{15, 2}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{15, 2}
 }
 
 // `Swagger` is a representation of OpenAPI v2 specification's Swagger object.
@@ -367,7 +367,7 @@ func (SecurityScheme_Flow) EnumDescriptor() ([]byte, []int) {
 //
 // Example:
 //
-//	option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+//	option (protoc_gen_openapiv2.options.openapiv2_swagger) = {
 //	  info: {
 //	    title: "Echo API";
 //	    version: "1.0";
@@ -447,7 +447,7 @@ type Swagger struct {
 
 func (x *Swagger) Reset() {
 	*x = Swagger{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[0]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -459,7 +459,7 @@ func (x *Swagger) String() string {
 func (*Swagger) ProtoMessage() {}
 
 func (x *Swagger) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[0]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -472,7 +472,7 @@ func (x *Swagger) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Swagger.ProtoReflect.Descriptor instead.
 func (*Swagger) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{0}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Swagger) GetSwagger() string {
@@ -578,7 +578,7 @@ func (x *Swagger) GetExtensions() map[string]*structpb.Value {
 //	      get: "/v1/example/echo/{id}"
 //	    };
 //
-//	    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+//	    option (protoc_gen_openapiv2.options.openapiv2_operation) = {
 //	      summary: "Get a message.";
 //	      operation_id: "getMessage";
 //	      tags: "echo";
@@ -647,7 +647,7 @@ type Operation struct {
 
 func (x *Operation) Reset() {
 	*x = Operation{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[1]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -659,7 +659,7 @@ func (x *Operation) String() string {
 func (*Operation) ProtoMessage() {}
 
 func (x *Operation) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[1]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -672,7 +672,7 @@ func (x *Operation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Operation.ProtoReflect.Descriptor instead.
 func (*Operation) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{1}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Operation) GetTags() []string {
@@ -782,7 +782,7 @@ type Parameters struct {
 
 func (x *Parameters) Reset() {
 	*x = Parameters{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[2]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -794,7 +794,7 @@ func (x *Parameters) String() string {
 func (*Parameters) ProtoMessage() {}
 
 func (x *Parameters) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[2]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -807,7 +807,7 @@ func (x *Parameters) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Parameters.ProtoReflect.Descriptor instead.
 func (*Parameters) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{2}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Parameters) GetHeaders() []*HeaderParameter {
@@ -838,7 +838,7 @@ type HeaderParameter struct {
 
 func (x *HeaderParameter) Reset() {
 	*x = HeaderParameter{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[3]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -850,7 +850,7 @@ func (x *HeaderParameter) String() string {
 func (*HeaderParameter) ProtoMessage() {}
 
 func (x *HeaderParameter) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[3]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -863,7 +863,7 @@ func (x *HeaderParameter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HeaderParameter.ProtoReflect.Descriptor instead.
 func (*HeaderParameter) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{3}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *HeaderParameter) GetName() string {
@@ -924,7 +924,7 @@ type Header struct {
 
 func (x *Header) Reset() {
 	*x = Header{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[4]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -936,7 +936,7 @@ func (x *Header) String() string {
 func (*Header) ProtoMessage() {}
 
 func (x *Header) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[4]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -949,7 +949,7 @@ func (x *Header) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Header.ProtoReflect.Descriptor instead.
 func (*Header) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{4}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Header) GetDescription() string {
@@ -1015,7 +1015,7 @@ type Response struct {
 
 func (x *Response) Reset() {
 	*x = Response{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[5]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1027,7 +1027,7 @@ func (x *Response) String() string {
 func (*Response) ProtoMessage() {}
 
 func (x *Response) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[5]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1040,7 +1040,7 @@ func (x *Response) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Response.ProtoReflect.Descriptor instead.
 func (*Response) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{5}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Response) GetDescription() string {
@@ -1084,7 +1084,7 @@ func (x *Response) GetExtensions() map[string]*structpb.Value {
 //
 // Example:
 //
-//	option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+//	option (protoc_gen_openapiv2.options.openapiv2_swagger) = {
 //	  info: {
 //	    title: "Echo API";
 //	    version: "1.0";
@@ -1127,7 +1127,7 @@ type Info struct {
 
 func (x *Info) Reset() {
 	*x = Info{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[6]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1139,7 +1139,7 @@ func (x *Info) String() string {
 func (*Info) ProtoMessage() {}
 
 func (x *Info) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[6]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1152,7 +1152,7 @@ func (x *Info) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Info.ProtoReflect.Descriptor instead.
 func (*Info) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{6}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Info) GetTitle() string {
@@ -1210,7 +1210,7 @@ func (x *Info) GetExtensions() map[string]*structpb.Value {
 //
 // Example:
 //
-//	option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+//	option (protoc_gen_openapiv2.options.openapiv2_swagger) = {
 //	  info: {
 //	    ...
 //	    contact: {
@@ -1238,7 +1238,7 @@ type Contact struct {
 
 func (x *Contact) Reset() {
 	*x = Contact{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[7]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1250,7 +1250,7 @@ func (x *Contact) String() string {
 func (*Contact) ProtoMessage() {}
 
 func (x *Contact) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[7]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1263,7 +1263,7 @@ func (x *Contact) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Contact.ProtoReflect.Descriptor instead.
 func (*Contact) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{7}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Contact) GetName() string {
@@ -1293,7 +1293,7 @@ func (x *Contact) GetEmail() string {
 //
 // Example:
 //
-//	option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+//	option (protoc_gen_openapiv2.options.openapiv2_swagger) = {
 //	  info: {
 //	    ...
 //	    license: {
@@ -1316,7 +1316,7 @@ type License struct {
 
 func (x *License) Reset() {
 	*x = License{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[8]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1328,7 +1328,7 @@ func (x *License) String() string {
 func (*License) ProtoMessage() {}
 
 func (x *License) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[8]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1341,7 +1341,7 @@ func (x *License) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use License.ProtoReflect.Descriptor instead.
 func (*License) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{8}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *License) GetName() string {
@@ -1365,7 +1365,7 @@ func (x *License) GetUrl() string {
 //
 // Example:
 //
-//	option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+//	option (protoc_gen_openapiv2.options.openapiv2_swagger) = {
 //	  ...
 //	  external_docs: {
 //	    description: "More about gRPC-Gateway";
@@ -1387,7 +1387,7 @@ type ExternalDocumentation struct {
 
 func (x *ExternalDocumentation) Reset() {
 	*x = ExternalDocumentation{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[9]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1399,7 +1399,7 @@ func (x *ExternalDocumentation) String() string {
 func (*ExternalDocumentation) ProtoMessage() {}
 
 func (x *ExternalDocumentation) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[9]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1412,7 +1412,7 @@ func (x *ExternalDocumentation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExternalDocumentation.ProtoReflect.Descriptor instead.
 func (*ExternalDocumentation) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{9}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ExternalDocumentation) GetDescription() string {
@@ -1458,7 +1458,7 @@ type Schema struct {
 
 func (x *Schema) Reset() {
 	*x = Schema{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[10]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1470,7 +1470,7 @@ func (x *Schema) String() string {
 func (*Schema) ProtoMessage() {}
 
 func (x *Schema) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[10]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1483,7 +1483,7 @@ func (x *Schema) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Schema.ProtoReflect.Descriptor instead.
 func (*Schema) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{10}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Schema) GetJsonSchema() *JSONSchema {
@@ -1527,7 +1527,7 @@ func (x *Schema) GetExample() string {
 //
 // Example:
 //
-//	option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_enum) = {
+//	option (protoc_gen_openapiv2.options.openapiv2_enum) = {
 //	  ...
 //	  title: "MyEnum";
 //	  description:"This is my nice enum";
@@ -1565,7 +1565,7 @@ type EnumSchema struct {
 
 func (x *EnumSchema) Reset() {
 	*x = EnumSchema{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[11]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1577,7 +1577,7 @@ func (x *EnumSchema) String() string {
 func (*EnumSchema) ProtoMessage() {}
 
 func (x *EnumSchema) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[11]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1590,7 +1590,7 @@ func (x *EnumSchema) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnumSchema.ProtoReflect.Descriptor instead.
 func (*EnumSchema) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{11}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *EnumSchema) GetDescription() string {
@@ -1669,7 +1669,7 @@ func (x *EnumSchema) GetExtensions() map[string]*structpb.Value {
 // Example:
 //
 //	message SimpleMessage {
-//	  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+//	  option (protoc_gen_openapiv2.options.openapiv2_schema) = {
 //	    json_schema: {
 //	      title: "SimpleMessage"
 //	      description: "A simple message."
@@ -1679,7 +1679,7 @@ func (x *EnumSchema) GetExtensions() map[string]*structpb.Value {
 //
 //	  // Id represents the message identifier.
 //	  string id = 1; [
-//	      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+//	      (protoc_gen_openapiv2.options.openapiv2_field) = {
 //	        description: "The unique identifier of the simple message."
 //	      }];
 //	}
@@ -1740,7 +1740,7 @@ type JSONSchema struct {
 
 func (x *JSONSchema) Reset() {
 	*x = JSONSchema{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[12]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1752,7 +1752,7 @@ func (x *JSONSchema) String() string {
 func (*JSONSchema) ProtoMessage() {}
 
 func (x *JSONSchema) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[12]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1765,7 +1765,7 @@ func (x *JSONSchema) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JSONSchema.ProtoReflect.Descriptor instead.
 func (*JSONSchema) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{12}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *JSONSchema) GetRef() string {
@@ -1974,7 +1974,7 @@ type Tag struct {
 
 func (x *Tag) Reset() {
 	*x = Tag{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[13]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1986,7 +1986,7 @@ func (x *Tag) String() string {
 func (*Tag) ProtoMessage() {}
 
 func (x *Tag) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[13]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1999,7 +1999,7 @@ func (x *Tag) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Tag.ProtoReflect.Descriptor instead.
 func (*Tag) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{13}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Tag) GetName() string {
@@ -2049,7 +2049,7 @@ type SecurityDefinitions struct {
 
 func (x *SecurityDefinitions) Reset() {
 	*x = SecurityDefinitions{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[14]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2061,7 +2061,7 @@ func (x *SecurityDefinitions) String() string {
 func (*SecurityDefinitions) ProtoMessage() {}
 
 func (x *SecurityDefinitions) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[14]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2074,7 +2074,7 @@ func (x *SecurityDefinitions) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SecurityDefinitions.ProtoReflect.Descriptor instead.
 func (*SecurityDefinitions) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{14}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *SecurityDefinitions) GetSecurity() map[string]*SecurityScheme {
@@ -2132,7 +2132,7 @@ type SecurityScheme struct {
 
 func (x *SecurityScheme) Reset() {
 	*x = SecurityScheme{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[15]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2144,7 +2144,7 @@ func (x *SecurityScheme) String() string {
 func (*SecurityScheme) ProtoMessage() {}
 
 func (x *SecurityScheme) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[15]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2157,7 +2157,7 @@ func (x *SecurityScheme) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SecurityScheme.ProtoReflect.Descriptor instead.
 func (*SecurityScheme) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{15}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *SecurityScheme) GetType() SecurityScheme_Type {
@@ -2247,7 +2247,7 @@ type SecurityRequirement struct {
 
 func (x *SecurityRequirement) Reset() {
 	*x = SecurityRequirement{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[16]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2259,7 +2259,7 @@ func (x *SecurityRequirement) String() string {
 func (*SecurityRequirement) ProtoMessage() {}
 
 func (x *SecurityRequirement) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[16]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2272,7 +2272,7 @@ func (x *SecurityRequirement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SecurityRequirement.ProtoReflect.Descriptor instead.
 func (*SecurityRequirement) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{16}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *SecurityRequirement) GetSecurityRequirement() map[string]*SecurityRequirement_SecurityRequirementValue {
@@ -2298,7 +2298,7 @@ type Scopes struct {
 
 func (x *Scopes) Reset() {
 	*x = Scopes{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[17]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2310,7 +2310,7 @@ func (x *Scopes) String() string {
 func (*Scopes) ProtoMessage() {}
 
 func (x *Scopes) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[17]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2323,7 +2323,7 @@ func (x *Scopes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Scopes.ProtoReflect.Descriptor instead.
 func (*Scopes) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{17}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *Scopes) GetScope() map[string]string {
@@ -2348,7 +2348,7 @@ type JSONSchema_FieldConfiguration struct {
 
 func (x *JSONSchema_FieldConfiguration) Reset() {
 	*x = JSONSchema_FieldConfiguration{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[27]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2360,7 +2360,7 @@ func (x *JSONSchema_FieldConfiguration) String() string {
 func (*JSONSchema_FieldConfiguration) ProtoMessage() {}
 
 func (x *JSONSchema_FieldConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[27]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2373,7 +2373,7 @@ func (x *JSONSchema_FieldConfiguration) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JSONSchema_FieldConfiguration.ProtoReflect.Descriptor instead.
 func (*JSONSchema_FieldConfiguration) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{12, 0}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{12, 0}
 }
 
 func (x *JSONSchema_FieldConfiguration) GetPathParamName() string {
@@ -2395,7 +2395,7 @@ type SecurityRequirement_SecurityRequirementValue struct {
 
 func (x *SecurityRequirement_SecurityRequirementValue) Reset() {
 	*x = SecurityRequirement_SecurityRequirementValue{}
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[32]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2407,7 +2407,7 @@ func (x *SecurityRequirement_SecurityRequirementValue) String() string {
 func (*SecurityRequirement_SecurityRequirementValue) ProtoMessage() {}
 
 func (x *SecurityRequirement_SecurityRequirementValue) ProtoReflect() protoreflect.Message {
-	mi := &file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[32]
+	mi := &file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2420,7 +2420,7 @@ func (x *SecurityRequirement_SecurityRequirementValue) ProtoReflect() protorefle
 
 // Deprecated: Use SecurityRequirement_SecurityRequirementValue.ProtoReflect.Descriptor instead.
 func (*SecurityRequirement_SecurityRequirementValue) Descriptor() ([]byte, []int) {
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{16, 0}
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP(), []int{16, 0}
 }
 
 func (x *SecurityRequirement_SecurityRequirementValue) GetScope() []string {
@@ -2430,11 +2430,11 @@ func (x *SecurityRequirement_SecurityRequirementValue) GetScope() []string {
 	return nil
 }
 
-var File_protoc_gen_openapiv2_options_openapiv2_proto protoreflect.FileDescriptor
+var File_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto protoreflect.FileDescriptor
 
-const file_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc = "" +
+const file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc = "" +
 	"\n" +
-	",protoc-gen-openapiv2/options/openapiv2.proto\x12)grpc.gateway.protoc_gen_openapiv2.options\x1a\x1cgoogle/protobuf/struct.proto\"\xb3\b\n" +
+	"9grpc/gateway/protoc_gen_openapiv2/options/openapiv2.proto\x12)grpc.gateway.protoc_gen_openapiv2.options\x1a\x1cgoogle/protobuf/struct.proto\"\xb3\b\n" +
 	"\aSwagger\x12\x18\n" +
 	"\aswagger\x18\x01 \x01(\tR\aswagger\x12C\n" +
 	"\x04info\x18\x02 \x01(\v2/.grpc.gateway.protoc_gen_openapiv2.options.InfoR\x04info\x12\x12\n" +
@@ -2694,20 +2694,20 @@ const file_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc = "" +
 	"\x03WSS\x10\x04BHZFgithub.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/optionsb\x06proto3"
 
 var (
-	file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescOnce sync.Once
-	file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescData []byte
+	file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescOnce sync.Once
+	file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescData []byte
 )
 
-func file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP() []byte {
-	file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescOnce.Do(func() {
-		file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc), len(file_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc)))
+func file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescGZIP() []byte {
+	file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescOnce.Do(func() {
+		file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc), len(file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc)))
 	})
-	return file_protoc_gen_openapiv2_options_openapiv2_proto_rawDescData
+	return file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDescData
 }
 
-var file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
-var file_protoc_gen_openapiv2_options_openapiv2_proto_goTypes = []any{
+var file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
+var file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
+var file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_goTypes = []any{
 	(Scheme)(0),                           // 0: grpc.gateway.protoc_gen_openapiv2.options.Scheme
 	(HeaderParameter_Type)(0),             // 1: grpc.gateway.protoc_gen_openapiv2.options.HeaderParameter.Type
 	(JSONSchema_JSONSchemaSimpleTypes)(0), // 2: grpc.gateway.protoc_gen_openapiv2.options.JSONSchema.JSONSchemaSimpleTypes
@@ -2751,7 +2751,7 @@ var file_protoc_gen_openapiv2_options_openapiv2_proto_goTypes = []any{
 	nil,                    // 40: grpc.gateway.protoc_gen_openapiv2.options.Scopes.ScopeEntry
 	(*structpb.Value)(nil), // 41: google.protobuf.Value
 }
-var file_protoc_gen_openapiv2_options_openapiv2_proto_depIdxs = []int32{
+var file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_depIdxs = []int32{
 	12, // 0: grpc.gateway.protoc_gen_openapiv2.options.Swagger.info:type_name -> grpc.gateway.protoc_gen_openapiv2.options.Info
 	0,  // 1: grpc.gateway.protoc_gen_openapiv2.options.Swagger.schemes:type_name -> grpc.gateway.protoc_gen_openapiv2.options.Scheme
 	24, // 2: grpc.gateway.protoc_gen_openapiv2.options.Swagger.responses:type_name -> grpc.gateway.protoc_gen_openapiv2.options.Swagger.ResponsesEntry
@@ -2812,27 +2812,27 @@ var file_protoc_gen_openapiv2_options_openapiv2_proto_depIdxs = []int32{
 	0,  // [0:53] is the sub-list for field type_name
 }
 
-func init() { file_protoc_gen_openapiv2_options_openapiv2_proto_init() }
-func file_protoc_gen_openapiv2_options_openapiv2_proto_init() {
-	if File_protoc_gen_openapiv2_options_openapiv2_proto != nil {
+func init() { file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_init() }
+func file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_init() {
+	if File_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc), len(file_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc), len(file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_rawDesc)),
 			NumEnums:      6,
 			NumMessages:   35,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_protoc_gen_openapiv2_options_openapiv2_proto_goTypes,
-		DependencyIndexes: file_protoc_gen_openapiv2_options_openapiv2_proto_depIdxs,
-		EnumInfos:         file_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes,
-		MessageInfos:      file_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes,
+		GoTypes:           file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_goTypes,
+		DependencyIndexes: file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_depIdxs,
+		EnumInfos:         file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_enumTypes,
+		MessageInfos:      file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_msgTypes,
 	}.Build()
-	File_protoc_gen_openapiv2_options_openapiv2_proto = out.File
-	file_protoc_gen_openapiv2_options_openapiv2_proto_goTypes = nil
-	file_protoc_gen_openapiv2_options_openapiv2_proto_depIdxs = nil
+	File_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto = out.File
+	file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_goTypes = nil
+	file_grpc_gateway_protoc_gen_openapiv2_options_openapiv2_proto_depIdxs = nil
 }
