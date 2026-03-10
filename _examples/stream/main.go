@@ -10,6 +10,7 @@ import (
 
 	"github.com/Ruvad39/go-finam-grpc"
 	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
+	accounts_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/accounts"
 	market_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
 	order_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 	"github.com/joho/godotenv"
@@ -35,7 +36,7 @@ func main() {
 
 	// получаем переменные из .env
 	token, _ = os.LookupEnv("FINAM_TOKEN")
-	accountID, _ = os.LookupEnv("FINAM_ACCOUNT")
+	accountID, _ = os.LookupEnv("FINAM_ACCOUNT_ID")
 
 	// init logger
 	log_app := InitLogger("logs/stream_app.log")
@@ -50,12 +51,15 @@ func main() {
 
 	//------------------------------------------
 	// создадим поток ордеров и сделок
-	order_log := InitLogger("logs/order.log")
+	order_log := InitLogger("logs/account.log")
 	slog.SetDefault(order_log)
 	// поток ордеров
-	newOrderStream(ctx, client)
+	// newOrderStream(ctx, client)
 	// поток сделок
 	//newTradeStream(ctx, client)
+
+	// данные по счету
+	NewAccountStreamWithCallback(ctx, client)
 
 	//------------------------------------------
 	// bar stream
@@ -182,6 +186,17 @@ func NewQuoteStreamWithChannel(ctx context.Context, client *finam.Client) {
 
 }
 
+// NewAccountStreamWithCallback пример создание стрима с callback функцией
+func NewAccountStreamWithCallback(ctx context.Context, client *finam.Client) {
+	//symbols := []string{"SBER@MISX", "IMOEXF@RTSX"}
+	slog.Info("newAccountStream", "accountID", accountID)
+
+	stream := client.NewAccountStreamWithCallback(ctx, accountID, onAccount)
+	// запуск стрима
+	stream.Start()
+
+}
+
 // callback метод для обработки ордеров
 func onOrder(order *order_service.OrderState) {
 	slog.Info("OnOrder", slog.Any("AccountOrder", order.String()))
@@ -218,4 +233,9 @@ func InitLogger(fileName string) *slog.Logger {
 	writer := io.MultiWriter(os.Stdout, fw)
 	logger := slog.New(slog.NewJSONHandler(writer, &slog.HandlerOptions{Level: slog.LevelDebug}))
 	return logger
+}
+
+// callback метод для обработки данных по счету
+func onAccount(account *accounts_service.GetAccountResponse) {
+	slog.Info("onAccount", slog.Any("account", account))
 }
