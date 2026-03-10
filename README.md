@@ -152,5 +152,6 @@ NewBarStreamWithCallback(parent context.Context, symbol string, timeframe market
 NewQuoteStreamWithChannel(parent context.Context, symbols []string)
 // создание стрима котировок с указанием callback функции (стрим НЕ запускается по умолчанию => Нужно выполнить метод  Start())
 NewQuoteStreamWithCallback(parent context.Context, symbols []string, callback func(q *marketdata_service.Quote))
-
+// Подписка на изменение по заданному счету
+NewAccountStream(parent context.Context, accountId string, callback func(*accounts_service.GetAccountResponse))
 ```
