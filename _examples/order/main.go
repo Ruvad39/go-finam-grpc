@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"github.com/Ruvad39/go-finam-grpc"
-	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
-	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
-	"github.com/joho/godotenv"
 	"log/slog"
 	"os"
+
+	v1 "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1"
+	pb "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/orders"
+	"github.com/Ruvad39/go-finam-grpc"
+	"github.com/joho/godotenv"
 )
 
 // предполагаем что есть файл .env
@@ -40,7 +41,7 @@ func main() {
 	orderService := client.NewOrderServiceClient()
 
 	// получим список всех ордеров по заданному счету
-	//getOrders(ctx, orderService, accountId)
+	getOrders(ctx, orderService, accountId)
 
 	// получим информацию по заданному ордеру
 	//getOrder(ctx, orderService, accountId, "69970064220")
@@ -49,7 +50,7 @@ func main() {
 	//cancelOrder(ctx, orderService, accountId, "69970064220")
 
 	// Выставление биржевой заявки
-	placeOrder(ctx, orderService, accountId)
+	//placeOrder(ctx, orderService, accountId)
 
 }
 
@@ -95,6 +96,7 @@ func placeOrder(ctx context.Context, client *finam.OrderServiceClient, accountId
 	//price := 0                                  // по какой цене выставить лимитку
 	orderType := pb.OrderType_ORDER_TYPE_MARKET //pb.OrderType_ORDER_TYPE_LIMIT // лимитная
 	side := v1.Side_SIDE_BUY                    // покупка
+	comment := "комментарий к ордеру(01)"
 
 	newOrder := &pb.Order{
 		AccountId: accountId,
@@ -104,6 +106,7 @@ func placeOrder(ctx context.Context, client *finam.OrderServiceClient, accountId
 		Type:        orderType,
 		Side:        side,
 		TimeInForce: pb.TimeInForce_TIME_IN_FORCE_DAY,
+		Comment:     comment,
 	}
 	_ = newOrder
 

@@ -9,7 +9,7 @@ import (
 	"crypto/tls"
 	"time"
 
-	auth_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/auth"
+	auth_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/auth"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"

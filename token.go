@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	auth_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/auth"
+	auth_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/auth"
 )
 
 const authKey = "Authorization"             //

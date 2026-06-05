@@ -29,7 +29,7 @@ import (
 	"strings"
 	"time"
 
-	marketdata_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
+	marketdata_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/marketdata"
 	"google.golang.org/genproto/googleapis/type/decimal"
 	"google.golang.org/genproto/googleapis/type/interval"
 	"google.golang.org/protobuf/types/known/timestamppb"

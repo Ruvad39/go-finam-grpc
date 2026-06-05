@@ -34,8 +34,8 @@ package finam
 import (
 	"context"
 
-	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
-	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
+	v1 "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1"
+	pb "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/orders"
 )
 
 // OrderServiceClient клиент для работы OrdersService

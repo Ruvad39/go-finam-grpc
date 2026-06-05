@@ -1,13 +1,12 @@
 # Неофициальный Go SDK для Finam Trade API
 
-**gRPC-клиент создан на базе [proto файлов](https://github.com/FinamWeb/finam-trade-api)**
-
 ⚠️ **Важное предупреждение**  
 Это **неофициальная** библиотека для работы с [Finam Trade API](https://tradeapi.finam.ru/docs/guides/grpc/).  
 Возможны ошибки как в реализации SDK, так и в самом Trade API.  
 **Используйте этот код на свой страх и риск.**  
 Разработчик не несет ответственности за потери.
 
+**gRPC-клиент использует уже скомпилированные [proto файлы Финама](https://github.com/FinamWeb/finam-trade-api)**
 
 ## Установка
 

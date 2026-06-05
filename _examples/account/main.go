@@ -52,7 +52,7 @@ func main() {
 		// получим список сделок
 		//getTrades(ctx, accountService, accountId)
 
-		//getTransactions(ctx, accountService, accountId)
+		getTransactions(ctx, accountService, accountId)
 	}
 }
 

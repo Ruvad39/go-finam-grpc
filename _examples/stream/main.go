@@ -8,11 +8,11 @@ import (
 	"os/signal"
 	"syscall"
 
+	v1 "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1"
+	accounts_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/accounts"
+	market_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/marketdata"
+	order_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/orders"
 	"github.com/Ruvad39/go-finam-grpc"
-	v1 "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1"
-	accounts_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/accounts"
-	market_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
-	order_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/orders"
 	"github.com/joho/godotenv"
 	slogw "github.com/yougg/slog-writer"
 )
@@ -51,15 +51,15 @@ func main() {
 
 	//------------------------------------------
 	// создадим поток ордеров и сделок
-	order_log := InitLogger("logs/account.log")
-	slog.SetDefault(order_log)
+	//order_log := InitLogger("logs/account.log")
+	//slog.SetDefault(order_log)
 	// поток ордеров
 	// newOrderStream(ctx, client)
 	// поток сделок
 	//newTradeStream(ctx, client)
 
 	// данные по счету
-	NewAccountStreamWithCallback(ctx, client)
+	// NewAccountStreamWithCallback(ctx, client)
 
 	//------------------------------------------
 	// bar stream
@@ -74,14 +74,14 @@ func main() {
 
 	// QuoteStream
 	// логер
-	//quote_log := InitLogger("logs/quote.log")
-	//slog.SetDefault(quote_log)
+	quote_log := InitLogger("logs/quote.log")
+	slog.SetDefault(quote_log)
 
 	// пример создание стрима котировок с с возвратом канала
 	// NewQuoteStreamWithChannel(ctx, client)
 
 	// пример создание стрима котировок с callback функций
-	//NewQuoteStreamWithCallback(ctx, client)
+	NewQuoteStreamWithCallback(ctx, client)
 
 	//--------------------------------------------
 	// Graceful shutdown
@@ -157,8 +157,8 @@ func NewBarStreamWithChannel(ctx context.Context, client *finam.Client) {
 
 // NewQuoteStreamWithCallback пример создание стрима с callback функцией
 func NewQuoteStreamWithCallback(ctx context.Context, client *finam.Client) {
-	//symbols := []string{"SBER@MISX", "IMOEXF@RTSX"}
-	symbols := []string{"SBER@MISX"}
+	//symbols := []string{"SBER@MISX", "IMOEXF@RTSX"} SPBFUT.CNYRUBF
+	symbols := []string{"CRM6@RTSX"} // []string{"CNYRUBF@RTSX"} // []string{"CRM6@RTSX"}
 	slog.Info("NewQuoteStreamWithCallback", "symbols", symbols)
 
 	stream := client.NewQuoteStreamWithCallback(ctx, symbols, onQuote)

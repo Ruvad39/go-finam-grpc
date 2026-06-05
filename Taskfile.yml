@@ -15,3 +15,9 @@ tasks:
   stream:
     cmds:
       - go run _examples/stream/main.go
+  asset:
+    cmds:
+      - go run _examples/asset/main.go      -
+  order:
+    cmds:
+      - go run _examples/order/main.go

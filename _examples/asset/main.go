@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"os"
 
+	pb "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/assets"
 	"github.com/Ruvad39/go-finam-grpc"
-	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/assets"
 	"github.com/joho/godotenv"
 )
 
@@ -45,16 +45,16 @@ func main() {
 	slog.Info("main", "current time server", currTime)
 
 	// Получение списка доступных бирж, названия и mic коды
-	getExchanges(ctx, assetService)
+	//getExchanges(ctx, assetService)
 
 	// Получение списка доступных инструментов, их описание
-	getAssets(ctx, assetService)
+	//getAssets(ctx, assetService)
 	//return
 
 	// возьмем номер счета из .env
 	accountId, _ := os.LookupEnv("FINAM_ACCOUNT")
 	_ = accountId
-	symbol := "FEES@MISX" //"IMOEXF@RTSX" //"SBER@MISX" //"FEES@MISX" //"SBER@MISX" // "SIU5@RTSX" // "SBER@MISX" // "RU000A106L18@MISX"
+	symbol := "SIM6@RTSX" //"IMOEXF@RTSX" //"SBER@MISX" //"FEES@MISX" //"SBER@MISX" // "SIM6@RTSX" // "SBER@MISX" // "RU000A106L18@MISX"
 	_ = symbol
 	// Получение информации по конкретному инструменту
 	getAsset(ctx, assetService, accountId, symbol)
@@ -63,7 +63,7 @@ func main() {
 	getAssetParams(ctx, assetService, accountId, symbol)
 
 	// Получение расписания торгов для инструмента
-	getSchedule(ctx, assetService, symbol)
+	//	getSchedule(ctx, assetService, symbol)
 }
 
 // Получение списка доступных бирж, названия и mic коды

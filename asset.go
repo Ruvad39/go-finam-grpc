@@ -31,7 +31,7 @@ import (
 	"context"
 	"time"
 
-	assets_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/assets"
+	assets_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/assets"
 )
 
 // AssetServiceClient клиент для работы AssetsService

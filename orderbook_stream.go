@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	pb "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
+	pb "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/marketdata"
 	"google.golang.org/grpc"
 )
 

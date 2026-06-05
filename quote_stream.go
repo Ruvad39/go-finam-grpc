@@ -9,7 +9,7 @@ import (
 	"math/rand"
 	"time"
 
-	marketdata_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/marketdata"
+	marketdata_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/marketdata"
 	"google.golang.org/grpc"
 )
 

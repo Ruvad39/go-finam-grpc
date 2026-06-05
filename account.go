@@ -19,7 +19,7 @@ import (
 	"context"
 	"time"
 
-	accounts_service "github.com/Ruvad39/go-finam-grpc/proto/grpc/tradeapi/v1/accounts"
+	accounts_service "github.com/FinamWeb/finam-trade-api/go/grpc/tradeapi/v1/accounts"
 	"google.golang.org/genproto/googleapis/type/interval"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

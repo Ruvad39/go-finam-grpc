@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.0] - 2026-06-05
+### Update
+- удалил папку proto
+- используются уже скомпилированные [proto файлы Финама](https://github.com/FinamWeb/finam-trade-api)
+- (github.com/FinamWeb/finam-trade-api/go)
+
 ## [0.7.0] - 2026-03-10
 ### New AccountStream
 
