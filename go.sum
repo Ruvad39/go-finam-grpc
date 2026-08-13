@@ -1,5 +1,5 @@
-github.com/FinamWeb/finam-trade-api/go v0.0.0-20260604092545-e70167427ba1 h1:+eznbD8/9mLOvDQj+pTNO36LWJ2AGzvdLrhDrmN2bk0=
-github.com/FinamWeb/finam-trade-api/go v0.0.0-20260604092545-e70167427ba1/go.mod h1:awaRPTzqrbIiDvNmRDi1y3HSS36FBIPCb+Zw6BpcQvw=
+github.com/FinamWeb/finam-trade-api/go v0.0.0-20260813094515-ac0abddcd07d h1:wy4MsJlW/oU1XuMTCm+p2Bn/OR5YCShd4i8hNrCptLc=
+github.com/FinamWeb/finam-trade-api/go v0.0.0-20260813094515-ac0abddcd07d/go.mod h1:awaRPTzqrbIiDvNmRDi1y3HSS36FBIPCb+Zw6BpcQvw=
 github.com/go-logr/logr v1.4.3 h1:CjnDlHq8ikf6E492q6eKboGOC0T8CDaOvkHCIg8idEI=
 github.com/go-logr/logr v1.4.3/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/go-logr/stdr v1.2.2 h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=
@@ -12,6 +12,8 @@ github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.5 h1:jP1RStw811EvUDzsUQ9oESqw2e4RqCjSAD9qIL8eMns=
 github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.5/go.mod h1:WXNBZ64q3+ZUemCMXD9kYnr56H7CgZxDBHCVwstfl3s=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 go.opentelemetry.io/auto/sdk v1.2.1 h1:jXsnJ4Lmnqd11kwkBV2LgLoFMZKizbCi5fNZ/ipaZ64=
 go.opentelemetry.io/auto/sdk v1.2.1/go.mod h1:KRTj+aOaElaLi+wW1kO/DZRXwkF4C5xPbEe3ZiIhN7Y=
 go.opentelemetry.io/otel v1.38.0 h1:RkfdswUDRimDg0m2Az18RKOsnI8UDzppJAtj01/Ymk8=

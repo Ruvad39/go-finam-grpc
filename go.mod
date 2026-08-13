@@ -1,9 +1,9 @@
 module github.com/Ruvad39/go-finam-grpc
 
-go 1.24.1
+go 1.26.0
 
 require (
-	github.com/FinamWeb/finam-trade-api/go v0.0.0-20260604092545-e70167427ba1
+	github.com/FinamWeb/finam-trade-api/go v0.0.0-20260813094515-ac0abddcd07d
 	google.golang.org/genproto v0.0.0-20251111163417-95abcf5c77ba
 	google.golang.org/grpc v1.78.0
 	google.golang.org/protobuf v1.36.11
@@ -11,6 +11,7 @@ require (
 
 require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.5 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/text v0.33.0 // indirect

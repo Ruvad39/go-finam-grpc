@@ -6,6 +6,7 @@ package finam
 
 import (
 	"context"
+	"strings"
 	"sync"
 	"time"
 
@@ -41,7 +42,18 @@ func (a *TokenAgent) GetJwt() string {
 // GetRequestMetadata для соответствия интерфейсу PerRPCCredentials
 func (a *TokenAgent) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
 	meta := make(map[string]string)
-	meta[authKey] = a.GetJwt()
+	//meta[authKey] = a.GetJwt()
+	//
+	needAuth := true
+	for _, v := range uri {
+		if strings.HasSuffix(v, "v1.auth.AuthService") {
+			needAuth = false
+		}
+	}
+
+	if needAuth {
+		meta["authorization"] = a.GetJwt()
+	}
 
 	return meta, nil
 }
@@ -64,12 +76,12 @@ func (c *Client) GetJWT(ctx context.Context) (string, error) {
 
 	//ctx, cancel := context.WithTimeout(ctx, c.opts.callTimeout)
 	//defer cancel()
-
-	req := &auth_service.AuthRequest{Secret: c.token}
 	log.Debug("GetJWT start AuthService.Auth")
+	req := &auth_service.AuthRequest{Secret: c.token}
 	t := time.Now()
 	res, err := c.AuthService.Auth(ctx, req)
 	if err != nil {
+		log.Error("AuthService.Auth", "err", err)
 		return "", err
 	}
 	log.Debug("GetJWT end AuthService.Auth", "duration", time.Since(t).String())
